@@ -1,0 +1,38 @@
+<?xml encoding="ISO-8859-1" ?>
+
+<!ELEMENT action-config (controller, wrapper-chains, actions, errors, resources)>
+
+<!ELEMENT controller (property*)>
+
+<!ELEMENT property EMPTY>
+<!ATTLIST property name CDATA #REQUIRED 
+                   value CDATA #REQUIRED>
+
+<!ELEMENT wrapper-chains (default-wrapper-chain, wrapper-chain*)>
+
+<!ELEMENT default-wrapper-chain (action-wrapper)>
+
+<!ELEMENT action-wrapper (property*, action-wrapper?)>
+<!ATTLIST action-wrapper class-name CDATA #REQUIRED>
+
+<!ELEMENT wrapper-chain (action-wrapper)>
+<!ATTLIST wrapper-chain name CDATA #REQUIRED>
+               
+<!ELEMENT actions (action*)>             
+
+<!ELEMENT action (property*)>
+<!ATTLIST action name CDATA #REQUIRED
+				 class-name CDATA #REQUIRED
+				 forward CDATA #IMPLIED
+				 wrapper-chain CDATA #IMPLIED>
+				 
+<!ELEMENT errors (exception*)>	
+	
+<!ELEMENT exception EMPTY>
+<!ATTLIST exception class-name CDATA #REQUIRED 
+                    forward CDATA #REQUIRED>	
+                    
+<!ELEMENT resources (bundle*)>	  
+
+<!ELEMENT bundle EMPTY>
+<!ATTLIST bundle name CDATA #REQUIRED>                  	

@@ -1,0 +1,67 @@
+<project basedir="." name="MEGA" default="all">
+	<property name="src" value="SRC" />
+	<property name="lib" value="LIB" />
+
+	<property name="build" value="BUILD" />
+	<property name="dist" value="${build}/DIST" />
+	<property name="classes" value="${build}/CLASSES" />
+	
+	<property name="dtd" value="DTD" />
+	
+	<property file="build.properties" />
+
+	<path id="classpath">
+		<fileset dir="${lib}">
+			<include name="*.jar" />
+		</fileset>
+		
+		<pathelement location="${war.jar}" />
+	</path>
+
+	<target name="all" depends="common, layout, action" />
+
+	<target name="layout" depends="compile">
+		<jar destfile="${dist}/${layout.file}">
+			<fileset dir="${classes}">
+				<include name="**/layout/**" />
+			</fileset>
+			<fileset dir="${dtd}">
+				<include name="swf-layout.dtd"/>
+			</fileset>
+		</jar>
+	</target>
+	
+	<target name="action" depends="compile">
+		<jar destfile="${dist}/${action.file}">
+			<fileset dir="${classes}">
+				<include name="**/action/**" />
+			</fileset>
+			<fileset dir="${dtd}">
+				<include name="swf-action.dtd"/>
+			</fileset>
+		</jar>
+	</target>	
+	
+	<target name="common" depends="compile">
+		<jar destfile="${dist}/${common.file}">
+			<fileset dir="${classes}">
+				<include name="**/common/**" />
+			</fileset>
+		</jar>
+	</target>		
+
+	<target name="compile" depends="init">
+		<javac debug="on" optimize="on" deprecation="on" classpathref="classpath" srcdir="${src}" destdir="${classes}" />
+	</target>
+
+	<target name="init">
+		<tstamp />
+		<mkdir dir="${build}" />
+		<mkdir dir="${dist}" />
+		<mkdir dir="${classes}" />
+	</target>
+
+	<target name="clean_all">
+		<delete dir="${build}" />
+	</target>
+</project>
