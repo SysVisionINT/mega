@@ -21,6 +21,7 @@ package net.java.mega.layout.xml;
 import java.io.InputStream;
 
 import net.java.mega.layout.model.Layout;
+import net.java.sjtools.util.ResourceUtil;
 import net.java.sjtools.xml.SimpleParser;
 
 public class LayoutConfigReader {
@@ -30,7 +31,7 @@ public class LayoutConfigReader {
 
 		SimpleParser parser = new SimpleParser(handler, true);
 		
-		parser.addDTD("-//MEGA//DTD mega-layout 1.0//EN", handler.getClass().getResource("/mega-layout.dtd").toString());
+		parser.addDTD("-//MEGA//DTD layout-config 1.0//EN", ResourceUtil.getContextResourceURL("/layout-config.dtd").toString());
 
 		return (Layout) parser.parse(inputStream);
 	}

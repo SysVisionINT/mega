@@ -16,13 +16,34 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package net.java.mega.common.resource;
+package net.java.mega.common.util;
 
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 
-public interface ResourceLoader {
-	public URL getResource(String path) throws Exception;
-	public InputStream getResourceAsStream(String path);
-	public void clean();
+import javax.servlet.ServletContext;
+
+public class ServletContextUtil {	
+	private ServletContext servletContext = null;
+
+	public ServletContextUtil(ServletContext context) {
+		servletContext = context;
+	}
+
+	public URL getResourceURL(String path) throws MalformedURLException {
+		return servletContext.getResource(path);
+	}
+	
+	public InputStream getResourceInputStream(String path) {
+		return servletContext.getResourceAsStream(path);
+	}
+	
+	public static URL getResourceURL(ServletContext sc, String path) throws MalformedURLException {
+		return sc.getResource(path);
+	}
+	
+	public static InputStream getResourceInputStream(ServletContext sc, String path) {
+		return sc.getResourceAsStream(path);
+	}	
 }

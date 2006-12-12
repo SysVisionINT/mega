@@ -36,8 +36,8 @@ import net.java.mega.action.model.ActionWrapper;
 import net.java.mega.action.model.ControllerConfig;
 import net.java.mega.action.util.Constants;
 import net.java.mega.action.xml.ActionConfigReader;
-import net.java.mega.common.resource.WebResourceLoader;
 import net.java.mega.common.util.RequestUtil;
+import net.java.mega.common.util.ServletContextUtil;
 import net.java.mega.common.xml.ServletConfigReader;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
@@ -109,14 +109,14 @@ public class ActionServlet extends HttpServlet {
 			log.debug("init(...)");
 		}
 
-		WebResourceLoader wrl = new WebResourceLoader(config.getServletContext());
+		ServletContextUtil wrl = new ServletContextUtil(config.getServletContext());
 
 		String configFile = config.getInitParameter(Constants.ACTION_CONFIG_PARAMETER);
 
 		if (configFile != null) {
 			try {
 				ControllerConfig controllerConfig = ActionConfigReader.getControllerConfig(wrl
-						.getResourceAsStream(configFile));
+						.getResourceInputStream(configFile));
 
 				ActionManager.getInstance().setControllerConfig(controllerConfig);
 			} catch (Exception e) {
@@ -131,7 +131,7 @@ public class ActionServlet extends HttpServlet {
 		try {
 			ActionManager.getInstance().setServletConfig(
 					ServletConfigReader.getServletConfig(config.getServletName(), wrl
-							.getResourceAsStream(Constants.WEB_XML)));
+							.getResourceInputStream(Constants.WEB_XML)));
 		} catch (Exception e) {
 			log.error("Error while reading " + Constants.WEB_XML, e);
 			throw new ServletException(e);

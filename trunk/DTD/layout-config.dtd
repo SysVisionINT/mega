@@ -1,6 +1,6 @@
 <?xml encoding="ISO-8859-1" ?>
 
-<!ELEMENT layout (page*)>
+<!ELEMENT layout-config (page*)>
 
 <!ELEMENT page ((layout-path|extends), block*)>
 <!ATTLIST page name CDATA #REQUIRED>

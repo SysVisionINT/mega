@@ -21,6 +21,7 @@ package net.java.mega.action.xml;
 import java.io.InputStream;
 
 import net.java.mega.action.model.ControllerConfig;
+import net.java.sjtools.util.ResourceUtil;
 import net.java.sjtools.xml.SimpleParser;
 
 public class ActionConfigReader {
@@ -30,7 +31,7 @@ public class ActionConfigReader {
 
 		SimpleParser parser = new SimpleParser(handler, true);
 		
-		parser.addDTD("-//MEGA//DTD mega-action 1.0//EN", handler.getClass().getResource("/mega-action.dtd").toString());
+		parser.addDTD("-//MEGA//DTD action-config 1.0//EN", ResourceUtil.getContextResourceURL("/action-config.dtd").toString());
 
 		return (ControllerConfig) parser.parse(inputStream);
 	}

@@ -83,26 +83,58 @@ public class ActionManager {
 		RequestMetaData requestMetaData = new RequestMetaData();
 
 		requestMetaData.setPath(path);
-		requestMetaData.setActionConfig(getActionConfig(path));
+		requestMetaData.setActionConfig(getActionConfig(getActionPath(path)));
 		requestMetaData.setMethodName(getMethod(path));
 
 		return requestMetaData;
 	}
 
-	public ActionConfig getActionConfig(Class clazz) throws ActionAlreadyInUseException, ConfigurationError {
+	private ActionConfig getActionConfig(String actionPath) throws ActionNotFound, ConfigurationError,
+			ActionAlreadyInUseException {
+		ActionConfig actionConfig = controllerConfig.getAction(actionPath);
+
+		if (actionConfig == null) {
+			actionConfig = createActionConfig(actionPath, null);
+		}
+
+		return actionConfig;
+	}
+
+	public ActionConfig getActionConfig(Class clazz) throws ActionAlreadyInUseException, ConfigurationError,
+			ActionNotFound {
 		ActionConfig actionConfig = controllerConfig.getAction(clazz);
 
 		if (actionConfig == null) {
-			actionConfig = new ActionConfig();
-			actionConfig.setClazz(clazz);
-			actionConfig.setName(getPathForClass(clazz));
-			
+			actionConfig = createActionConfig(getPathForClass(clazz), clazz);
+		}
+
+		return actionConfig;
+	}
+
+	private ActionConfig createActionConfig(String path, Class clazz) throws ActionNotFound, ConfigurationError,
+			ActionAlreadyInUseException {
+		ActionConfig actionConfig = new ActionConfig();
+
+		actionConfig.setName(path);
+
+		if (clazz == null) {
+			String className = getClassName(path);
+
 			try {
-				controllerConfig.addAction(actionConfig);
-			} catch (ActionAlreadyInUseException e) {
-				log.error("Class " + actionConfig.getClazz().getName() + " already assign to a other action", e);
-				throw e;
+				actionConfig.setClazz(ClassLoaderUtil.getClass(className));
+			} catch (ClassNotFoundException e) {
+				log.error("Error loading class " + className, e);
+				throw new ActionNotFound(path);
 			}
+		} else {
+			actionConfig.setClazz(clazz);
+		}
+
+		try {
+			controllerConfig.addAction(actionConfig);
+		} catch (ActionAlreadyInUseException e) {
+			log.error("Class " + actionConfig.getClazz().getName() + " already assign to a other action", e);
+			throw e;
 		}
 
 		return actionConfig;
@@ -110,19 +142,19 @@ public class ActionManager {
 
 	private String getPathForClass(Class clazz) throws ConfigurationError {
 		String rootPackage = getRootPackage();
-		
+
 		StringBuffer buffer = new StringBuffer();
-		
+
 		buffer.append("/");
-		
+
 		String path = TextUtil.replace(clazz.getName().substring(rootPackage.length()), ".", "/");
-		
+
 		if (path.startsWith("/") && path.length() > 1) {
 			path = path.substring(1);
 		}
 
 		buffer.append(path.toLowerCase());
-		
+
 		return buffer.toString();
 	}
 
@@ -134,42 +166,6 @@ public class ActionManager {
 		}
 
 		return MethodConstants.ON_LOAD;
-	}
-
-	private ActionConfig getActionConfig(String path) throws ActionNotFound, ConfigurationError, ActionAlreadyInUseException {
-		String actionPath = getActionPath(path);
-
-		ActionConfig actionConfig = controllerConfig.getAction(actionPath);
-
-		if (actionConfig == null) {
-			actionConfig = createActionConfig(actionPath);
-
-			try {
-				controllerConfig.addAction(actionConfig);
-			} catch (ActionAlreadyInUseException e) {
-				log.error("Class " + actionConfig.getClazz().getName() + " already assign to a other action", e);
-				throw e;
-			}
-		}
-
-		return actionConfig;
-	}
-
-	private ActionConfig createActionConfig(String path) throws ActionNotFound, ConfigurationError {
-		ActionConfig actionConfig = new ActionConfig();
-
-		actionConfig.setName(path);
-
-		String className = getClassName(path);
-
-		try {
-			actionConfig.setClazz(ClassLoaderUtil.getClass(className));
-		} catch (ClassNotFoundException e) {
-			log.error("Error loading class " + className, e);
-			throw new ActionNotFound(path);
-		}
-
-		return actionConfig;
 	}
 
 	private String getClassName(String path) throws ConfigurationError {
@@ -236,7 +232,8 @@ public class ActionManager {
 		return chain.getActionWrapper();
 	}
 
-	public ResponseProvider getResponseProvider(Action action) throws ConfigurationError, ActionNotFound, ActionAlreadyInUseException {
+	public ResponseProvider getResponseProvider(Action action) throws ConfigurationError, ActionNotFound,
+			ActionAlreadyInUseException {
 		ResponseProvider provider = null;
 
 		forwardLock.getReadLock();
