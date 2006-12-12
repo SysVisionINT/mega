@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.java.mega.common.util.RequestUtil;
+import net.java.mega.common.util.ServletContextUtil;
 import net.java.mega.layout.model.Layout;
 import net.java.mega.layout.util.Constant;
 import net.java.mega.layout.util.LayoutUtil;
@@ -99,12 +100,13 @@ public class LayoutServlet extends HttpServlet {
 		}
 
 		try {
-			layout = LayoutConfigReader.getLayoutConfig(config.getServletContext().getResourceAsStream(configFileName));
+			layout = LayoutConfigReader.getLayoutConfig(ServletContextUtil.getResourceInputStream(config
+					.getServletContext(), configFileName));
 		} catch (Exception e) {
 			log.fatal("Error reading " + configFileName, e);
 			new ServletException("Error reading " + configFileName, e);
 		}
-		
+
 		config.getServletContext().setAttribute(Constant.LAYOUT, layout);
 	}
 

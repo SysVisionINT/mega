@@ -40,7 +40,7 @@ public class LayoutConfigHandler extends SimpleHandler {
 	private static Log log = LogFactory.getLog(LayoutConfigHandler.class);
 
 	public Object proccessElement(String elementType, Object currentObject, Attributes attributes) {
-		if (elementType.equals("layout")) {
+		if (elementType.equals("layout-config")) {
 			return new Layout();
 		} else if (elementType.equals("page")) {
 			Layout layout = (Layout) currentObject;

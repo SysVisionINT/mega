@@ -94,7 +94,7 @@ public class ControllerConfig implements Serializable {
 		if (other == null) {
 			lock.getWriteLock();
 			actionsByPath.put(action.getName(), action);
-			actionsByPath.put(action.getClazz().getName(), action);
+			actionsByName.put(action.getClazz().getName(), action);
 			lock.releaseLock();
 		} else {
 			throw new ActionAlreadyInUseException(action.getClazz());
