@@ -18,13 +18,14 @@
  */
 package net.java.mega.action.api;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import net.java.mega.action.RequestMetaData;
 import net.java.mega.action.ResponseMetaData;
-import net.java.mega.action.api.scope.RequestScope;
-import net.java.mega.action.api.scope.ResponseScope;
 import net.java.mega.action.error.ActionException;
 
 public interface ResponseProvider {
-	public void process(RequestScope request, ResponseScope response, RequestMetaData requestMetaData,
+	public void process(HttpServletRequest request, HttpServletResponse response, RequestMetaData requestMetaData,
 			ResponseMetaData responseMetaData) throws ActionException;
 }

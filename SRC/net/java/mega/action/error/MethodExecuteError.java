@@ -18,10 +18,14 @@
  */
 package net.java.mega.action.error;
 
-public class MethodExecuteError extends ActionException {
+public class MethodExecuteError extends RuntimeException {
 	private static final long serialVersionUID = -1189279403761339865L;
 
 	public MethodExecuteError (String className, String methodName) {
 		super("Error trying to execute method " + methodName + " of class " + className);
+	}
+	
+	public MethodExecuteError (Exception e) {
+		super(e);
 	}
 }

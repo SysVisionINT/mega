@@ -18,7 +18,9 @@
  */
 package net.java.mega.common.util;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.PageContext;
 
 import net.java.sjtools.logging.Log;
@@ -39,9 +41,17 @@ public class PageContextUtil {
 			HttpServletRequest request = (HttpServletRequest) context.getRequest();
 
 			obj = request.getAttribute(name);
-
+			
 			if (obj == null) {
-				obj = request.getSession(true).getAttribute(name);
+				HttpSession session = request.getSession(true); 
+				
+				obj = session.getAttribute(name);
+				
+				if (obj == null) {
+					ServletContext servletContext = session.getServletContext();
+					
+					obj = servletContext.getAttribute(name);
+				}
 			}
 		}
 

@@ -18,7 +18,7 @@
  */
 package net.java.mega.action.error;
 
-public class ActionCreationException extends ActionException {
+public class ActionCreationException extends RuntimeException {
 	private static final long serialVersionUID = 7230587565673672223L;
 
 	public ActionCreationException (Class clazz) {

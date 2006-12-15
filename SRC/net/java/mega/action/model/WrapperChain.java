@@ -18,10 +18,12 @@
  */
 package net.java.mega.action.model;
 
+import net.java.mega.action.wrapper.BasicWrapper;
+
 
 public class WrapperChain {
 	private String name = null;
-	private ActionWrapper actionWrapper = null;
+	private ActionWrapper actionWrapper = new BasicWrapper();
 	
 	public ActionWrapper getActionWrapper() {
 		return actionWrapper;

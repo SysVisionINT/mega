@@ -27,7 +27,7 @@ public class Constants {
 	public static final String DEFAULT_OUTPUT_RENDER_EXTENTION_PROPERTY = "render-extention";
 	public static final String OUTPUT_RENDER_ROOT_PROPERTY = "render-root";
 	
-	public static final String DEFAULT_OUTPUT_RENDER_EXTENTION_PROPERTY_VALUE = ".jsp";
+	public static final String DEFAULT_OUTPUT_RENDER_EXTENTION_PROPERTY_VALUE = ".page";
 	public static final String OUTPUT_RENDER_ROOT_PROPERTY_VALUE = "/";
 	
 	public static final String CURRENT_ACTION = "this";

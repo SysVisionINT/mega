@@ -18,11 +18,12 @@
  */
 package net.java.mega.action.output;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import net.java.mega.action.RequestMetaData;
 import net.java.mega.action.ResponseMetaData;
 import net.java.mega.action.api.ResponseProvider;
-import net.java.mega.action.api.scope.RequestScope;
-import net.java.mega.action.api.scope.ResponseScope;
 import net.java.mega.action.error.ActionException;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
@@ -36,7 +37,7 @@ public class Redirector implements ResponseProvider {
 		this.location = location;
 	}
 
-	public void process(RequestScope request, ResponseScope response, RequestMetaData requestMetaData,
+	public void process(HttpServletRequest request, HttpServletResponse response, RequestMetaData requestMetaData,
 			ResponseMetaData responseMetaData) throws ActionException {
 		try {
 			if (log.isDebugEnabled()) {
