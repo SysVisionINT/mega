@@ -26,18 +26,17 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import net.java.mega.action.api.CustomResponseProvider;
 import net.java.mega.action.api.Message;
 import net.java.mega.action.api.SessionObject;
 import net.java.mega.action.api.Validator;
-import net.java.mega.action.api.scope.ApplicationScope;
-import net.java.mega.action.api.scope.RequestScope;
-import net.java.mega.action.api.scope.ResponseScope;
-import net.java.mega.action.api.scope.SessionScope;
 import net.java.mega.action.error.ActionCreationException;
+import net.java.mega.action.error.ConfigurationError;
 import net.java.mega.action.error.MethodExecuteError;
 import net.java.mega.action.error.PropertySetError;
 import net.java.mega.action.model.Action;
@@ -56,6 +55,7 @@ public class RequestProcessor {
 	private Map actions = new HashMap();
 	private ResponseMetaData currentResponse = new ResponseMetaData();
 	private MessageContainer messageContainer = new MessageContainer();
+	private String lastMethod = null;
 
 	public RequestProcessor(HttpServletRequest request, HttpServletResponse response) {
 		if (log.isDebugEnabled()) {
@@ -74,39 +74,39 @@ public class RequestProcessor {
 		messageContainer.addMessage(key, message);
 	}
 
-	public RequestScope getRequestScope() {
+	public HttpServletRequest getHttpServletRequest() {
 		if (log.isDebugEnabled()) {
-			log.debug("getRequestScope()");
+			log.debug("getHttpServletRequest()");
 		}
 
-		return (RequestScope) request;
+		return (HttpServletRequest) request;
 	}
 
-	public SessionScope getSessionScope() {
+	public HttpSession getHttpSession() {
 		if (log.isDebugEnabled()) {
-			log.debug("getSessionScope()");
+			log.debug("getHttpSession()");
 		}
 
-		return (SessionScope) getRequestScope().getSession(true);
+		return (HttpSession) getHttpServletRequest().getSession(true);
 	}
 
-	public ResponseScope getResponseScope() {
+	public HttpServletResponse getHttpServletResponse() {
 		if (log.isDebugEnabled()) {
-			log.debug("getResponseScope()");
+			log.debug("getHttpServletResponse()");
 		}
 
-		return (ResponseScope) response;
+		return response;
 	}
-	
-	public ApplicationScope getApplicationScope() {
+
+	public ServletContext getServletContext() {
 		if (log.isDebugEnabled()) {
-			log.debug("getApplicationScope()");
+			log.debug("getServletContext()");
 		}
 
-		return (ApplicationScope) getSessionScope().getServletContext();
-	}	
+		return getHttpSession().getServletContext();
+	}
 
-	public void gotoAction(Class clazz) throws Exception {
+	public void gotoAction(Class clazz) {
 		if (log.isDebugEnabled()) {
 			log.debug("gotoAction(" + clazz.getName() + ".class)");
 		}
@@ -114,17 +114,19 @@ public class RequestProcessor {
 		gotoAction(getActionInstance(clazz));
 	}
 
-	public void gotoAction(Action action) throws Exception {
+	public void gotoAction(Action action) {
 		if (log.isDebugEnabled()) {
 			log.debug("gotoAction(" + action.getClass().getName() + ")");
 		}
 
 		currentResponse.setAction(action);
+		
+		lastMethod = MethodConstants.ON_LOAD;
 
 		execute(action, MethodConstants.ON_LOAD);
 	}
 
-	public Action getActionInstance(Class clazz) throws ActionCreationException {
+	public Action getActionInstance(Class clazz) {
 		if (log.isDebugEnabled()) {
 			log.debug("getActionInstance(" + clazz.getName() + ".class)");
 		}
@@ -132,7 +134,12 @@ public class RequestProcessor {
 		Action action = (Action) actions.get(clazz.getName());
 
 		if (action == null) {
-			action = (Action) getSessionScope().getAttribute(clazz.getName());
+			try {
+				action = (Action) getHttpSession().getAttribute(getContextName(clazz.getName()));
+			} catch (ConfigurationError e) {
+				log.error("Error while looking for session object " + clazz.getName(), e);
+				throw new RuntimeException(e);
+			}
 
 			if (action != null) {
 				action.setRequestProcessor(this);
@@ -167,31 +174,45 @@ public class RequestProcessor {
 
 		String attributeName = null;
 
-		for (Enumeration e = getRequestScope().getParameterNames(); e.hasMoreElements();) {
+		for (Enumeration e = getHttpServletRequest().getParameterNames(); e.hasMoreElements();) {
 			attributeName = (String) e.nextElement();
 
-			setProperty(action, attributeName, getRequestScope().getParameter(attributeName));
+			setProperty(action, attributeName, getHttpServletRequest().getParameter(attributeName));
 		}
 
 		boolean valid = true;
 
-		if (action instanceof Validator) {
-			valid = ((Validator) action).isInputValid();
+		if (!requestMetaData.getMethodName().equals(MethodConstants.ON_LOAD)) {
+			if (action instanceof Validator) {
+				valid = ((Validator) action).isInputValid();
+			}
 		}
 
 		currentResponse.setAction(action);
 
 		if (valid) {
+			lastMethod = requestMetaData.getMethodName();
+			
 			execute(action, requestMetaData.getMethodName());
+			
+			if (!lastMethod.equals(MethodConstants.ON_LOAD)){
+				execute(currentResponse.getAction(), MethodConstants.ON_LOAD);
+			}
+		} else {
+			execute(action, MethodConstants.ON_LOAD);
 		}
+
+		String contextName = null;
 
 		for (Iterator i = actions.values().iterator(); i.hasNext();) {
 			action = (Action) i.next();
 
+			contextName = getContextName(action);
+
 			if (action instanceof SessionObject) {
-				getSessionScope().setAttribute(action.getClass().getName(), action);
+				getHttpSession().setAttribute(contextName, action);
 			} else {
-				getRequestScope().setAttribute(action.getClass().getName(), action);
+				getHttpServletRequest().setAttribute(contextName, action);
 			}
 		}
 
@@ -206,6 +227,24 @@ public class RequestProcessor {
 		}
 
 		return currentResponse;
+	}
+
+	private String getContextName(Object obj) throws ConfigurationError {
+		return getContextName(obj.getClass().getName());
+	}
+	
+	private String getContextName(String name) throws ConfigurationError {
+		String rootPackage = ActionManager.getInstance().getRootPackage();
+		
+		String newName = name.substring(rootPackage.length());
+		
+		newName = newName.replace('.', '/');
+		
+		if (!newName.startsWith("/")) {
+			newName = "/".concat(newName);
+		}
+		
+		return newName;
 	}
 
 	private void setProperty(Action action, String name, String value) throws PropertySetError {
@@ -261,7 +300,7 @@ public class RequestProcessor {
 		}
 	}
 
-	private void execute(Action action, String methodName) throws Exception {
+	private void execute(Action action, String methodName) {
 		if (log.isDebugEnabled()) {
 			log.debug("execute(" + action.getClass().getName() + ", " + methodName + ")");
 		}
@@ -296,7 +335,7 @@ public class RequestProcessor {
 			} catch (Exception e) {
 				log.error("Error trying to execute method " + methodName + " of class " + action.getClass().getName(),
 						e);
-				throw e;
+				throw new MethodExecuteError(e);
 			}
 		}
 	}

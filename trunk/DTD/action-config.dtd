@@ -8,7 +8,7 @@
 <!ATTLIST property name CDATA #REQUIRED 
                    value CDATA #REQUIRED>
 
-<!ELEMENT wrapper-chains (default-wrapper-chain, wrapper-chain*)>
+<!ELEMENT wrapper-chains (default-wrapper-chain?, wrapper-chain*)>
 
 <!ELEMENT default-wrapper-chain (action-wrapper)>
 

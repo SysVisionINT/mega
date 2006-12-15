@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- $Id: web.xml,v 1.1 2006-12-15 15:05:49 jrocha Exp $ -->
+
+<!DOCTYPE web-app
+  PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+         "dtd/web-app_2_3.dtd">
+
+<web-app>
+	<display-name>MEGA-DEMO</display-name>
+
+	<servlet>
+		<servlet-name>mega-action</servlet-name>
+		<servlet-class>net.java.mega.action.ActionServlet</servlet-class>
+		<init-param>
+			<param-name>config</param-name>
+			<param-value>/WEB-INF/action-config.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>    
+	</servlet>
+  
+	<servlet>
+		<servlet-name>mega-layout</servlet-name>
+		<servlet-class>net.java.mega.layout.LayoutServlet</servlet-class>
+		<init-param>
+			<param-name>config</param-name>
+			<param-value>/WEB-INF/layout-config.xml</param-value>
+		</init-param>	
+		<load-on-startup>2</load-on-startup>
+	</servlet>  
+
+	<servlet-mapping>
+		<servlet-name>mega-action</servlet-name>
+		<url-pattern>*.action</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>mega-layout</servlet-name>
+		<url-pattern>*.page</url-pattern>
+	</servlet-mapping>
+	
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+	</welcome-file-list>
+  
+	<taglib>
+		<taglib-uri>mega-action</taglib-uri>
+		<taglib-location>/WEB-INF/TLD/mega-action.tld</taglib-location>
+	</taglib>  
+  
+	<taglib>
+		<taglib-uri>mega-layout</taglib-uri>
+		<taglib-location>/WEB-INF/TLD/mega-layout.tld</taglib-location>
+	</taglib>    
+</web-app>

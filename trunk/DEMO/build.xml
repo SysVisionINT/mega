@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project basedir="." default="all" name="MEGA_DEMO">
+	<property name="src" value="SRC"/>
+	<property name="lib" value="LIB"/>
+	<property name="war" value="WAR"/>	
+
+	<property name="build" value="BUILD"/>
+	<property name="build.dist" value="${build}/DIST"/>
+	<property name="build.classes" value="${build}/CLASSES"/>
+	
+	<property name="mega" value=".."/>
+	<property name="mega.bin" value="${mega}/BUILD/DIST"/>
+	<property name="mega.dep" value="${mega}/LIB"/>
+
+	<path id="classpath">
+		<fileset dir="${lib}">
+			<include name="*.jar"/>
+		</fileset>
+		<fileset dir="${war}/WEB-INF/lib">
+			<include name="*.jar"/>
+		</fileset>		
+		<fileset dir="${mega.bin}">
+			<include name="*.jar"/>
+		</fileset>		
+		<fileset dir="${mega.dep}">
+			<include name="*.jar"/>
+		</fileset>			
+	</path>
+
+	<target depends="war" name="all"/>
+  
+	<target depends="compile" name="war">
+		<war warfile="${build.dist}/mega-demo.war" webxml="${war}/WEB-INF/web.xml">
+			<classes dir="${build.classes}">
+				<include name="**"/>
+			</classes>
+			<lib dir="${war}/WEB-INF/lib" />
+			<lib dir="${mega.bin}" />
+			<lib dir="${mega.dep}" />
+			<webinf dir="${mega}">
+				<include name="TLD/**" />
+			</webinf>			
+			<fileset dir="${war}">
+				<exclude name="WEB-INF/web.xml" />
+				<exclude name="WEB-INF/lib/*.jar" />
+			</fileset>		
+		</war>		
+	</target>
+
+	<target depends="init" name="compile">
+		<javac debug="on" optimize="on" deprecation="on" classpathref="classpath" destdir="${build.classes}">
+			<src path="${src}"/>
+		</javac>
+	</target>
+
+	<target name="init">
+		<tstamp/>
+
+		<mkdir dir="${build.classes}"/>
+		<mkdir dir="${build.dist}"/>
+	</target>
+
+	<target name="clean_all">
+		<delete dir="${build}"/>
+	</target>
+
+</project>

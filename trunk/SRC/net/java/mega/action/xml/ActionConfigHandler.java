@@ -42,7 +42,11 @@ public class ActionConfigHandler extends SimpleHandler {
 
 	public Object proccessElement(String elementType, Object currentObject, Attributes attributes) throws SAXException {
 		if (elementType.equals("action-config")) {
-			return new ControllerConfig();
+			ControllerConfig config =  new ControllerConfig();
+			
+			config.addWrapperChain(getDefaultWrapperChain());
+			
+			return config;
 		} else if (elementType.equals("property")) {
 			String name = attributes.getValue("name");
 			String value = attributes.getValue("value");
@@ -83,9 +87,7 @@ public class ActionConfigHandler extends SimpleHandler {
 		} else if (elementType.equals("default-wrapper-chain")) {
 			ControllerConfig config = (ControllerConfig) currentObject;
 
-			WrapperChain ret = new WrapperChain();
-
-			ret.setName(Constants.DEFAULT_WRAPPER_CHAIN);
+			WrapperChain ret = getDefaultWrapperChain();
 
 			config.addWrapperChain(ret);
 
@@ -191,6 +193,13 @@ public class ActionConfigHandler extends SimpleHandler {
 		}
 
 		return null;
+	}
+
+	private WrapperChain getDefaultWrapperChain() {
+		WrapperChain ret = new WrapperChain();
+
+		ret.setName(Constants.DEFAULT_WRAPPER_CHAIN);
+		return ret;
 	}
 
 	public void processPCDATA(String elementType, Object currentObject, String value) {}

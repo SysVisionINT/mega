@@ -19,12 +19,12 @@
 package net.java.mega.action.output;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import net.java.mega.action.RequestMetaData;
 import net.java.mega.action.ResponseMetaData;
 import net.java.mega.action.api.ResponseProvider;
-import net.java.mega.action.api.scope.RequestScope;
-import net.java.mega.action.api.scope.ResponseScope;
 import net.java.mega.action.error.ActionException;
 import net.java.mega.action.error.ForwardNotFound;
 import net.java.mega.action.util.Constants;
@@ -40,7 +40,7 @@ public class Forward implements ResponseProvider {
 		this.location = location;
 	}
 
-	public void process(RequestScope request, ResponseScope response, RequestMetaData requestMetaData,
+	public void process(HttpServletRequest request, HttpServletResponse response, RequestMetaData requestMetaData,
 			ResponseMetaData responseMetaData) throws ActionException {
 		RequestDispatcher dispatcher = request.getRequestDispatcher(location);
 

@@ -23,75 +23,74 @@ import java.io.Serializable;
 import java.util.Locale;
 import java.util.Properties;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import net.java.mega.action.RequestProcessor;
-import net.java.mega.action.api.scope.ApplicationScope;
-import net.java.mega.action.api.scope.RequestScope;
-import net.java.mega.action.api.scope.ResponseScope;
-import net.java.mega.action.api.scope.SessionScope;
-import net.java.mega.action.error.ActionException;
 import net.java.mega.action.model.Action;
 import net.java.mega.action.util.LocaleUtil;
 
-
-public abstract class AbstractAction implements Action, Serializable{	
+public abstract class AbstractAction implements Action, Serializable {
 	private transient RequestProcessor requestProcessor = null;
 	private Properties config = null;
 
 	public void setRequestProcessor(RequestProcessor rp) {
 		requestProcessor = rp;
 	}
-	
+
 	public void setProperties(Properties config) {
 		this.config = config;
 	}
-	
+
 	public String getProperty(String name) {
 		return config.getProperty(name);
 	}
-	
+
 	public abstract void onLoad();
-	
-	public void gotoAction(Class clazz) throws Exception {
+
+	public void gotoAction(Class clazz) {
 		requestProcessor.gotoAction(clazz);
 	}
-	
-	public void gotoAction(Action action) throws Exception {
+
+	public void gotoAction(Action action) {
 		requestProcessor.gotoAction(action);
 	}
-	
-	public Action getAction(Class clazz) throws ActionException  {
+
+	public Action getAction(Class clazz) {
 		return requestProcessor.getActionInstance(clazz);
-	}	
-	
+	}
+
 	public void addMessage(Message message) {
 		requestProcessor.addMessage(message);
 	}
-	
+
 	public void addMessage(String key, Message message) {
 		requestProcessor.addMessage(key, message);
 	}
-	
-	public RequestScope getRequestScope() {
-		return requestProcessor.getRequestScope();
-	}	
-	
-	public ResponseScope getResponseScope() {
-		return requestProcessor.getResponseScope();
+
+	public HttpServletRequest getHttpServletRequest() {
+		return requestProcessor.getHttpServletRequest();
 	}
-	
-	public SessionScope getSessionScope() {
-		return requestProcessor.getSessionScope();
-	}		
-	
-	public ApplicationScope getApplicationScope() {
-		return requestProcessor.getApplicationScope();
+
+	public HttpServletResponse getHttpServletResponse() {
+		return requestProcessor.getHttpServletResponse();
 	}
-	
+
+	public HttpSession getHttpSession() {
+		return requestProcessor.getHttpSession();
+	}
+
+	public ServletContext getServletContext() {
+		return requestProcessor.getServletContext();
+	}
+
 	public Locale getLocate() {
-		return LocaleUtil.getUserLocate(getRequestScope());
+		return LocaleUtil.getUserLocate(getHttpServletRequest());
 	}
-	
+
 	public void setLocate(Locale locale) {
-		LocaleUtil.setUserLocate(getRequestScope(), locale);
+		LocaleUtil.setUserLocate(getHttpServletRequest(), locale);
 	}
 }
