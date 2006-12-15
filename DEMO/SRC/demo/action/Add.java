@@ -10,14 +10,19 @@ import demo.bean.Record;
 import net.java.mega.action.api.AbstractAction;
 import net.java.mega.action.api.Message;
 import net.java.mega.action.api.Validator;
+import net.java.sjtools.logging.Log;
+import net.java.sjtools.logging.LogFactory;
 import net.java.sjtools.util.NumberUtil;
 import net.java.sjtools.util.TextUtil;
 
 public class Add extends AbstractAction implements Validator {
+	private static Log log = LogFactory.getLog(Add.class);
+	
 	private String id = null;
 	private String nome = null;
 
 	public void onLoad() {
+		log.info("onLoad()");
 	}
 
 	public String getId() {
@@ -37,6 +42,8 @@ public class Add extends AbstractAction implements Validator {
 	}
 
 	public void insert() {
+		log.info("insert()");
+		
 		RecordList recordList = (RecordList) getAction(RecordList.class);
 		
 		Record record = new Record(Integer.parseInt(id), nome);
@@ -51,6 +58,8 @@ public class Add extends AbstractAction implements Validator {
 	}
 
 	public boolean isInputValid() {
+		log.info("isInputValid()");
+		
 		boolean ret = true;
 		
 		if (TextUtil.isEmptyString(id)) {
