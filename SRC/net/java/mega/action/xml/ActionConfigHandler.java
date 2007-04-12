@@ -34,6 +34,7 @@ import net.java.sjtools.xml.SimpleHandler;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 
 public class ActionConfigHandler extends SimpleHandler {
@@ -203,4 +204,10 @@ public class ActionConfigHandler extends SimpleHandler {
 	}
 
 	public void processPCDATA(String elementType, Object currentObject, String value) {}
+
+	public void error(SAXParseException error) throws SAXException {
+		log.error("SAX Error", error);
+		
+		throw new SAXException(error);
+	}
 }

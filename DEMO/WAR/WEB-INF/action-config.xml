@@ -8,9 +8,20 @@
 	</controller>
 	
 	<wrapper-chains>
+		<default-wrapper-chain>
+			<action-wrapper class-name="net.java.mega.action.wrapper.SessionValidatorWrapper">
+				<property name="attribute-name" value="USER"/>
+				<property name="forward-url" value="/login"/>
+			</action-wrapper>
+		</default-wrapper-chain>
+		<wrapper-chain name="not-secured">
+			<action-wrapper class-name="net.java.mega.action.wrapper.BasicWrapper"/>
+		</wrapper-chain>
 	</wrapper-chains>
 	
 	<actions>
+		<action name="/login" class-name="demo.action.Login" wrapper-chain="not-secured"/>
+		<action name="/currentLocate" class-name="demo.action.CurrentLocate" wrapper-chain="not-secured"/>
 	</actions>
 	
 	<errors>
