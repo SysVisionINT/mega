@@ -23,6 +23,8 @@ import net.java.mega.common.model.ServletMapping;
 import net.java.sjtools.xml.SimpleHandler;
 
 import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 
 public class WebXMLHandler extends SimpleHandler {
@@ -48,4 +50,7 @@ public class WebXMLHandler extends SimpleHandler {
 			((ServletMapping)currentObject).setUrl(value);
 		}
 	}
+	
+	public void error(SAXParseException error) throws SAXException {
+	}	
 }

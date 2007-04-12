@@ -27,6 +27,16 @@
 		</block>	
 	</page>	
 	
+	<page name="/login">
+		<extends page-name="/base"/>
+		<block name="title">
+			<string value="MEGA-DEMO - Login"/>
+		</block>		
+		<block name="body">
+			<path value="/login.jsp"/>
+		</block>	
+	</page>		
+	
 	<page name="/currentlocate">
 		<extends page-name="/base"/>
 		<block name="title">
