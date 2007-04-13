@@ -200,10 +200,19 @@ public class ActionConfigHandler extends SimpleHandler {
 		WrapperChain ret = new WrapperChain();
 
 		ret.setName(Constants.DEFAULT_WRAPPER_CHAIN);
+		
 		return ret;
 	}
 
-	public void processPCDATA(String elementType, Object currentObject, String value) {}
+	public void processPCDATA(String elementType, Object currentObject, String value) {		
+		if (elementType.equals("url-pattern")) {
+			if (log.isDebugEnabled()) {
+				log.debug("      (" + value + ")");
+			}
+			
+			((WrapperChain)currentObject).addPattern(value);
+		}
+	}
 
 	public void error(SAXParseException error) throws SAXException {
 		log.error("SAX Error", error);

@@ -18,18 +18,21 @@
  */
 package net.java.mega.action.model;
 
+import java.io.Serializable;
 import java.util.Properties;
 
 import net.java.mega.action.api.ResponseProvider;
 import net.java.mega.action.util.Constants;
 
 
-public class ActionConfig {
+public class ActionConfig implements Serializable {
+	private static final long serialVersionUID = 7956945334098859770L;
+	
 	private Properties config = new Properties();
 	private String name = null;
 	private ResponseProvider forward = null;
 	private Class clazz = null;
-	private String wrapperChain = Constants.DEFAULT_WRAPPER_CHAIN;
+	private String wrapperChain = null;
 
 	public String getName() {
 		return name;

@@ -184,7 +184,7 @@ public class RequestProcessor {
 
 		if (!requestMetaData.getMethodName().equals(MethodConstants.ON_LOAD)) {
 			if (action instanceof Validator) {
-				valid = ((Validator) action).isInputValid();
+				valid = ((Validator) action).isInputValid(requestMetaData.getMethodName());
 			}
 		}
 

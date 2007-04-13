@@ -1,11 +1,4 @@
-package demo.action;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.servlet.http.HttpSession;
-
-import demo.bean.Record;
+package demo.action.db;
 
 import net.java.mega.action.api.AbstractAction;
 import net.java.mega.action.api.Message;
@@ -14,6 +7,7 @@ import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
 import net.java.sjtools.util.NumberUtil;
 import net.java.sjtools.util.TextUtil;
+import demo.bean.Record;
 
 public class Add extends AbstractAction implements Validator {
 	private static Log log = LogFactory.getLog(Add.class);
@@ -57,8 +51,8 @@ public class Add extends AbstractAction implements Validator {
 		}
 	}
 
-	public boolean isInputValid() {
-		log.info("isInputValid()");
+	public boolean isInputValid(String methodName) {
+		log.info("isInputValid("+ methodName +")");
 		
 		boolean ret = true;
 		

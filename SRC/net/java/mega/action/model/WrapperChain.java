@@ -18,12 +18,23 @@
  */
 package net.java.mega.action.model;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import net.java.mega.action.wrapper.BasicWrapper;
+import net.java.sjtools.util.TextUtil;
 
 
-public class WrapperChain {
+public class WrapperChain implements Serializable {
+	private static final long serialVersionUID = -7561581642985780823L;
+	
 	private String name = null;
 	private ActionWrapper actionWrapper = new BasicWrapper();
+	private List urlPatternList = new ArrayList();
 	
 	public ActionWrapper getActionWrapper() {
 		return actionWrapper;
@@ -39,5 +50,29 @@ public class WrapperChain {
 	
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public void addPattern(String urlPattern) {
+		Map map = new HashMap();
+		map.put("*", ".*");
+		map.put("?", ".");
+		
+		String expression = TextUtil.replace(urlPattern, map);
+		
+		urlPatternList.add(expression);
+	}
+	
+	public boolean matches(String path) {
+		if (urlPatternList.isEmpty()) {
+			return false;
+		}
+		
+		for (Iterator i = urlPatternList.iterator(); i.hasNext();) {
+			if (path.matches((String) i.next())) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 }
