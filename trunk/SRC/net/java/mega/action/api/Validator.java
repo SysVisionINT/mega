@@ -20,5 +20,5 @@
 package net.java.mega.action.api;
 
 public interface Validator {
-	public boolean isInputValid();
+	public boolean isInputValid(String methodName);
 }

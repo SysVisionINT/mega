@@ -20,6 +20,7 @@ package net.java.mega.action.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -86,6 +87,10 @@ public class ControllerConfig implements Serializable {
 
 	public WrapperChain getWrapperChain(String name) {
 		return (WrapperChain) chains.get(name);
+	}
+	
+	public Collection getWrapperChains() {
+		return chains.values();
 	}
 
 	public void addAction(ActionConfig action) throws ActionAlreadyInUseException {

@@ -1,5 +1,6 @@
 package demo.action;
 
+import demo.action.db.RecordList;
 import net.java.mega.action.api.AbstractAction;
 import net.java.mega.action.api.Message;
 import net.java.mega.action.api.Validator;
@@ -21,9 +22,10 @@ public class Login extends AbstractAction implements Validator{
 		
 	}
 
-	public boolean isInputValid() {
+	public boolean isInputValid(String methodName) {
 		if (TextUtil.isEmptyString(getUser())) {
 			addMessage("user", new Message("login.user.null"));
+			return false;
 		}
 			
 		return true;

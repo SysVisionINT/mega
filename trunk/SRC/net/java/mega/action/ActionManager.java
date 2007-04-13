@@ -19,6 +19,7 @@
 package net.java.mega.action;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -96,6 +97,10 @@ public class ActionManager {
 		if (actionConfig == null) {
 			actionConfig = createActionConfig(actionPath, null);
 		}
+		
+		if (actionConfig.getWrapperChain() == null) {
+			actionConfig.setWrapperChain(findWrapperChain(actionConfig.getName()));
+		}
 
 		return actionConfig;
 	}
@@ -138,6 +143,20 @@ public class ActionManager {
 		}
 
 		return actionConfig;
+	}
+
+	private String findWrapperChain(String path) {
+		WrapperChain chain = null;
+		
+		for (Iterator i = controllerConfig.getWrapperChains().iterator(); i.hasNext();) {
+			chain = (WrapperChain)i.next();
+			
+			if (chain.matches(path)) {
+				return chain.getName();
+			}
+		}
+		
+		return Constants.DEFAULT_WRAPPER_CHAIN;
 	}
 
 	private String getPathForClass(Class clazz) throws ConfigurationError {

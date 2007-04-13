@@ -15,8 +15,10 @@
 <!ELEMENT action-wrapper (property*, action-wrapper?)>
 <!ATTLIST action-wrapper class-name CDATA #REQUIRED>
 
-<!ELEMENT wrapper-chain (action-wrapper)>
+<!ELEMENT wrapper-chain (url-pattern*, action-wrapper)>
 <!ATTLIST wrapper-chain name CDATA #REQUIRED>
+
+<!ELEMENT url-pattern (#PCDATA)>
                
 <!ELEMENT actions (action*)>             
 

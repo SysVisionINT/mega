@@ -1,4 +1,4 @@
-package demo.action;
+package demo.action.db;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;

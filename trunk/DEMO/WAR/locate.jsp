@@ -13,6 +13,6 @@
 <BR/>
 <BR/>
 
-<a href="<a:action action="/recordList"/>"><a:key key="locate.label.back"/></a>
+<a href="<a:action action="/db/recordList"/>"><a:key key="locate.label.back"/></a>
 
 

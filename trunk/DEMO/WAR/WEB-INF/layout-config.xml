@@ -7,7 +7,7 @@
 		<layout-path value="/layout/layout.jsp"/>
 	</page>
 	
-	<page name="/add">
+	<page name="/db/add">
 		<extends page-name="/base"/>
 		<block name="title">
 			<string value="MEGA-DEMO - Adicionar"/>
@@ -17,7 +17,7 @@
 		</block>	
 	</page>
 	
-	<page name="/recordlist">
+	<page name="/db/recordlist">
 		<extends page-name="/base"/>
 		<block name="title">
 			<string value="MEGA-DEMO - Lista"/>
