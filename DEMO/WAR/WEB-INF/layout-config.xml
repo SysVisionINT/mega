@@ -17,7 +17,7 @@
 		</block>	
 	</page>
 	
-	<page name="/db/recordlist">
+	<page name="/db/recordList">
 		<extends page-name="/base"/>
 		<block name="title">
 			<string value="MEGA-DEMO - Lista"/>
@@ -37,7 +37,7 @@
 		</block>	
 	</page>		
 	
-	<page name="/currentlocate">
+	<page name="/currentLocate">
 		<extends page-name="/base"/>
 		<block name="title">
 			<string value="MEGA-DEMO - Locate"/>

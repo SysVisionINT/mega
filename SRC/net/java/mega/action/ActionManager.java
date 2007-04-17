@@ -311,7 +311,16 @@ public class ActionManager {
 			path = path.substring(1);
 		}
 
-		buffer.append(path.toLowerCase());
+		int pos = path.lastIndexOf("/");
+		
+		if (pos != -1) {
+			buffer.append(path.substring(0, pos + 1));
+			
+			path = path.substring(pos + 1);
+		}
+		
+		buffer.append(path.substring(0, 1).toLowerCase());
+		buffer.append(path.substring(1));
 
 		if (renderExtention == null) {
 			buffer.append(Constants.DEFAULT_OUTPUT_RENDER_EXTENTION_PROPERTY_VALUE);
