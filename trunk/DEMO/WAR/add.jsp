@@ -1,8 +1,9 @@
 <%@ taglib uri="mega-action" prefix="a" %>
+<%@ taglib uri="mega-tags" prefix="t" %>
 
 <a:messages all="true" filter="true"/>
 
-<FORM ACTION="<a:action method="insert"/>" METHOD="POST">
+<t:form method="insert">
 	<TABLE BORDER="0">
 	<TR>
 		<TD><a:key key="add.label.id"/></TD>
@@ -16,8 +17,8 @@
 		<TD COLSPAN="2"><INPUT TYPE="submit" VALUE="<a:key key="add.label.insert"/>"></TD>
 	</TR>
 	</TABLE>
-</FORM>
+</t:form>
 
 <BR/>
 
-<a href="<a:action action="/db/recordList"/>"><a:key key="add.label.back"/></a>
+<t:link action="/db/recordList"><a:key key="add.label.back"/></t:link>

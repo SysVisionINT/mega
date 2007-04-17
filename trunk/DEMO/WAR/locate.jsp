@@ -1,11 +1,12 @@
 <%@ taglib uri="mega-action" prefix="a" %>
+<%@ taglib uri="mega-tags" prefix="t" %>
 
 <a:key key="locate.label.current"/> <a:value property="currentLocate"/>
 
 <BR/>
 <BR/>
 
-[<a href="<a:action method="change"/>"><a:key key="locate.label.change"/></a>]
+[<t:link method="change"><a:key key="locate.label.change"/></t:link>]
 
 <BR/>
 <BR/>
@@ -13,6 +14,6 @@
 <BR/>
 <BR/>
 
-<a href="<a:action action="/db/recordList"/>"><a:key key="locate.label.back"/></a>
+<t:link action="/db/recordList"><a:key key="locate.label.back"/></t:link>
 
 

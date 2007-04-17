@@ -1,5 +1,6 @@
 <%@ taglib uri="mega-action" prefix="a" %>
 <%@ taglib uri="http://java.sun.com/jstl/core"   prefix="c" %>
+<%@ taglib uri="mega-tags" prefix="t" %>
 
 <a:messages all="true" filter="true"/>
 
@@ -13,14 +14,21 @@
 	<TR>
 		<TD><c:out value="${elemento.id}"/></TD>
 		<TD><c:out value="${elemento.name}"/></TD>
-		<TD>[<a href="<a:action method="delete"/>?id=<c:out value="${elemento.id}"/>"><a:key key="list.label.delete"/></a>]</TD>
+		<TD>[
+			<t:link method="delete">
+				<t:parameter name="id">
+					<c:out value="${elemento.id}"/>
+				</t:parameter>
+				<a:key key="list.label.delete"/>
+			</t:link>
+			]</TD>
 	</TR>
 </c:forEach>
 </TABLE>
 
 <BR/>
 
-<a href="<a:action method="add"/>"><a:key key="list.label.addnew"/></a>
+<t:link method="add"><a:key key="list.label.addnew"/></t:link>
 
 
 <BR/>
@@ -29,4 +37,4 @@
 <BR>
 <BR>
 <BR>
-<a href="<a:action action="/currentLocate"/>"><a:key key="list.label.locate"/></a>
+<t:link action="/currentLocate"><a:key key="list.label.locate"/></t:link>

@@ -29,7 +29,6 @@ import javax.servlet.http.HttpServletResponse;
 import net.java.mega.action.api.ResponseProvider;
 import net.java.mega.action.error.ActionException;
 import net.java.mega.action.error.ActionNotFound;
-import net.java.mega.action.error.ForwardNotFound;
 import net.java.mega.action.model.ActionWrapper;
 import net.java.mega.action.model.ControllerConfig;
 import net.java.mega.action.util.Constants;
@@ -79,8 +78,6 @@ public class ActionServlet extends HttpServlet {
 
 			responseMetaData.getResponseProvider().process(request, response, requestMetaData, responseMetaData);
 		} catch (ActionNotFound e) {
-			response.sendError(HttpServletResponse.SC_NOT_FOUND);
-		} catch (ForwardNotFound e) {
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);
 		} catch (ActionException e) {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

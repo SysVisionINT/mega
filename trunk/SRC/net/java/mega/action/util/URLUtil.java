@@ -22,6 +22,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.java.mega.action.ActionManager;
+import net.java.mega.action.error.ActionException;
+import net.java.mega.action.model.Action;
+import net.java.mega.action.model.ActionConfig;
 import net.java.mega.common.model.ServletMapping;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
@@ -92,14 +95,14 @@ public class URLUtil {
 		return buffer.toString();
 	}
 
-	public String getActionURL(String actionName) {
+	public String getActionURL(String actionName) throws ActionException {
 		if (log.isDebugEnabled()) {
 			log.debug("getActionURL(" + actionName + ")");
 		}
 
 		StringBuffer buffer = new StringBuffer();
 
-		buffer.append(getActionURLPart(actionName));
+		buffer.append(getActionURLPart(getActionName(actionName)));
 
 		String extention = getExtention();
 
@@ -151,14 +154,18 @@ public class URLUtil {
 		return servletPath;
 	}
 
-	public String getMethodURL(String actionName, String methodName) {
+	public String getMethodURL(String actionName, String methodName) throws ActionException {
 		if (log.isDebugEnabled()) {
 			log.debug("getMethodURL(" + actionName + ", " + methodName + ")");
+		}
+		
+		if (methodName == null) {
+			return getActionURL(actionName);
 		}
 
 		StringBuffer buffer = new StringBuffer();
 
-		buffer.append(getActionURLPart(actionName));
+		buffer.append(getActionURLPart(getActionName(actionName)));
 		buffer.append(".");
 		buffer.append(methodName);
 
@@ -171,4 +178,15 @@ public class URLUtil {
 		return response.encodeURL(buffer.toString());
 	}
 
+	private String getActionName(String actionName) throws ActionException {
+		String action = actionName;
+		
+		if (action == null) {
+			Action actionObject = (Action) request.getAttribute(Constants.CURRENT_ACTION);
+			ActionConfig actionConfig = ActionManager.getInstance().getActionConfig(actionObject.getClass());
+			action = actionConfig.getName();
+		}
+		
+		return action;
+	}
 }

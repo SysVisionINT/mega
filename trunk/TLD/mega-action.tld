@@ -15,7 +15,7 @@
 		<attribute>
 			<name>key</name>
 			<required>true</required>
-			<rtexprvalue>true</rtexprvalue>
+			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
 			<name>filter</name>
@@ -31,12 +31,12 @@
 		<attribute>
 			<name>action</name>
 			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
+			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
 			<name>method</name>
 			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
+			<rtexprvalue>false</rtexprvalue>
 		</attribute>		
 	</tag>	
 	
@@ -47,7 +47,7 @@
 		<attribute>
 			<name>file</name>
 			<required>true</required>
-			<rtexprvalue>true</rtexprvalue>
+			<rtexprvalue>false</rtexprvalue>
 		</attribute>		
 	</tag>	
 	
@@ -56,19 +56,19 @@
 		<tag-class>net.java.mega.action.tag.ValueTag</tag-class>
 		<body-content>empty</body-content>
 		<attribute>
-			<name>className</name>
+			<name>name</name>
 			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
+			<rtexprvalue>false</rtexprvalue>
 		</attribute>	
 		<attribute>
 			<name>property</name>
 			<required>true</required>
-			<rtexprvalue>true</rtexprvalue>
+			<rtexprvalue>false</rtexprvalue>
 		</attribute>		
 		<attribute>
 			<name>format</name>
 			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
+			<rtexprvalue>false</rtexprvalue>
 		</attribute>			
 	</tag>	
 	
@@ -79,7 +79,7 @@
 		<attribute>
 			<name>key</name>
 			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
+			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
 			<name>all</name>

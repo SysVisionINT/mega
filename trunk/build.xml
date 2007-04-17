@@ -18,7 +18,7 @@
 		<pathelement location="${war.jar}" />
 	</path>
 
-	<target name="all" depends="common, layout, action" />
+	<target name="all" depends="common, layout, action, tags" />
 
 	<target name="layout" depends="compile">
 		<jar destfile="${dist}/${layout.file}">
@@ -40,7 +40,15 @@
 				<include name="action-config.dtd"/>
 			</fileset>
 		</jar>
-	</target>	
+	</target>
+	
+	<target name="tags" depends="compile">
+		<jar destfile="${dist}/${tags.file}">
+			<fileset dir="${classes}">
+				<include name="**/tags/**" />
+			</fileset>
+		</jar>
+	</target>		
 	
 	<target name="common" depends="compile">
 		<jar destfile="${dist}/${common.file}">
