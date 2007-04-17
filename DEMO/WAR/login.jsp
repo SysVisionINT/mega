@@ -1,8 +1,9 @@
 <%@ taglib uri="mega-action" prefix="a" %>
+<%@ taglib uri="mega-tags" prefix="t" %>
 
 <a:messages all="true" filter="true"/>
 
-<FORM ACTION="<a:action method="login"/>" METHOD="POST">
+<t:form method="login">
 	<TABLE BORDER="0">
 	<TR>
 		<TD><a:key key="login.label.user"/></TD>
@@ -12,8 +13,8 @@
 		<TD COLSPAN="2"><INPUT TYPE="submit" VALUE="<a:key key="login.label.next"/>"></TD>
 	</TR>
 	</TABLE>
-</FORM>
+</t:form>
 <BR>
 <BR>
 <BR>
-<a href="<a:action action="/currentLocate"/>"><a:key key="list.label.locate"/></a>
+<t:link action="/currentLocate"><a:key key="list.label.locate"/></t:link>

@@ -18,7 +18,6 @@
  */
 package net.java.mega.action.output;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -26,8 +25,8 @@ import net.java.mega.action.RequestMetaData;
 import net.java.mega.action.ResponseMetaData;
 import net.java.mega.action.api.ResponseProvider;
 import net.java.mega.action.error.ActionException;
-import net.java.mega.action.error.ForwardNotFound;
 import net.java.mega.action.util.Constants;
+import net.java.mega.common.util.NavigationUtil;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
 
@@ -42,23 +41,11 @@ public class Forward implements ResponseProvider {
 
 	public void process(HttpServletRequest request, HttpServletResponse response, RequestMetaData requestMetaData,
 			ResponseMetaData responseMetaData) throws ActionException {
-		RequestDispatcher dispatcher = request.getRequestDispatcher(location);
-
-		if (dispatcher == null) {
-			log.error("Can't find url '" + location + "'");
-
-			throw new ForwardNotFound(location);
-		}
-
 		request.setAttribute(Constants.CURRENT_ACTION, responseMetaData.getAction());
 		request.setAttribute(Constants.MESSAGE_CONTAINER, responseMetaData.getMessageContainer());
 
 		try {
-			if (log.isDebugEnabled()) {
-				log.debug("Forward to " + location);
-			}
-
-			dispatcher.forward(request, response);
+			NavigationUtil.forward(request, response, location);
 		} catch (Exception e) {
 			log.error("Error while forward to " + location, e);
 			throw new ActionException("Error while forward to " + location, e);

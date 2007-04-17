@@ -16,35 +16,44 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package net.java.mega.action.output;
+package net.java.mega.common.util;
 
+import java.io.IOException;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.java.mega.action.RequestMetaData;
-import net.java.mega.action.ResponseMetaData;
-import net.java.mega.action.api.ResponseProvider;
-import net.java.mega.action.error.ActionException;
-import net.java.mega.common.util.NavigationUtil;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
 
-public class Redirector implements ResponseProvider {
-	private static Log log = LogFactory.getLog(Redirector.class);
+public class NavigationUtil {
+	private static Log log = LogFactory.getLog(NavigationUtil.class);
 
-	private String location = null;
+	public static void forward(HttpServletRequest request, HttpServletResponse response, String url)
+			throws ServletException, IOException {
+		RequestDispatcher dispatcher = request.getRequestDispatcher(url);
 
-	public Redirector(String location) {
-		this.location = location;
+		if (dispatcher == null) {
+			log.error("Can't find url '" + url + "'");
+
+			throw new RuntimeException("Can't find url '" + url + "'");
+		}
+
+		if (log.isDebugEnabled()) {
+			log.debug("Forward to " + url);
+		}
+
+		dispatcher.forward(request, response);
 	}
 
-	public void process(HttpServletRequest request, HttpServletResponse response, RequestMetaData requestMetaData,
-			ResponseMetaData responseMetaData) throws ActionException {
-		try {
-			NavigationUtil.redirect(request, response, location);
-		} catch (Exception e) {
-			log.error("Error while redirecting to " + location, e);
-			throw new ActionException("Error while redirecting to " + location, e);
+	public static void redirect(HttpServletRequest request, HttpServletResponse response, String url)
+			throws IOException {
+		if (log.isDebugEnabled()) {
+			log.debug("Redirect to " + url);
 		}
+
+		response.sendRedirect(url);
 	}
 }

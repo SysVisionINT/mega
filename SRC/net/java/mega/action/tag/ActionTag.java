@@ -23,16 +23,12 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
-import net.java.mega.action.ActionManager;
-import net.java.mega.action.model.Action;
-import net.java.mega.action.model.ActionConfig;
-import net.java.mega.action.util.Constants;
 import net.java.mega.action.util.URLUtil;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
 
 public class ActionTag extends TagSupport {
-	private static final long serialVersionUID = 1824165782784735482L;
+	private static final long serialVersionUID = 7442575625580880429L;
 
 	private static Log log = LogFactory.getLog(ActionTag.class);
 
@@ -47,21 +43,10 @@ public class ActionTag extends TagSupport {
 		URLUtil url = new URLUtil(request, response);
 
 		try {
-			if (action == null) {
-				Action actionObject = (Action) request.getAttribute(Constants.CURRENT_ACTION);
-				ActionConfig actionConfig = ActionManager.getInstance().getActionConfig(actionObject.getClass());
-				action = actionConfig.getName();
-			}
-
-			if (method == null) {
-				pageContext.getOut().print(url.getActionURL(action));
-			} else {
-				pageContext.getOut().print(url.getMethodURL(action, method));
-			}
+			pageContext.getOut().print(url.getMethodURL(action, method));
 		} catch (Exception e) {
-			log
-					.error("Error while writing URL for (action = " + action + (method == null ? "" : " method = " + method)
-							+ ")", e);
+			log.error("Error while writing URL for (action = " + action + (method == null ? "" : " method = " + method)
+					+ ")", e);
 
 			throw new JspException(e);
 		}

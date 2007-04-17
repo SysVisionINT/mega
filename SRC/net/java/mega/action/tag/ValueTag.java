@@ -37,19 +37,19 @@ public class ValueTag extends TagSupport {
 
 	private static Log log = LogFactory.getLog(ValueTag.class);
 
-	private String className = Constants.CURRENT_ACTION;
+	private String name = Constants.CURRENT_ACTION;
 	private String property = null;
 	private String format = null;
 
 	public int doEndTag() throws JspException {
 		try {
-			Object value = PageContextUtil.getObject(pageContext, className, property);
+			Object value = PageContextUtil.getObject(pageContext, name, property);
 
 			Locale locale = LocaleUtil.getUserLocate((HttpServletRequest) pageContext.getRequest());
 
 			pageContext.getOut().print(FormatUtil.format(value, format, locale));
 		} catch (IOException e) {
-			log.error("Error while formating " + className + (property == null ? "." + property : "") + " with "
+			log.error("Error while formating " + name + (property == null ? "." + property : "") + " with "
 					+ format, e);
 
 			throw new JspException(e);
@@ -58,12 +58,12 @@ public class ValueTag extends TagSupport {
 		return EVAL_PAGE;
 	}
 
-	public String getClassName() {
-		return className;
+	public String getName() {
+		return name;
 	}
 
-	public void setClassName(String className) {
-		this.className = className;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getFormat() {
