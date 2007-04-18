@@ -45,6 +45,7 @@ import net.java.mega.action.util.MethodConstants;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
 import net.java.sjtools.util.BeanUtil;
+import net.java.sjtools.util.TextUtil;
 
 public class RequestProcessor {
 	private static Log log = LogFactory.getLog(RequestProcessor.class);
@@ -257,7 +258,7 @@ public class RequestProcessor {
 		List methods = beanUtil.getMethods(beanUtil.getMethodName("set", name));
 
 		if (!methods.isEmpty()) {
-			if (methods.size() > 1) {
+			if (methods.size() > 1 || TextUtil.isEmptyString(value)) {
 				try {
 					beanUtil.set(name, value);
 				} catch (Exception e) {
