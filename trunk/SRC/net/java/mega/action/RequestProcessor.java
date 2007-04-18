@@ -254,11 +254,12 @@ public class RequestProcessor {
 		}
 
 		BeanUtil beanUtil = new BeanUtil(action);
+		Object object = value;
 
 		List methods = beanUtil.getMethods(beanUtil.getMethodName("set", name));
 
 		if (!methods.isEmpty()) {
-			if (methods.size() > 1 || TextUtil.isEmptyString(value)) {
+			if (methods.size() > 1) {
 				try {
 					beanUtil.set(name, value);
 				} catch (Exception e) {
@@ -266,9 +267,16 @@ public class RequestProcessor {
 							+ action.getClass().getName(), e);
 					throw new PropertySetError(name, value);
 				}
+			} else if (TextUtil.isEmptyString(value)) {
+				try {
+					beanUtil.set(name, null);
+				} catch (Exception e) {
+					log.error("Error trying to set property " + name + " with the value NULL of class "
+							+ action.getClass().getName(), e);
+					throw new PropertySetError(name, value);
+				}
 			} else {
 				Class clazz = ((Method) methods.get(0)).getParameterTypes()[0];
-				Object object = value;
 
 				if (clazz.equals(int.class) || clazz.equals(Integer.class)) {
 					object = Integer.valueOf(value);
