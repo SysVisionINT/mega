@@ -74,6 +74,7 @@ public class OptionsTag extends BaseTag{
 	}
 
 	public int doEndTag() throws JspException {
+		log.info("OPTIONS");
 		Collection list = (Collection) PageContextUtil.getObject(pageContext, name, property);
 		
 		if (list != null) {
