@@ -120,7 +120,7 @@ public class RequestProcessor {
 		}
 
 		currentResponse.setAction(action);
-		
+
 		lastMethod = MethodConstants.ON_LOAD;
 
 		execute(action, MethodConstants.ON_LOAD);
@@ -192,10 +192,10 @@ public class RequestProcessor {
 
 		if (valid) {
 			lastMethod = requestMetaData.getMethodName();
-			
+
 			execute(action, requestMetaData.getMethodName());
-			
-			if (!lastMethod.equals(MethodConstants.ON_LOAD)){
+
+			if (!lastMethod.equals(MethodConstants.ON_LOAD)) {
 				execute(currentResponse.getAction(), MethodConstants.ON_LOAD);
 			}
 		} else {
@@ -232,18 +232,18 @@ public class RequestProcessor {
 	private String getContextName(Object obj) throws ConfigurationError {
 		return getContextName(obj.getClass().getName());
 	}
-	
+
 	private String getContextName(String name) throws ConfigurationError {
 		String rootPackage = ActionManager.getInstance().getRootPackage();
-		
+
 		String newName = name.substring(rootPackage.length());
-		
+
 		newName = newName.replace('.', '/');
-		
+
 		if (!newName.startsWith("/")) {
 			newName = "/".concat(newName);
 		}
-		
+
 		return newName;
 	}
 
@@ -269,24 +269,22 @@ public class RequestProcessor {
 				Class clazz = ((Method) methods.get(0)).getParameterTypes()[0];
 				Object object = value;
 
-				if (clazz.isPrimitive()) {
-					if (clazz.equals(int.class)) {
-						object = Integer.valueOf(value);
-					} else if (clazz.equals(boolean.class)) {
-						object = Boolean.valueOf(value);
-					} else if (clazz.equals(char.class)) {
-						object = new Character(value.charAt(0));
-					} else if (clazz.equals(byte.class)) {
-						object = Byte.valueOf(value);
-					} else if (clazz.equals(short.class)) {
-						object = Short.valueOf(value);
-					} else if (clazz.equals(long.class)) {
-						object = Long.valueOf(value);
-					} else if (clazz.equals(float.class)) {
-						object = Float.valueOf(value);
-					} else if (clazz.equals(double.class)) {
-						object = Double.valueOf(value);
-					}
+				if (clazz.equals(int.class) || clazz.equals(Integer.class)) {
+					object = Integer.valueOf(value);
+				} else if (clazz.equals(boolean.class) || clazz.equals(Boolean.class)) {
+					object = Boolean.valueOf(value);
+				} else if (clazz.equals(char.class)) {
+					object = new Character(value.charAt(0));
+				} else if (clazz.equals(byte.class) || clazz.equals(Byte.class)) {
+					object = Byte.valueOf(value);
+				} else if (clazz.equals(short.class) || clazz.equals(Short.class)) {
+					object = Short.valueOf(value);
+				} else if (clazz.equals(long.class) || clazz.equals(Long.class)) {
+					object = Long.valueOf(value);
+				} else if (clazz.equals(float.class) || clazz.equals(Float.class)) {
+					object = Float.valueOf(value);
+				} else if (clazz.equals(double.class) || clazz.equals(Double.class)) {
+					object = Double.valueOf(value);
 				}
 
 				try {

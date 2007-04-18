@@ -41,15 +41,15 @@ public class PageContextUtil {
 			HttpServletRequest request = (HttpServletRequest) context.getRequest();
 
 			obj = request.getAttribute(name);
-			
+
 			if (obj == null) {
-				HttpSession session = request.getSession(true); 
-				
+				HttpSession session = request.getSession(true);
+
 				obj = session.getAttribute(name);
-				
+
 				if (obj == null) {
 					ServletContext servletContext = session.getServletContext();
-					
+
 					obj = servletContext.getAttribute(name);
 				}
 			}
@@ -66,13 +66,17 @@ public class PageContextUtil {
 		Object ret = null;
 		Object obj = getObject(context, name);
 
-		if (obj != null && propertyName != null) {
-			BeanUtil beanUtil = new BeanUtil(obj);
-			
-			try {
-				ret = beanUtil.get(propertyName);
-			} catch (Exception e) {
-				log.error("Error while accessing property " + propertyName + " of attribute " + name, e);
+		if (obj != null) {
+			if (propertyName != null) {
+				BeanUtil beanUtil = new BeanUtil(obj);
+
+				try {
+					ret = beanUtil.get(propertyName);
+				} catch (Exception e) {
+					log.error("Error while accessing property " + propertyName + " of attribute " + name, e);
+				}
+			} else {
+				ret = obj;
 			}
 		}
 

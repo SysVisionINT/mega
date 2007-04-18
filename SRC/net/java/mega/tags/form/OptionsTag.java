@@ -31,11 +31,11 @@ import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
 import net.java.sjtools.util.BeanUtil;
 
-public class OptionsTag extends BaseTag{
+public class OptionsTag extends BaseTag {
 	private static final long serialVersionUID = 6019952761717128436L;
 
 	private static Log log = LogFactory.getLog(OptionsTag.class);
-	
+
 	private String name = Constants.CURRENT_ACTION;
 	private String property = null;
 	private String value = null;
@@ -56,7 +56,7 @@ public class OptionsTag extends BaseTag{
 	public void setProperty(String property) {
 		this.property = property;
 	}
-	
+
 	public String getLabel() {
 		return label;
 	}
@@ -74,16 +74,15 @@ public class OptionsTag extends BaseTag{
 	}
 
 	public int doEndTag() throws JspException {
-		log.info("OPTIONS");
 		Collection list = (Collection) PageContextUtil.getObject(pageContext, name, property);
-		
+
 		if (list != null) {
 			Object propertyValue = getPropertyValue();
 			Object element = null;
-			
+
 			for (Iterator i = list.iterator(); i.hasNext();) {
 				element = i.next();
-				
+
 				write(element, propertyValue);
 			}
 		}
@@ -93,10 +92,16 @@ public class OptionsTag extends BaseTag{
 
 	private void write(Object element, Object propertyValue) throws JspException {
 		BeanUtil beanUtil = new BeanUtil(element);
-		
+
 		try {
-			String value = String.valueOf(beanUtil.get(getValue()));
-			
+			String value = null;
+
+			if (getValue() != null) {
+				value = String.valueOf(beanUtil.get(getValue()));
+			} else {
+				value = String.valueOf(element);
+			}
+
 			pageContext.getOut().print("<option value=\"");
 			pageContext.getOut().print(value);
 			pageContext.getOut().print("\"");
@@ -106,15 +111,15 @@ public class OptionsTag extends BaseTag{
 					pageContext.getOut().print("selected=\"selected\"");
 				}
 			}
-			
+
 			pageContext.getOut().print(">");
-			
+
 			if (getLabel() != null) {
 				pageContext.getOut().print(beanUtil.get(getLabel()));
 			} else {
 				pageContext.getOut().print(value);
 			}
-			
+
 			pageContext.getOut().println("</option>");
 		} catch (Exception e) {
 			log.error("Error while writing OPTION TAG", e);
@@ -124,11 +129,11 @@ public class OptionsTag extends BaseTag{
 
 	private Object getPropertyValue() {
 		Tag tag = findAncestorWithClass(this, ComboBoxTag.class);
-		
+
 		if (tag != null) {
-			return ((ComboBoxTag)tag).getValue();
+			return ((ComboBoxTag) tag).getValue();
 		}
-		
+
 		return null;
 	}
 }
