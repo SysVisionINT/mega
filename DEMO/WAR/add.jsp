@@ -7,11 +7,11 @@
 	<TABLE BORDER="0">
 	<TR>
 		<TD><a:key key="add.label.id"/></TD>
-		<TD><INPUT TYPE="text" NAME="id" VALUE="<a:value property="id"/>"></TD>
+		<TD><t:inputText property="id" size="5" tabIndex="1"/></TD>
 	</TR>
 	<TR>
 		<TD><a:key key="add.label.name"/></TD>
-		<TD><INPUT TYPE="text" NAME="nome" VALUE="<a:value property="nome"/>"></TD>
+		<TD><t:inputText property="nome" size="50" tabIndex="2"/></TD>
 	</TR>
 	<TR>
 		<TD COLSPAN="2"><INPUT TYPE="submit" VALUE="<a:key key="add.label.insert"/>"></TD>

@@ -7,7 +7,7 @@
 	<TABLE BORDER="0">
 	<TR>
 		<TD><a:key key="login.label.user"/></TD>
-		<TD><INPUT TYPE="text" NAME="user" VALUE="<a:value property="user"/>"></TD>
+		<TD><t:inputText property="user" size="10" tabIndex="1"/></TD>
 	</TR>
 	<TR>
 		<TD COLSPAN="2"><INPUT TYPE="submit" VALUE="<a:key key="login.label.next"/>"></TD>
