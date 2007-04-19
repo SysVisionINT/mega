@@ -19,14 +19,24 @@
 package net.java.mega.tags.model;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
+import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
-public class BaseBodyTag extends BodyTagSupport {
+import net.java.sjtools.logging.Log;
+import net.java.sjtools.logging.LogFactory;
+
+public abstract class BaseBodyTag extends BodyTagSupport implements AttributeContainer {
 	private static final long serialVersionUID = 2098390912252264943L;
+
+	private static Log log = LogFactory.getLog(BaseBodyTag.class);
 
 	private String style = null;
 	private String className = null;
+	private List attributes = null;
 
 	public String getClassName() {
 		return className;
@@ -44,21 +54,65 @@ public class BaseBodyTag extends BodyTagSupport {
 		this.style = style;
 	}
 
+	public final int doStartTag() {
+		attributes = new ArrayList();
+
+		initTag();
+
+		return EVAL_BODY_BUFFERED;
+	}
+
+	public abstract void initTag();
+
+	public abstract void writeStartTag() throws JspException;
+
+	public abstract void writeEndTag() throws JspException;
+
+	public final int doEndTag() throws JspException {
+		writeStartTag();
+
+		try {
+			if (getBodyContent() != null && getBodyContent().getString() != null) {
+				pageContext.getOut().print(getBodyContent().getString().trim());
+			}
+		} catch (IOException e) {
+			log.error("Error while writing the body content", e);
+
+			throw new JspException(e);
+		}
+
+		writeEndTag();
+
+		return EVAL_PAGE;
+	}
+
 	public void writeAttributes() throws IOException {
 		if (getId() != null) {
-			addAttribute("id", getId());
+			writeAttribute("id", getId());
 		}
 
 		if (getClassName() != null) {
-			addAttribute("class", getClassName());
+			writeAttribute("class", getClassName());
 		}
 
 		if (getStyle() != null) {
-			addAttribute("style", getStyle());
+			writeAttribute("style", getStyle());
+		}
+
+		AttributeTag tag = null;
+
+		for (Iterator i = attributes.iterator(); i.hasNext();) {
+			tag = (AttributeTag) i.next();
+
+			writeAttribute(tag.getName(), tag.getValue());
 		}
 	}
 
-	private void addAttribute(String name, String value) throws IOException {
+	public void addAttribute(AttributeTag tag) {
+		attributes.add(tag);
+	}
+	
+	private void writeAttribute(String name, String value) throws IOException {
 		pageContext.getOut().print(" ");
 		pageContext.getOut().print(name);
 		pageContext.getOut().print("=\"");

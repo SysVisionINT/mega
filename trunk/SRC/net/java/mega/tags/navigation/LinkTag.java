@@ -47,7 +47,7 @@ public class LinkTag extends BaseBodyTag {
 	public void setAction(String action) {
 		this.action = action;
 	}
-	
+
 	public String getMethod() {
 		return method;
 	}
@@ -55,18 +55,36 @@ public class LinkTag extends BaseBodyTag {
 	public void setMethod(String method) {
 		this.method = method;
 	}
-	
+
 	public void addParameter(String name, String value) {
 		parameters.put(name, value);
 	}
-	
-	public int doStartTag () {
-		parameters = new HashMap();
-		
-		return EVAL_BODY_BUFFERED;
+
+	private String getParameters() {
+		StringBuffer buffer = new StringBuffer();
+
+		String name = null;
+
+		for (Iterator i = parameters.keySet().iterator(); i.hasNext();) {
+			name = (String) i.next();
+
+			if (buffer.length() != 0) {
+				buffer.append("&");
+			}
+
+			buffer.append(name);
+			buffer.append("=");
+			buffer.append(parameters.get(name));
+		}
+
+		return buffer.toString();
 	}
 
-	public int doEndTag() throws JspException {
+	public void initTag() {
+		parameters = new HashMap();
+	}
+
+	public void writeStartTag() throws JspException {
 		HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
 		HttpServletResponse response = (HttpServletResponse) pageContext.getResponse();
 
@@ -75,42 +93,27 @@ public class LinkTag extends BaseBodyTag {
 		try {
 			pageContext.getOut().print("<a href=\"");
 			pageContext.getOut().print(url.getMethodURL(getAction(), getMethod()));
-			
+
 			if (!parameters.isEmpty()) {
 				pageContext.getOut().print("?");
 				pageContext.getOut().print(getParameters());
 			}
-			
+
 			pageContext.getOut().print("\"");
 			writeAttributes();
 			pageContext.getOut().print(">");
-			pageContext.getOut().print(getBodyContent().getString().trim());
+		} catch (Exception e) {
+			log.error("Error while writing A TAG", e);
+			throw new JspException(e);
+		}
+	}
+
+	public void writeEndTag() throws JspException {
+		try {
 			pageContext.getOut().println("</a>");
 		} catch (Exception e) {
 			log.error("Error while writing A TAG", e);
 			throw new JspException(e);
 		}
-
-		return EVAL_PAGE;
-	}
-
-	private String getParameters() {
-		StringBuffer buffer = new StringBuffer();
-		
-		String name = null;
-		
-		for (Iterator i = parameters.keySet().iterator(); i.hasNext();) {
-			name = (String) i.next();
-			
-			if (buffer.length() != 0) {
-				buffer.append("&");
-			}
-			
-			buffer.append(name);
-			buffer.append("=");
-			buffer.append(parameters.get(name));
-		}
-		
-		return buffer.toString();
 	}
 }
