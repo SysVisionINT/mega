@@ -26,12 +26,12 @@ import javax.servlet.jsp.tagext.Tag;
 
 import net.java.mega.action.util.Constants;
 import net.java.mega.common.util.PageContextUtil;
-import net.java.mega.tags.model.BaseTag;
+import net.java.mega.tags.model.BaseBodyTag;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
 import net.java.sjtools.util.BeanUtil;
 
-public class OptionsTag extends BaseTag {
+public class OptionsTag extends BaseBodyTag {
 	private static final long serialVersionUID = 6019952761717128436L;
 
 	private static Log log = LogFactory.getLog(OptionsTag.class);
@@ -73,23 +73,6 @@ public class OptionsTag extends BaseTag {
 		this.value = value;
 	}
 
-	public int doEndTag() throws JspException {
-		Collection list = (Collection) PageContextUtil.getObject(pageContext, name, property);
-
-		if (list != null) {
-			Object propertyValue = getPropertyValue();
-			Object element = null;
-
-			for (Iterator i = list.iterator(); i.hasNext();) {
-				element = i.next();
-
-				write(element, propertyValue);
-			}
-		}
-
-		return EVAL_PAGE;
-	}
-
 	private void write(Object element, Object propertyValue) throws JspException {
 		BeanUtil beanUtil = new BeanUtil(element);
 
@@ -111,6 +94,8 @@ public class OptionsTag extends BaseTag {
 					pageContext.getOut().print("selected=\"selected\"");
 				}
 			}
+
+			writeAttributes();
 
 			pageContext.getOut().print(">");
 
@@ -135,5 +120,26 @@ public class OptionsTag extends BaseTag {
 		}
 
 		return null;
+	}
+
+	public void initTag() {
+	}
+
+	public void writeStartTag() throws JspException {
+	}
+
+	public void writeEndTag() throws JspException {
+		Collection list = (Collection) PageContextUtil.getObject(pageContext, name, property);
+
+		if (list != null) {
+			Object propertyValue = getPropertyValue();
+			Object element = null;
+
+			for (Iterator i = list.iterator(); i.hasNext();) {
+				element = i.next();
+
+				write(element, propertyValue);
+			}
+		}
 	}
 }

@@ -1,3 +1,21 @@
+/*  ------------------
+ *  MEGA Web Framework
+ *  ------------------
+ *  
+ *  Copyright 2006 SysVision - Consultadoria e Desenvolvimento em Sistemas de Informática, Lda.
+ *  
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *  
+ *  	http://www.apache.org/licenses/LICENSE-2.0
+ *  
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package net.java.mega.tags.form;
 
 import javax.servlet.http.HttpServletRequest;
@@ -5,11 +23,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.JspException;
 
 import net.java.mega.action.util.URLUtil;
-import net.java.mega.tags.model.BaseTag;
+import net.java.mega.tags.model.BaseBodyTag;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
 
-public class FormTag extends BaseTag {
+public class FormTag extends BaseBodyTag {
 	private static final long serialVersionUID = -5532740559135162767L;
 	
 	private static Log log = LogFactory.getLog(FormTag.class);
@@ -24,7 +42,7 @@ public class FormTag extends BaseTag {
 		this.method = method;
 	}
 
-	public int doStartTag () throws JspException {
+	public void writeStartTag() throws JspException {
 		HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
 		HttpServletResponse response = (HttpServletResponse) pageContext.getResponse();
 
@@ -43,18 +61,17 @@ public class FormTag extends BaseTag {
 			log.error("Error while writing FORM TAG", e);
 			throw new JspException(e);
 		}
-		
-		return EVAL_BODY_INCLUDE;
 	}
 
-	public int doEndTag() throws JspException {
+	public void writeEndTag() throws JspException {
 		try {
 			pageContext.getOut().println("</form>");
 		} catch (Exception e) {
 			log.error("Error while writing FORM TAG", e);
 			throw new JspException(e);
 		}
+	}
 
-		return EVAL_PAGE;
+	public void initTag() {
 	}
 }

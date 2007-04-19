@@ -22,11 +22,11 @@ import javax.servlet.jsp.JspException;
 
 import net.java.mega.action.util.Constants;
 import net.java.mega.common.util.PageContextUtil;
-import net.java.mega.tags.model.BaseTag;
+import net.java.mega.tags.model.BaseBodyTag;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
 
-public class ComboBoxTag extends BaseTag{
+public class ComboBoxTag extends BaseBodyTag {
 	private static final long serialVersionUID = 1891172739255099324L;
 
 	private static Log log = LogFactory.getLog(ComboBoxTag.class);
@@ -41,7 +41,7 @@ public class ComboBoxTag extends BaseTag{
 		this.property = property;
 	}
 
-	public int doStartTag () throws JspException {
+	public void writeStartTag() throws JspException {
 		try {
 			pageContext.getOut().print("<select name=\"");
 			pageContext.getOut().print(getProperty());
@@ -52,22 +52,21 @@ public class ComboBoxTag extends BaseTag{
 			log.error("Error while writing SELECT TAG", e);
 			throw new JspException(e);
 		}
-		
-		return EVAL_BODY_INCLUDE;
 	}
 	
-	public int doEndTag() throws JspException {
+	public void writeEndTag() throws JspException {
 		try {
 			pageContext.getOut().println("</select>");
 		} catch (Exception e) {
 			log.error("Error while writing SELECT TAG", e);
 			throw new JspException(e);
 		}
-
-		return EVAL_PAGE;
 	}
 	
 	public Object getValue() {
 		return PageContextUtil.getObject(pageContext, Constants.CURRENT_ACTION, property);
+	}
+
+	public void initTag() {		
 	}
 }
