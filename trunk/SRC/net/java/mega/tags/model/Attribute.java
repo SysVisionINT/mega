@@ -18,32 +18,38 @@
  */
 package net.java.mega.tags.model;
 
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.BodyTagSupport;
-import javax.servlet.jsp.tagext.Tag;
+import java.io.Serializable;
 
-public class AttributeTag extends BodyTagSupport{
-	private static final long serialVersionUID = 8993694992328452439L;
+public class Attribute implements Serializable {
+	private static final long serialVersionUID = -2757255365412110570L;
 	
 	private String name = null;
+	private String value = null;
+	
+	public Attribute(String name, String value) {
+		this.name = name;
+		this.value = value;
+	}
 	
 	public String getName() {
 		return name;
 	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
 	
-	public int doEndTag() throws JspException {		
-		if (getBodyContent() != null && getBodyContent().getString() != null) {
-			Tag tag = findAncestorWithClass(this, AttributeContainer.class);
-			
-			if (tag != null) {
-				((AttributeContainer)tag).addAttribute(new Attribute(getName(), getBodyContent().getString().trim()));
-			}
-		}
+	public String getValue() {
+		return value;
+	}
 
-		return EVAL_PAGE;	
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		
+		if (!(obj instanceof Attribute)) {
+			return false;
+		}
+		
+		Attribute other = (Attribute) obj;
+		
+		return getName().equals(other.getName());
 	}
 }

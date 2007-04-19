@@ -27,6 +27,7 @@ import javax.servlet.jsp.tagext.Tag;
 import net.java.mega.action.util.Constants;
 import net.java.mega.common.util.PageContextUtil;
 import net.java.mega.tags.model.BaseBodyTag;
+import net.java.mega.tags.model.InputTag;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
 import net.java.sjtools.util.BeanUtil;
@@ -113,10 +114,10 @@ public class OptionsTag extends BaseBodyTag {
 	}
 
 	private Object getPropertyValue() {
-		Tag tag = findAncestorWithClass(this, ComboBoxTag.class);
+		Tag tag = findAncestorWithClass(this, InputTag.class);
 
 		if (tag != null) {
-			return ((ComboBoxTag) tag).getValue();
+			return ((InputTag) tag).getPropertyValue();
 		}
 
 		return null;

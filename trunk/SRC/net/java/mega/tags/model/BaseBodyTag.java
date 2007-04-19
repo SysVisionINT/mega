@@ -99,17 +99,21 @@ public abstract class BaseBodyTag extends BodyTagSupport implements AttributeCon
 			writeAttribute("style", getStyle());
 		}
 
-		AttributeTag tag = null;
+		Attribute attribute = null;
 
 		for (Iterator i = attributes.iterator(); i.hasNext();) {
-			tag = (AttributeTag) i.next();
+			attribute = (Attribute) i.next();
 
-			writeAttribute(tag.getName(), tag.getValue());
+			writeAttribute(attribute.getName(), attribute.getValue());
 		}
 	}
 
-	public void addAttribute(AttributeTag tag) {
-		attributes.add(tag);
+	public void addAttribute(Attribute attribute) {
+		if (attributes.contains(attribute)) {
+			attributes.remove(attribute);
+		}
+		
+		attributes.add(attribute);
 	}
 	
 	private void writeAttribute(String name, String value) throws IOException {

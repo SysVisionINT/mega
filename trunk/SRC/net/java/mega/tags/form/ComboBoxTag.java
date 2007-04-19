@@ -20,26 +20,14 @@ package net.java.mega.tags.form;
 
 import javax.servlet.jsp.JspException;
 
-import net.java.mega.action.util.Constants;
-import net.java.mega.common.util.PageContextUtil;
-import net.java.mega.tags.model.BaseBodyTag;
+import net.java.mega.tags.model.InputTag;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
 
-public class ComboBoxTag extends BaseBodyTag {
+public class ComboBoxTag extends InputTag {
 	private static final long serialVersionUID = 1891172739255099324L;
 
 	private static Log log = LogFactory.getLog(ComboBoxTag.class);
-	
-	private String property = null;
-
-	public String getProperty() {
-		return property;
-	}
-
-	public void setProperty(String property) {
-		this.property = property;
-	}
 
 	public void writeStartTag() throws JspException {
 		try {
@@ -61,10 +49,6 @@ public class ComboBoxTag extends BaseBodyTag {
 			log.error("Error while writing SELECT TAG", e);
 			throw new JspException(e);
 		}
-	}
-	
-	public Object getValue() {
-		return PageContextUtil.getObject(pageContext, Constants.CURRENT_ACTION, property);
 	}
 
 	public void initTag() {		
