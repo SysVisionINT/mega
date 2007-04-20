@@ -8,12 +8,14 @@
 	<TR>
 		<TD><a:key key="list.label.id"/></TD>
 		<TD><a:key key="list.label.name"/></TD>
+		<TD><a:key key="list.label.admin"/></TD>
 		<TD>&nbsp;</TD>
 	</TR>
 <c:forEach var="elemento" items="${this.recordList}" varStatus="forEachStatus1">
 	<TR>
 		<TD><c:out value="${elemento.id}"/></TD>
 		<TD><c:out value="${elemento.name}"/></TD>
+		<TD><c:out value="${elemento.admin}"/></TD>
 		<TD>[
 			<t:link method="delete">
 				<t:parameter name="id">

@@ -14,6 +14,18 @@
 		<TD><t:inputText property="nome" size="50" tabIndex="2"/></TD>
 	</TR>
 	<TR>
+		<TD><a:key key="add.label.admin"/></TD>
+		<TD><t:checkBox property="admin" tabIndex="3"/></TD>
+	</TR>	
+		<TR>
+		<TD><a:key key="add.label.xpto"/></TD>
+		<TD>1 <t:multiCheck property="xpto" value="1" tabIndex="4"/><br/>
+		2 <t:multiCheck property="xpto" value="2" tabIndex="5"/><br/>
+		3 <t:multiCheck property="xpto" value="3" tabIndex="6"/><br/>
+		4 <t:multiCheck property="xpto" value="4" tabIndex="7"/><br/>
+		5 <t:multiCheck property="xpto" value="5" tabIndex="8"/></TD>
+	</TR>	
+	<TR>
 		<TD COLSPAN="2"><INPUT TYPE="submit" VALUE="<a:key key="add.label.insert"/>"></TD>
 	</TR>
 	</TABLE>
