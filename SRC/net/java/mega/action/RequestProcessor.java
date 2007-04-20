@@ -59,6 +59,7 @@ public class RequestProcessor {
 	private ResponseMetaData currentResponse = new ResponseMetaData();
 	private MessageContainer messageContainer = new MessageContainer();
 	private String lastMethod = null;
+	private boolean sessionInvalidated = false;
 
 	public RequestProcessor(HttpServletRequest request, HttpServletResponse response) {
 		if (log.isDebugEnabled()) {
@@ -71,6 +72,10 @@ public class RequestProcessor {
 
 	public void addMessage(Message message) {
 		messageContainer.addMessage(message);
+	}
+
+	public void invalidateSession() {
+		sessionInvalidated = true;
 	}
 
 	public void addMessage(String key, Message message) {
@@ -217,6 +222,10 @@ public class RequestProcessor {
 			execute(action, MethodConstants.ON_LOAD);
 		}
 
+		if (sessionInvalidated) {
+			getHttpSession().invalidate();
+		}
+
 		String contextName = null;
 
 		for (Iterator i = actions.values().iterator(); i.hasNext();) {
@@ -224,7 +233,7 @@ public class RequestProcessor {
 
 			contextName = getContextName(action);
 
-			if (action instanceof SessionObject) {
+			if (!sessionInvalidated && action instanceof SessionObject) {
 				getHttpSession().setAttribute(contextName, action);
 			} else {
 				getHttpServletRequest().setAttribute(contextName, action);
@@ -271,9 +280,9 @@ public class RequestProcessor {
 		BeanUtil beanUtil = new BeanUtil(action);
 
 		List methods = beanUtil.getMethods(beanUtil.getMethodName("set", name));
-		
+
 		Object value = parameterValue;
-		
+
 		if (parameterValue != null && parameterValue.length == 1) {
 			value = parameterValue[0];
 		}
@@ -289,22 +298,22 @@ public class RequestProcessor {
 				}
 			} else {
 				if (value.getClass().isArray()) {
-					String [] values = (String[]) value;
+					String[] values = (String[]) value;
 					Collection collection = new ArrayList();
-					
+
 					for (int i = 0; i < values.length; i++) {
 						collection.add(values[i]);
 					}
-					
+
 					try {
 						beanUtil.set(name, collection);
 					} catch (Exception e) {
-						log.error("Error trying to set property " + name + " with the value " + collection + " of class "
-								+ action.getClass().getName(), e);
+						log.error("Error trying to set property " + name + " with the value " + collection
+								+ " of class " + action.getClass().getName(), e);
 						throw new PropertySetError(name, collection);
 					}
 				} else {
-					if (TextUtil.isEmptyString((String)value)) {
+					if (TextUtil.isEmptyString((String) value)) {
 						try {
 							beanUtil.set(name, null);
 						} catch (Exception e) {
@@ -314,7 +323,7 @@ public class RequestProcessor {
 						}
 					} else {
 						Class clazz = ((Method) methods.get(0)).getParameterTypes()[0];
-						String strValue = (String)value;
+						String strValue = (String) value;
 						Object object = value;
 
 						if (clazz.equals(int.class) || clazz.equals(Integer.class)) {

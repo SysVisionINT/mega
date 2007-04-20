@@ -93,4 +93,8 @@ public abstract class AbstractAction implements Action, Serializable {
 	public void setLocate(Locale locale) {
 		LocaleUtil.setUserLocate(getHttpServletRequest(), locale);
 	}
+	
+	public void invalidateSession() {
+		requestProcessor.invalidateSession();
+	}
 }
