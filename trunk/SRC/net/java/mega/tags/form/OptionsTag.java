@@ -126,7 +126,8 @@ public class OptionsTag extends BaseBodyTag {
 	public void initTag() {
 	}
 
-	public void writeStartTag() throws JspException {
+	public int writeStartTag() throws JspException {
+		return NOT_INCLUDE_INNER_HTML;
 	}
 
 	public void writeEndTag() throws JspException {

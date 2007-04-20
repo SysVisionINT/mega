@@ -31,32 +31,25 @@ public class MultiCheckBoxTag extends InputTag {
 
 	private static Log log = LogFactory.getLog(MultiCheckBoxTag.class);
 
-	private String value = null;
-
-	public String getValue() {
-		return value;
-	}
-
-	public void setValue(String value) {
-		this.value = value;
-	}
-
-	public void writeStartTag() throws JspException {
+	public int writeStartTag() throws JspException {
+		return NOT_INCLUDE_INNER_HTML;
 	}
 
 	public void writeEndTag() throws JspException {
+		String value = getInnerHtml();
+		
 		try {
 			pageContext.getOut().print("<input type=\"checkbox\" name=\"");
 			pageContext.getOut().print(getProperty());
 			pageContext.getOut().print("\" value=\"");
-			pageContext.getOut().print(getValue());
+			pageContext.getOut().print(value);
 			pageContext.getOut().print("\"");
 
 			writeAttributes();
 
 			Collection list = (Collection) getPropertyValue();
 
-			if (list != null && list.contains(getValue())) {
+			if (list != null && list.contains(value)) {
 				pageContext.getOut().print(" checked=\"checked\"");
 			}
 

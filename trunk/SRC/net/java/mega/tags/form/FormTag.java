@@ -42,7 +42,7 @@ public class FormTag extends BaseBodyTag {
 		this.method = method;
 	}
 
-	public void writeStartTag() throws JspException {
+	public int writeStartTag() throws JspException {
 		HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
 		HttpServletResponse response = (HttpServletResponse) pageContext.getResponse();
 
@@ -61,6 +61,8 @@ public class FormTag extends BaseBodyTag {
 			log.error("Error while writing FORM TAG", e);
 			throw new JspException(e);
 		}
+		
+		return INCLUDE_INNER_HTML;
 	}
 
 	public void writeEndTag() throws JspException {

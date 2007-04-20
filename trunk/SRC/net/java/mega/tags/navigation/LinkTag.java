@@ -84,7 +84,7 @@ public class LinkTag extends BaseBodyTag {
 		parameters = new HashMap();
 	}
 
-	public void writeStartTag() throws JspException {
+	public int writeStartTag() throws JspException {
 		HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
 		HttpServletResponse response = (HttpServletResponse) pageContext.getResponse();
 
@@ -106,6 +106,8 @@ public class LinkTag extends BaseBodyTag {
 			log.error("Error while writing A TAG", e);
 			throw new JspException(e);
 		}
+		
+		return INCLUDE_INNER_HTML;
 	}
 
 	public void writeEndTag() throws JspException {

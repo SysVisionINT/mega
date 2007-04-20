@@ -29,7 +29,7 @@ public class ComboBoxTag extends InputTag {
 
 	private static Log log = LogFactory.getLog(ComboBoxTag.class);
 
-	public void writeStartTag() throws JspException {
+	public int writeStartTag() throws JspException {
 		try {
 			pageContext.getOut().print("<select name=\"");
 			pageContext.getOut().print(getProperty());
@@ -40,6 +40,8 @@ public class ComboBoxTag extends InputTag {
 			log.error("Error while writing SELECT TAG", e);
 			throw new JspException(e);
 		}
+		
+		return INCLUDE_INNER_HTML;
 	}
 	
 	public void writeEndTag() throws JspException {
