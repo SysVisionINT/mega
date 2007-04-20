@@ -56,7 +56,7 @@ public class RecordList extends AbstractAction implements SessionObject {
 	public void delete() {		
 		log.info("delete()");
 		
-		recordList.remove(new Record(id, null));
+		recordList.remove(new Record(id, null, false));
 		updateDate();
 	}
 }

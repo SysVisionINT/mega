@@ -7,10 +7,12 @@ public class Record implements Serializable{
 	
 	private int id = 0;
 	private String name = null;
+	private boolean admin = false;
 	
-	public Record(int i, String n) {
+	public Record(int i, String n, boolean b) {
 		setId(i);
 		setName(n);
+		setAdmin(b);
 	}
 
 	public int getId() {
@@ -27,6 +29,14 @@ public class Record implements Serializable{
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public boolean isAdmin() {
+		return admin;
+	}
+
+	public void setAdmin(boolean admin) {
+		this.admin = admin;
 	}
 
 	public boolean equals(Object obj) {

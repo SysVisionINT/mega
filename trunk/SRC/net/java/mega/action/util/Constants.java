@@ -33,5 +33,7 @@ public class Constants {
 	public static final String CURRENT_ACTION = "this";
 	public static final String MESSAGE_CONTAINER = "MEGA_ACTION_MESSAGES";
 	
+	public static final String CHECK_BOX = "_CHCK_BX_";
+	
 	public static final String WEB_XML = "/WEB-INF/web.xml";
 }

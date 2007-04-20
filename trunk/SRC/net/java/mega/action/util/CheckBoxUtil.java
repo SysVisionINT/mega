@@ -16,16 +16,18 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package net.java.mega.action.error;
+package net.java.mega.action.util;
 
-public class PropertySetError extends ActionException {
-	private static final long serialVersionUID = -6901405599724391923L;
-
-	public PropertySetError (String property, Object value) {
-		super("Error trying to set property " + property + " with the value " + value);
+public class CheckBoxUtil {
+	public static String getHiddenName(String propertyName) {
+		return Constants.CHECK_BOX.concat(propertyName);
 	}
 	
-	public PropertySetError (String message) {
-		super(message);
-	}	
+	public static boolean isHiddenCheckBox(String propertyName) {
+		return propertyName.startsWith(Constants.CHECK_BOX);
+	}
+	
+	public static String getPropertyNameFromHidden(String propertyName) {
+		return propertyName.substring(Constants.CHECK_BOX.length());
+	}
 }

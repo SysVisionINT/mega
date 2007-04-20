@@ -20,7 +20,8 @@ package net.java.mega.action;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Enumeration;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -41,6 +42,7 @@ import net.java.mega.action.error.MethodExecuteError;
 import net.java.mega.action.error.PropertySetError;
 import net.java.mega.action.model.Action;
 import net.java.mega.action.model.ActionConfig;
+import net.java.mega.action.util.CheckBoxUtil;
 import net.java.mega.action.util.MethodConstants;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
@@ -174,11 +176,23 @@ public class RequestProcessor {
 		Action action = getActionInstance(requestMetaData.getActionConfig().getClazz());
 
 		String attributeName = null;
+		String attributeValue = null;
 
-		for (Enumeration e = getHttpServletRequest().getParameterNames(); e.hasMoreElements();) {
-			attributeName = (String) e.nextElement();
+		Map parameters = getHttpServletRequest().getParameterMap();
 
-			setProperty(action, attributeName, getHttpServletRequest().getParameter(attributeName));
+		for (Iterator i = parameters.keySet().iterator(); i.hasNext();) {
+			attributeName = (String) i.next();
+			attributeValue = attributeName;
+
+			if (CheckBoxUtil.isHiddenCheckBox(attributeName)) {
+				attributeName = CheckBoxUtil.getPropertyNameFromHidden(attributeName);
+
+				if (parameters.get(attributeName) != null) {
+					continue;
+				}
+			}
+
+			setProperty(action, attributeName, (String[]) parameters.get(attributeValue));
 		}
 
 		boolean valid = true;
@@ -248,15 +262,21 @@ public class RequestProcessor {
 		return newName;
 	}
 
-	private void setProperty(Action action, String name, String value) throws PropertySetError {
+	private void setProperty(Action action, String name, String[] parameterValue) throws PropertySetError {
 		if (log.isDebugEnabled()) {
-			log.debug("setProperty(" + action.getClass().getName() + ", " + name + ", " + value + ")");
+			log.debug("setProperty(" + action.getClass().getName() + ", " + name + ", ["
+					+ TextUtil.toString(parameterValue) + "])");
 		}
 
 		BeanUtil beanUtil = new BeanUtil(action);
-		Object object = value;
 
 		List methods = beanUtil.getMethods(beanUtil.getMethodName("set", name));
+		
+		Object value = parameterValue;
+		
+		if (parameterValue != null && parameterValue.length == 1) {
+			value = parameterValue[0];
+		}
 
 		if (!methods.isEmpty()) {
 			if (methods.size() > 1) {
@@ -267,41 +287,62 @@ public class RequestProcessor {
 							+ action.getClass().getName(), e);
 					throw new PropertySetError(name, value);
 				}
-			} else if (TextUtil.isEmptyString(value)) {
-				try {
-					beanUtil.set(name, null);
-				} catch (Exception e) {
-					log.error("Error trying to set property " + name + " with the value NULL of class "
-							+ action.getClass().getName(), e);
-					throw new PropertySetError(name, value);
-				}
 			} else {
-				Class clazz = ((Method) methods.get(0)).getParameterTypes()[0];
+				if (value.getClass().isArray()) {
+					String [] values = (String[]) value;
+					Collection collection = new ArrayList();
+					
+					for (int i = 0; i < values.length; i++) {
+						collection.add(values[i]);
+					}
+					
+					try {
+						beanUtil.set(name, collection);
+					} catch (Exception e) {
+						log.error("Error trying to set property " + name + " with the value " + collection + " of class "
+								+ action.getClass().getName(), e);
+						throw new PropertySetError(name, collection);
+					}
+				} else {
+					if (TextUtil.isEmptyString((String)value)) {
+						try {
+							beanUtil.set(name, null);
+						} catch (Exception e) {
+							log.error("Error trying to set property " + name + " with the value NULL of class "
+									+ action.getClass().getName(), e);
+							throw new PropertySetError(name, null);
+						}
+					} else {
+						Class clazz = ((Method) methods.get(0)).getParameterTypes()[0];
+						String strValue = (String)value;
+						Object object = value;
 
-				if (clazz.equals(int.class) || clazz.equals(Integer.class)) {
-					object = Integer.valueOf(value);
-				} else if (clazz.equals(boolean.class) || clazz.equals(Boolean.class)) {
-					object = Boolean.valueOf(value);
-				} else if (clazz.equals(char.class)) {
-					object = new Character(value.charAt(0));
-				} else if (clazz.equals(byte.class) || clazz.equals(Byte.class)) {
-					object = Byte.valueOf(value);
-				} else if (clazz.equals(short.class) || clazz.equals(Short.class)) {
-					object = Short.valueOf(value);
-				} else if (clazz.equals(long.class) || clazz.equals(Long.class)) {
-					object = Long.valueOf(value);
-				} else if (clazz.equals(float.class) || clazz.equals(Float.class)) {
-					object = Float.valueOf(value);
-				} else if (clazz.equals(double.class) || clazz.equals(Double.class)) {
-					object = Double.valueOf(value);
-				}
+						if (clazz.equals(int.class) || clazz.equals(Integer.class)) {
+							object = Integer.valueOf(strValue);
+						} else if (clazz.equals(boolean.class) || clazz.equals(Boolean.class)) {
+							object = Boolean.valueOf(strValue);
+						} else if (clazz.equals(char.class)) {
+							object = new Character(strValue.charAt(0));
+						} else if (clazz.equals(byte.class) || clazz.equals(Byte.class)) {
+							object = Byte.valueOf(strValue);
+						} else if (clazz.equals(short.class) || clazz.equals(Short.class)) {
+							object = Short.valueOf(strValue);
+						} else if (clazz.equals(long.class) || clazz.equals(Long.class)) {
+							object = Long.valueOf(strValue);
+						} else if (clazz.equals(float.class) || clazz.equals(Float.class)) {
+							object = Float.valueOf(strValue);
+						} else if (clazz.equals(double.class) || clazz.equals(Double.class)) {
+							object = Double.valueOf(strValue);
+						}
 
-				try {
-					beanUtil.set(name, object);
-				} catch (Exception e) {
-					log.error("Error trying to set property " + name + " with the value " + value + " of class "
-							+ action.getClass().getName(), e);
-					throw new PropertySetError(name, value);
+						try {
+							beanUtil.set(name, object);
+						} catch (Exception e) {
+							log.error("Error trying to set property " + name + " with the value " + parameterValue
+									+ " of class " + action.getClass().getName(), e);
+							throw new PropertySetError(name, parameterValue);
+						}
+					}
 				}
 			}
 		}
