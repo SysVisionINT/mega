@@ -19,11 +19,11 @@
 	</TR>	
 		<TR>
 		<TD><a:key key="add.label.xpto"/></TD>
-		<TD>1 <t:multiCheck property="xpto" value="1" tabIndex="4"/><br/>
-		2 <t:multiCheck property="xpto" value="2" tabIndex="5"/><br/>
-		3 <t:multiCheck property="xpto" value="3" tabIndex="6"/><br/>
-		4 <t:multiCheck property="xpto" value="4" tabIndex="7"/><br/>
-		5 <t:multiCheck property="xpto" value="5" tabIndex="8"/></TD>
+		<TD>1 <t:multiCheck property="xpto">1</t:multiCheck><br/>
+		2 <t:multiCheck property="xpto">2</t:multiCheck><br/>
+		3 <t:multiCheck property="xpto">3</t:multiCheck><br/>
+		4 <t:multiCheck property="xpto">4</t:multiCheck><br/>
+		5 <t:multiCheck property="xpto">5</t:multiCheck></TD>
 	</TR>	
 	<TR>
 		<TD COLSPAN="2"><INPUT TYPE="submit" VALUE="<a:key key="add.label.insert"/>"></TD>

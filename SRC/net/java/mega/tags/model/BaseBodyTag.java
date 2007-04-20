@@ -32,6 +32,9 @@ import net.java.sjtools.logging.LogFactory;
 public abstract class BaseBodyTag extends BodyTagSupport implements AttributeContainer {
 	private static final long serialVersionUID = 2098390912252264943L;
 
+	public static int INCLUDE_INNER_HTML = 1;
+	public static int NOT_INCLUDE_INNER_HTML = 2;
+
 	private static Log log = LogFactory.getLog(BaseBodyTag.class);
 
 	private String style = null;
@@ -64,26 +67,36 @@ public abstract class BaseBodyTag extends BodyTagSupport implements AttributeCon
 
 	public abstract void initTag();
 
-	public abstract void writeStartTag() throws JspException;
+	public abstract int writeStartTag() throws JspException;
 
 	public abstract void writeEndTag() throws JspException;
 
 	public final int doEndTag() throws JspException {
-		writeStartTag();
+		int include = writeStartTag();
 
-		try {
-			if (getBodyContent() != null && getBodyContent().getString() != null) {
-				pageContext.getOut().print(getBodyContent().getString().trim());
+		if (include == INCLUDE_INNER_HTML) {
+			try {
+				if (getBodyContent() != null && getBodyContent().getString() != null) {
+					pageContext.getOut().print(getInnerHtml());
+				}
+			} catch (IOException e) {
+				log.error("Error while writing the body content", e);
+
+				throw new JspException(e);
 			}
-		} catch (IOException e) {
-			log.error("Error while writing the body content", e);
-
-			throw new JspException(e);
 		}
 
 		writeEndTag();
 
 		return EVAL_PAGE;
+	}
+
+	public String getInnerHtml() {
+		if (getBodyContent() != null && getBodyContent().getString() != null) {
+			return getBodyContent().getString().trim();
+		}
+
+		return null;
 	}
 
 	public void writeAttributes() throws IOException {
@@ -112,10 +125,10 @@ public abstract class BaseBodyTag extends BodyTagSupport implements AttributeCon
 		if (attributes.contains(attribute)) {
 			attributes.remove(attribute);
 		}
-		
+
 		attributes.add(attribute);
 	}
-	
+
 	private void writeAttribute(String name, String value) throws IOException {
 		pageContext.getOut().print(" ");
 		pageContext.getOut().print(name);

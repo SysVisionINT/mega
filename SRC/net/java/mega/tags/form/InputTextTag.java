@@ -49,7 +49,7 @@ public class InputTextTag extends InputTag {
 		this.size = size;
 	}
 
-	public void writeStartTag() throws JspException {
+	public int writeStartTag() throws JspException {
 		if (getSize() != null) {
 			addAttribute(new Attribute("size", getSize()));
 		}
@@ -57,6 +57,8 @@ public class InputTextTag extends InputTag {
 		if (getMaxLength() != null) {
 			addAttribute(new Attribute("maxlength", getMaxLength()));
 		}
+		
+		return NOT_INCLUDE_INNER_HTML;
 	}
 
 	public void writeEndTag() throws JspException {
