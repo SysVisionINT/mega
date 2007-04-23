@@ -62,8 +62,8 @@ public class ActionServlet extends HttpServlet {
 
 	private void process(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		ActionManager actionManager = ActionManager.getInstance();
-
-		String path = RequestUtil.getPath(request);
+		
+		String path = RequestUtil.getAction(request);
 
 		RequestMetaData requestMetaData = null;
 		ResponseMetaData responseMetaData = null;

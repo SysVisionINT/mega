@@ -3,7 +3,7 @@
 
 <a:messages all="true" filter="true"/>
 
-<t:form method="insert">
+<t:form>
 	<TABLE BORDER="0">
 	<TR>
 		<TD><a:key key="add.label.id"/></TD>
@@ -26,7 +26,7 @@
 		5 <t:multiCheck property="xpto">5</t:multiCheck></TD>
 	</TR>	
 	<TR>
-		<TD COLSPAN="2"><INPUT TYPE="submit" VALUE="<a:key key="add.label.insert"/>"></TD>
+		<TD COLSPAN="2"><t:submit method="insert"><a:key key="add.label.insert"/></t:submit></TD>
 	</TR>
 	</TABLE>
 </t:form>

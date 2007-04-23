@@ -22,11 +22,11 @@ import java.util.Collection;
 
 import javax.servlet.jsp.JspException;
 
-import net.java.mega.tags.model.InputTag;
+import net.java.mega.tags.model.InputBaseTag;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
 
-public class MultiCheckBoxTag extends InputTag {
+public class MultiCheckBoxTag extends InputBaseTag {
 	private static final long serialVersionUID = 4288262712585202635L;
 
 	private static Log log = LogFactory.getLog(MultiCheckBoxTag.class);

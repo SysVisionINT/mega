@@ -20,11 +20,11 @@ package net.java.mega.tags.form;
 
 import javax.servlet.jsp.JspException;
 
-import net.java.mega.tags.model.InputTag;
+import net.java.mega.tags.model.InputBaseTag;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
 
-public class ComboBoxTag extends InputTag {
+public class ComboBoxTag extends InputBaseTag {
 	private static final long serialVersionUID = 1891172739255099324L;
 
 	private static Log log = LogFactory.getLog(ComboBoxTag.class);

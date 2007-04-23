@@ -22,38 +22,53 @@ import javax.servlet.http.HttpServletRequest;
 
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
+import net.java.sjtools.util.TextUtil;
 
 public class RequestUtil {
 	private static Log log = LogFactory.getLog(RequestUtil.class);
 	
+	public static String getAction(HttpServletRequest request) {
+		if (log.isDebugEnabled()) {
+			log.debug("getAction(...)");
+		}
+		
+		String path = request.getParameter(CommonConstants.MEGA_FORM_ACTION);
+
+		if (!TextUtil.isEmptyString(path)) {			
+			return path;
+		}
+		
+		return getPath(request);
+	}
+
 	public static String getPath(HttpServletRequest request) {
 		if (log.isDebugEnabled()) {
 			log.debug("getPath(...)");
 		}
-		
-		String path = (String) request.getAttribute("javax.servlet.include.path_info");
+
+		String path = (String) request.getAttribute(CommonConstants.PATH_INFO);
 
 		if (path == null) {
 			path = request.getPathInfo();
 		}
-		
+
 		if ((path != null) && (path.length() > 0)) {
 			return path;
 		}
 
-		path = (String) request.getAttribute("javax.servlet.include.servlet_path");
-		
+		path = (String) request.getAttribute(CommonConstants.SERVLET_PATH);
+
 		if (path == null) {
 			path = request.getServletPath();
 		}
-		
+
 		int slash = path.lastIndexOf("/");
 		int period = path.lastIndexOf(".");
 
 		if ((period >= 0) && (period > slash)) {
 			path = path.substring(0, period);
 		}
-		
+
 		return path;
 	}
 }

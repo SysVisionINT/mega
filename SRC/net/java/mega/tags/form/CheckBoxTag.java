@@ -21,11 +21,11 @@ package net.java.mega.tags.form;
 import javax.servlet.jsp.JspException;
 
 import net.java.mega.action.util.CheckBoxUtil;
-import net.java.mega.tags.model.InputTag;
+import net.java.mega.tags.model.InputBaseTag;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
 
-public class CheckBoxTag extends InputTag {
+public class CheckBoxTag extends InputBaseTag {
 	private static final long serialVersionUID = 4288262712585202635L;
 	
 	private static Log log = LogFactory.getLog(CheckBoxTag.class);

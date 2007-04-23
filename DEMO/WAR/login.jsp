@@ -3,15 +3,18 @@
 
 <a:messages all="true" filter="true"/>
 
-<t:form method="login">
+<t:form>
 	<TABLE BORDER="0">
 	<TR>
 		<TD><a:key key="login.label.user"/></TD>
 		<TD><t:inputText property="user" size="10" tabIndex="1"/></TD>
 	</TR>
 	<TR>
-		<TD COLSPAN="2"><INPUT TYPE="submit" VALUE="<a:key key="login.label.next"/>"></TD>
+		<TD COLSPAN="2"><t:submitLink method="login"><a:key key="login.label.next"/></t:submitLink></TD>
 	</TR>
+	<TR>
+		<t:submitHTML tag="td" style="border: 1px solid black;" method="login"><t:attribute name="colspan">2</t:attribute>Bute!</t:submitHTML>
+	</TR>	
 	</TABLE>
 </t:form>
 <BR>
