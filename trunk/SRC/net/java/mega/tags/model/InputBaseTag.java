@@ -23,7 +23,7 @@ import java.io.IOException;
 import net.java.mega.action.util.Constants;
 import net.java.mega.common.util.PageContextUtil;
 
-public abstract class InputTag extends BaseBodyTag {
+public abstract class InputBaseTag extends BaseBodyTag {
 	private String property = null;
 	private String tabIndex = null;
 

@@ -177,6 +177,23 @@ public class URLUtil {
 
 		return response.encodeURL(buffer.toString());
 	}
+	
+	public String getRAWMethodName(String actionName, String methodName) throws ActionException {
+		if (log.isDebugEnabled()) {
+			log.debug("getRAWMethodName(" + actionName + ", " + methodName + ")");
+		}
+		
+		StringBuffer buffer = new StringBuffer();
+		
+		buffer.append(getActionName(actionName));
+		
+		if (methodName != null) {
+			buffer.append(".");
+			buffer.append(methodName);
+		}
+		
+		return buffer.toString();
+	}
 
 	private String getActionName(String actionName) throws ActionException {
 		String action = actionName;
