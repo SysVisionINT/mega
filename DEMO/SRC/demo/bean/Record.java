@@ -8,11 +8,13 @@ public class Record implements Serializable{
 	private int id = 0;
 	private String name = null;
 	private boolean admin = false;
+	private String obs = null;
 	
-	public Record(int i, String n, boolean b) {
+	public Record(int i, String n, boolean b, String o) {
 		setId(i);
 		setName(n);
 		setAdmin(b);
+		setObs(o);
 	}
 
 	public int getId() {
@@ -37,6 +39,14 @@ public class Record implements Serializable{
 
 	public void setAdmin(boolean admin) {
 		this.admin = admin;
+	}
+
+	public String getObs() {
+		return obs;
+	}
+
+	public void setObs(String obs) {
+		this.obs = obs;
 	}
 
 	public boolean equals(Object obj) {

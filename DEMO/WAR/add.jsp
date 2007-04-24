@@ -14,6 +14,10 @@
 		<TD><t:inputText property="nome" size="50" tabIndex="2"/></TD>
 	</TR>
 	<TR>
+		<TD><a:key key="add.label.obs"/></TD>
+		<TD><t:textarea property="obs" cols="50" rows="5"/></TD>
+	</TR>	
+	<TR>
 		<TD><a:key key="add.label.admin"/></TD>
 		<TD><t:checkBox property="admin" tabIndex="3"/></TD>
 	</TR>	
