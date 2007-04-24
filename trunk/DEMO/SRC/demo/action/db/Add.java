@@ -17,6 +17,7 @@ public class Add extends AbstractAction implements Validator {
 	private String id = null;
 	private String nome = null;
 	private boolean admin = false;
+	private String obs = null;
 	private List xpto = null;
 
 	public void onLoad() {
@@ -47,6 +48,14 @@ public class Add extends AbstractAction implements Validator {
 		this.nome = nome;
 	}
 
+	public String getObs() {
+		return obs;
+	}
+
+	public void setObs(String obs) {
+		this.obs = obs;
+	}
+
 	public void insert() {
 		log.info("insert()");
 		
@@ -54,7 +63,7 @@ public class Add extends AbstractAction implements Validator {
 
 		RecordList recordList = (RecordList) getAction(RecordList.class);
 
-		Record record = new Record(Integer.parseInt(id), nome, admin);
+		Record record = new Record(Integer.parseInt(id), nome, admin, obs);
 
 		if (recordList.getRecordList().contains(record)) {
 			addMessage(new Message("add.error.duplicated"));
