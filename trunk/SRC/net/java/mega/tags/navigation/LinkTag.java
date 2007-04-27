@@ -18,6 +18,8 @@
  */
 package net.java.mega.tags.navigation;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -60,7 +62,7 @@ public class LinkTag extends BaseBodyTag {
 		parameters.put(name, value);
 	}
 
-	private String getParameters() {
+	private String getParameters() throws JspException {
 		StringBuffer buffer = new StringBuffer();
 
 		String name = null;
@@ -74,7 +76,13 @@ public class LinkTag extends BaseBodyTag {
 
 			buffer.append(name);
 			buffer.append("=");
-			buffer.append(parameters.get(name));
+			
+			try {
+				buffer.append(URLEncoder.encode((String)parameters.get(name), "UTF-8"));
+			} catch (UnsupportedEncodingException e) {
+				log.error("Error while writing A TAG", e);
+				throw new JspException(e);
+			}
 		}
 
 		return buffer.toString();
