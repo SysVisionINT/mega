@@ -49,7 +49,7 @@ public class ActionServlet extends HttpServlet {
 			log.debug("GET from user " + request.getRemoteUser() + " on " + request.getRemoteAddr());
 		}
 
-		process(request, response);
+		process(request, response, Constants.HTTP_GET);
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -57,10 +57,10 @@ public class ActionServlet extends HttpServlet {
 			log.debug("POST from user " + request.getRemoteUser() + " on " + request.getRemoteAddr());
 		}
 
-		process(request, response);
+		process(request, response, Constants.HTTP_POST);
 	}
 
-	private void process(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+	private void process(HttpServletRequest request, HttpServletResponse response, String doMethod) throws IOException, ServletException {
 		ActionManager actionManager = ActionManager.getInstance();
 		
 		String path = RequestUtil.getAction(request);
@@ -69,7 +69,7 @@ public class ActionServlet extends HttpServlet {
 		ResponseMetaData responseMetaData = null;
 
 		try {
-			requestMetaData = actionManager.getRequestMetaData(path);
+			requestMetaData = actionManager.getRequestMetaData(path, doMethod);
 
 			ActionWrapper actionWrapper = actionManager.getActionWrapper(requestMetaData.getActionConfig()
 					.getWrapperChain());

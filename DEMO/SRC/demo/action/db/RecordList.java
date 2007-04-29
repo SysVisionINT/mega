@@ -13,7 +13,6 @@ import demo.bean.Record;
 public class RecordList extends AbstractAction implements SessionObject {
 	private static Log log = LogFactory.getLog(RecordList.class);
 	
-	private int id = 0;
 	private List recordList = null;
 	private Timestamp lastChange = null;
 
@@ -34,10 +33,6 @@ public class RecordList extends AbstractAction implements SessionObject {
 		lastChange = new Timestamp(System.currentTimeMillis());
 	}
 
-	public void setId(int id) {
-		this.id = id;
-	}
-
 	public void onLoad() {
 		log.info("onLoad()");
 		
@@ -53,8 +48,8 @@ public class RecordList extends AbstractAction implements SessionObject {
 		gotoAction(Add.class);
 	}
 	
-	public void delete() {		
-		log.info("delete()");
+	public void delete(int id) {		
+		log.info("delete("+ id +")");
 		
 		recordList.remove(new Record(id, null, false, null));
 		updateDate();

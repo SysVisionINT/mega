@@ -20,7 +20,7 @@
 		<TD><c:out value="${elemento.obs}"/></TD>
 		<TD>[
 			<t:link method="delete">
-				<t:parameter name="id">
+				<t:parameter>
 					<c:out value="${elemento.id}"/>
 				</t:parameter>
 				<a:key key="list.label.delete"/>

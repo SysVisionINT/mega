@@ -25,7 +25,7 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.Tag;
 
 import net.java.mega.action.util.Constants;
-import net.java.mega.common.util.PageContextUtil;
+import net.java.mega.common.util.WARContextUtil;
 import net.java.mega.tags.model.BaseBodyTag;
 import net.java.mega.tags.model.InputBaseTag;
 import net.java.sjtools.logging.Log;
@@ -131,7 +131,7 @@ public class OptionsTag extends BaseBodyTag {
 	}
 
 	public void writeEndTag() throws JspException {
-		Collection list = (Collection) PageContextUtil.getObject(pageContext, name, property);
+		Collection list = (Collection) WARContextUtil.getValue(pageContext, name, property);
 
 		if (list != null) {
 			Object propertyValue = getPropertyValue();

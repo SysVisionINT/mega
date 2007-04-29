@@ -79,13 +79,14 @@ public class ActionManager {
 		servletConfig = null;
 	}
 
-	public RequestMetaData getRequestMetaData(String path) throws ActionNotFound, ConfigurationError,
+	public RequestMetaData getRequestMetaData(String path, String doMethod) throws ActionNotFound, ConfigurationError,
 			ActionAlreadyInUseException {
 		RequestMetaData requestMetaData = new RequestMetaData();
 
 		requestMetaData.setPath(path);
 		requestMetaData.setActionConfig(getActionConfig(getActionPath(path)));
 		requestMetaData.setMethodName(getMethod(path));
+		requestMetaData.setDoMethod(doMethod);
 
 		return requestMetaData;
 	}

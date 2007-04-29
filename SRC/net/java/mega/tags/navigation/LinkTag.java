@@ -20,18 +20,20 @@ package net.java.mega.tags.navigation;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Map;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.JspException;
 
+import net.java.mega.action.util.Constants;
 import net.java.mega.action.util.URLUtil;
 import net.java.mega.tags.model.BaseBodyTag;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
+import net.java.sjtools.util.TextUtil;
 
 public class LinkTag extends BaseBodyTag {
 	private static final long serialVersionUID = -3738161366330292080L;
@@ -39,8 +41,10 @@ public class LinkTag extends BaseBodyTag {
 	private static Log log = LogFactory.getLog(LinkTag.class);
 
 	private String action = null;
+
 	private String method = null;
-	private Map parameters = null;
+
+	private List parameters = null;
 
 	public String getAction() {
 		return action;
@@ -58,38 +62,50 @@ public class LinkTag extends BaseBodyTag {
 		this.method = method;
 	}
 
-	public void addParameter(String name, String value) {
-		parameters.put(name, value);
+	public void addParameter(String value) {
+		parameters.add(value);
 	}
 
 	private String getParameters() throws JspException {
 		StringBuffer buffer = new StringBuffer();
 
-		String name = null;
+		String value = null;
+		int count = 0;
 
-		for (Iterator i = parameters.keySet().iterator(); i.hasNext();) {
-			name = (String) i.next();
+		for (Iterator i = parameters.iterator(); i.hasNext();) {
+			value = (String) i.next();
 
 			if (buffer.length() != 0) {
 				buffer.append("&");
 			}
 
-			buffer.append(name);
+			buffer.append(getArgName(count));
 			buffer.append("=");
-			
+
 			try {
-				buffer.append(URLEncoder.encode((String)parameters.get(name), "UTF-8"));
+				buffer.append(URLEncoder.encode(value, "UTF-8"));
 			} catch (UnsupportedEncodingException e) {
 				log.error("Error while writing A TAG", e);
 				throw new JspException(e);
 			}
+
+			count++;
 		}
 
 		return buffer.toString();
 	}
 
+	private String getArgName(int count) {
+		StringBuffer buffer = new StringBuffer();
+
+		buffer.append(Constants.GET_ARG);
+		buffer.append(TextUtil.format(String.valueOf(count), 3, '0', TextUtil.ALLIGN_RIGHT));
+
+		return buffer.toString();
+	}
+
 	public void initTag() {
-		parameters = new HashMap();
+		parameters = new ArrayList();
 	}
 
 	public int writeStartTag() throws JspException {
@@ -114,7 +130,7 @@ public class LinkTag extends BaseBodyTag {
 			log.error("Error while writing A TAG", e);
 			throw new JspException(e);
 		}
-		
+
 		return INCLUDE_INNER_HTML;
 	}
 

@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.PageContext;
 
-import net.java.mega.common.util.PageContextUtil;
+import net.java.mega.common.util.WARContextUtil;
 import net.java.mega.layout.extention.Controller;
 import net.java.mega.layout.model.BeanContent;
 import net.java.mega.layout.model.Block;
@@ -164,7 +164,7 @@ public class LayoutServletUtil {
 	}
 
 	private static void includeContent(PageContext pageContext, BeanContent content) throws IOException {
-		pageContext.getOut().print(PageContextUtil.getObject(pageContext, content.getName(), content.getProperty()));
+		pageContext.getOut().print(WARContextUtil.getValue(pageContext, content.getName(), content.getProperty()));
 	}
 
 	private static void includeContent(PageContext pageContext, PathContent content) throws IOException, ServletException {

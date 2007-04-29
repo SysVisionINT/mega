@@ -25,6 +25,7 @@ import net.java.mega.action.ActionManager;
 import net.java.mega.action.RequestMetaData;
 import net.java.mega.action.ResponseMetaData;
 import net.java.mega.action.api.AbstractWrapper;
+import net.java.mega.action.util.Constants;
 
 
 public class SessionValidatorWrapper extends AbstractWrapper {
@@ -36,7 +37,7 @@ public class SessionValidatorWrapper extends AbstractWrapper {
 		if (sessionObjectExists(request)){
 			return executeNext(request, response, requestMetaData);
 		} else {
-			RequestMetaData forward = ActionManager.getInstance().getRequestMetaData(getProperty("forward-url"));
+			RequestMetaData forward = ActionManager.getInstance().getRequestMetaData(getProperty("forward-url"), Constants.HTTP_GET);
 			
 			return executeNext(request, response, forward);
 		}

@@ -25,7 +25,6 @@ import net.java.mega.action.RequestMetaData;
 import net.java.mega.action.ResponseMetaData;
 import net.java.mega.action.api.ResponseProvider;
 import net.java.mega.action.error.ActionException;
-import net.java.mega.action.util.Constants;
 import net.java.mega.common.util.NavigationUtil;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
@@ -41,8 +40,6 @@ public class Forward implements ResponseProvider {
 
 	public void process(HttpServletRequest request, HttpServletResponse response, RequestMetaData requestMetaData,
 			ResponseMetaData responseMetaData) throws ActionException {
-		request.setAttribute(Constants.CURRENT_ACTION, responseMetaData.getAction());
-		request.setAttribute(Constants.MESSAGE_CONTAINER, responseMetaData.getMessageContainer());
 
 		try {
 			NavigationUtil.forward(request, response, location);

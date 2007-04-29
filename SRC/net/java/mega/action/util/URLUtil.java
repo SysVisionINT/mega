@@ -26,6 +26,7 @@ import net.java.mega.action.error.ActionException;
 import net.java.mega.action.model.Action;
 import net.java.mega.action.model.ActionConfig;
 import net.java.mega.common.model.ServletMapping;
+import net.java.mega.common.util.WARContextUtil;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
 
@@ -199,7 +200,7 @@ public class URLUtil {
 		String action = actionName;
 		
 		if (action == null) {
-			Action actionObject = (Action) request.getAttribute(Constants.CURRENT_ACTION);
+			Action actionObject = (Action) WARContextUtil.getObject(request, Constants.CURRENT_ACTION);
 			ActionConfig actionConfig = ActionManager.getInstance().getActionConfig(actionObject.getClass());
 			action = actionConfig.getName();
 		}
