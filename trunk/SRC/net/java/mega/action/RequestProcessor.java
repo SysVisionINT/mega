@@ -22,6 +22,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -43,6 +45,7 @@ import net.java.mega.action.error.PropertySetError;
 import net.java.mega.action.model.Action;
 import net.java.mega.action.model.ActionConfig;
 import net.java.mega.action.util.CheckBoxUtil;
+import net.java.mega.action.util.Constants;
 import net.java.mega.action.util.MethodConstants;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
@@ -53,12 +56,15 @@ public class RequestProcessor {
 	private static Log log = LogFactory.getLog(RequestProcessor.class);
 
 	private HttpServletRequest request = null;
+
 	private HttpServletResponse response = null;
 
 	private Map actions = new HashMap();
+
 	private ResponseMetaData currentResponse = new ResponseMetaData();
+
 	private MessageContainer messageContainer = new MessageContainer();
-	private String lastMethod = null;
+
 	private boolean sessionInvalidated = false;
 
 	public RequestProcessor(HttpServletRequest request, HttpServletResponse response) {
@@ -129,9 +135,7 @@ public class RequestProcessor {
 
 		currentResponse.setAction(action);
 
-		lastMethod = MethodConstants.ON_LOAD;
-
-		execute(action, MethodConstants.ON_LOAD);
+		execute(action, MethodConstants.ON_LOAD, new Object[0]);
 	}
 
 	public Action getActionInstance(Class clazz) {
@@ -180,6 +184,112 @@ public class RequestProcessor {
 
 		Action action = getActionInstance(requestMetaData.getActionConfig().getClazz());
 
+		if (requestMetaData.getDoMethod().equals(Constants.HTTP_POST)) {
+			processPOST(requestMetaData, action);
+		} else {
+			processGET(requestMetaData, action);
+		}
+
+		if (sessionInvalidated) {
+			getHttpSession().invalidate();
+		}
+
+		String contextName = null;
+
+		for (Iterator i = actions.values().iterator(); i.hasNext();) {
+			action = (Action) i.next();
+
+			contextName = getContextName(action);
+
+			if (!sessionInvalidated && action instanceof SessionObject) {
+				getHttpSession().setAttribute(contextName, action);
+			} else {
+				getHttpServletRequest().setAttribute(contextName, action);
+			}
+		}
+		
+		if (!sessionInvalidated) {
+			getHttpSession().setAttribute(Constants.CURRENT_ACTION, action);
+		} else {
+			getHttpServletRequest().setAttribute(Constants.CURRENT_ACTION, action);
+		}
+
+		currentResponse.setMessageContainer(messageContainer);
+		getHttpServletRequest().setAttribute(Constants.MESSAGE_CONTAINER, messageContainer);
+
+		if (currentResponse.getAction() instanceof CustomResponseProvider) {
+			currentResponse.setResponseProvider(((CustomResponseProvider) currentResponse.getAction()).getResponseProvider());
+		} else {
+			currentResponse.setResponseProvider(ActionManager.getInstance().getResponseProvider(currentResponse.getAction()));
+		}
+
+		return currentResponse;
+	}
+
+	private void processGET(RequestMetaData requestMetaData, Action action) {
+		if (log.isDebugEnabled()) {
+			log.debug("processGET(...)");
+		}
+
+		List attributeList = new ArrayList();
+		String attributeName = null;
+
+		for (Enumeration e = getHttpServletRequest().getParameterNames(); e.hasMoreElements();) {
+			attributeName = (String) e.nextElement();
+
+			if (attributeName.startsWith(Constants.GET_ARG)) {
+				attributeList.add(attributeName);
+			}
+		}
+
+		Collections.sort(attributeList);
+		
+		String[] parameters = new String[attributeList.size()];
+		int index = 0;
+
+		for (Iterator i = attributeList.iterator(); i.hasNext();) {
+			attributeName = (String) i.next();
+
+			parameters[index] = getHttpServletRequest().getParameter(attributeName);
+		}
+
+		Object[] args = convertArgs(parameters, action, requestMetaData.getMethodName());
+
+		execute(action, requestMetaData.getMethodName(), args);
+	}
+
+	private Object[] convertArgs(String[] parameters, Action action, String methodName) {
+		Object[] ret = new Object[parameters.length];
+
+		BeanUtil beanUtil = new BeanUtil(action);
+
+		List methods = beanUtil.getMethods(methodName);
+
+		if (methods.size() == 1) {
+			if (parameters.length != ((Method) methods.get(0)).getParameterTypes().length) {
+				log.error("Wrong number of arguments for method " + methodName + " of class " + action.getClass().getName());
+				throw new MethodExecuteError(action.getClass().getName(), methodName);
+			}
+
+			for (int i = 0; i < parameters.length; i++) {
+				if (TextUtil.isEmptyString(parameters[i])) {
+					ret[i] = null;
+				} else {
+					ret[i] = convertType(parameters[i], ((Method) methods.get(0)).getParameterTypes()[i]);
+				}
+			}
+		} else {
+			ret = parameters;
+		}
+
+		return ret;
+	}
+
+	private void processPOST(RequestMetaData requestMetaData, Action action) throws Exception {
+		if (log.isDebugEnabled()) {
+			log.debug("processPOST(...)");
+		}
+
 		String attributeName = null;
 		String attributeValue = null;
 
@@ -211,46 +321,8 @@ public class RequestProcessor {
 		currentResponse.setAction(action);
 
 		if (valid) {
-			lastMethod = requestMetaData.getMethodName();
-
-			execute(action, requestMetaData.getMethodName());
-
-			if (!lastMethod.equals(MethodConstants.ON_LOAD)) {
-				execute(currentResponse.getAction(), MethodConstants.ON_LOAD);
-			}
-		} else {
-			execute(action, MethodConstants.ON_LOAD);
+			execute(action, requestMetaData.getMethodName(), new Object[0]);
 		}
-
-		if (sessionInvalidated) {
-			getHttpSession().invalidate();
-		}
-
-		String contextName = null;
-
-		for (Iterator i = actions.values().iterator(); i.hasNext();) {
-			action = (Action) i.next();
-
-			contextName = getContextName(action);
-
-			if (!sessionInvalidated && action instanceof SessionObject) {
-				getHttpSession().setAttribute(contextName, action);
-			} else {
-				getHttpServletRequest().setAttribute(contextName, action);
-			}
-		}
-
-		currentResponse.setMessageContainer(messageContainer);
-
-		if (currentResponse.getAction() instanceof CustomResponseProvider) {
-			currentResponse.setResponseProvider(((CustomResponseProvider) currentResponse.getAction())
-					.getResponseProvider());
-		} else {
-			currentResponse.setResponseProvider(ActionManager.getInstance().getResponseProvider(
-					currentResponse.getAction()));
-		}
-
-		return currentResponse;
 	}
 
 	private String getContextName(Object obj) throws ConfigurationError {
@@ -273,8 +345,8 @@ public class RequestProcessor {
 
 	private void setProperty(Action action, String name, String[] parameterValue) throws PropertySetError {
 		if (log.isDebugEnabled()) {
-			log.debug("setProperty(" + action.getClass().getName() + ", " + name + ", ["
-					+ TextUtil.toString(parameterValue) + "])");
+			log.debug("setProperty(" + action.getClass().getName() + ", " + name + ", [" + TextUtil.toString(parameterValue)
+					+ "])");
 		}
 
 		BeanUtil beanUtil = new BeanUtil(action);
@@ -308,8 +380,8 @@ public class RequestProcessor {
 					try {
 						beanUtil.set(name, collection);
 					} catch (Exception e) {
-						log.error("Error trying to set property " + name + " with the value " + collection
-								+ " of class " + action.getClass().getName(), e);
+						log.error("Error trying to set property " + name + " with the value " + collection + " of class "
+								+ action.getClass().getName(), e);
 						throw new PropertySetError(name, collection);
 					}
 				} else {
@@ -323,26 +395,7 @@ public class RequestProcessor {
 						}
 					} else {
 						Class clazz = ((Method) methods.get(0)).getParameterTypes()[0];
-						String strValue = (String) value;
-						Object object = value;
-
-						if (clazz.equals(int.class) || clazz.equals(Integer.class)) {
-							object = Integer.valueOf(strValue);
-						} else if (clazz.equals(boolean.class) || clazz.equals(Boolean.class)) {
-							object = Boolean.valueOf(strValue);
-						} else if (clazz.equals(char.class)) {
-							object = new Character(strValue.charAt(0));
-						} else if (clazz.equals(byte.class) || clazz.equals(Byte.class)) {
-							object = Byte.valueOf(strValue);
-						} else if (clazz.equals(short.class) || clazz.equals(Short.class)) {
-							object = Short.valueOf(strValue);
-						} else if (clazz.equals(long.class) || clazz.equals(Long.class)) {
-							object = Long.valueOf(strValue);
-						} else if (clazz.equals(float.class) || clazz.equals(Float.class)) {
-							object = Float.valueOf(strValue);
-						} else if (clazz.equals(double.class) || clazz.equals(Double.class)) {
-							object = Double.valueOf(strValue);
-						}
+						Object object = convertType((String) value, clazz);
 
 						try {
 							beanUtil.set(name, object);
@@ -357,7 +410,31 @@ public class RequestProcessor {
 		}
 	}
 
-	private void execute(Action action, String methodName) {
+	private Object convertType(String strValue, Class clazz) {
+		Object object = strValue;
+
+		if (clazz.equals(int.class) || clazz.equals(Integer.class)) {
+			object = Integer.valueOf(strValue);
+		} else if (clazz.equals(boolean.class) || clazz.equals(Boolean.class)) {
+			object = Boolean.valueOf(strValue);
+		} else if (clazz.equals(char.class)) {
+			object = new Character(strValue.charAt(0));
+		} else if (clazz.equals(byte.class) || clazz.equals(Byte.class)) {
+			object = Byte.valueOf(strValue);
+		} else if (clazz.equals(short.class) || clazz.equals(Short.class)) {
+			object = Short.valueOf(strValue);
+		} else if (clazz.equals(long.class) || clazz.equals(Long.class)) {
+			object = Long.valueOf(strValue);
+		} else if (clazz.equals(float.class) || clazz.equals(Float.class)) {
+			object = Float.valueOf(strValue);
+		} else if (clazz.equals(double.class) || clazz.equals(Double.class)) {
+			object = Double.valueOf(strValue);
+		}
+
+		return object;
+	}
+
+	private void execute(Action action, String methodName, Object[] parameters) {
 		if (log.isDebugEnabled()) {
 			log.debug("execute(" + action.getClass().getName() + ", " + methodName + ")");
 		}
@@ -368,30 +445,24 @@ public class RequestProcessor {
 			BeanUtil beanUtil = new BeanUtil(action);
 
 			try {
-				beanUtil.invokeMethod(methodName, new Object[0]);
+				beanUtil.invokeMethod(methodName, parameters);
 			} catch (SecurityException e) {
-				log.error("Error trying to execute method " + methodName + " of class " + action.getClass().getName(),
-						e);
+				log.error("Error trying to execute method " + methodName + " of class " + action.getClass().getName(), e);
 				throw new MethodExecuteError(action.getClass().getName(), methodName);
 			} catch (IllegalArgumentException e) {
-				log.error("Error trying to execute method " + methodName + " of class " + action.getClass().getName(),
-						e);
+				log.error("Error trying to execute method " + methodName + " of class " + action.getClass().getName(), e);
 				throw new MethodExecuteError(action.getClass().getName(), methodName);
 			} catch (NoSuchMethodException e) {
-				log.error("Error trying to execute method " + methodName + " of class " + action.getClass().getName(),
-						e);
+				log.error("Error trying to execute method " + methodName + " of class " + action.getClass().getName(), e);
 				throw new MethodExecuteError(action.getClass().getName(), methodName);
 			} catch (IllegalAccessException e) {
-				log.error("Error trying to execute method " + methodName + " of class " + action.getClass().getName(),
-						e);
+				log.error("Error trying to execute method " + methodName + " of class " + action.getClass().getName(), e);
 				throw new MethodExecuteError(action.getClass().getName(), methodName);
 			} catch (InvocationTargetException e) {
-				log.error("Error trying to execute method " + methodName + " of class " + action.getClass().getName(),
-						e);
+				log.error("Error trying to execute method " + methodName + " of class " + action.getClass().getName(), e);
 				throw new MethodExecuteError(action.getClass().getName(), methodName);
 			} catch (Exception e) {
-				log.error("Error trying to execute method " + methodName + " of class " + action.getClass().getName(),
-						e);
+				log.error("Error trying to execute method " + methodName + " of class " + action.getClass().getName(), e);
 				throw new MethodExecuteError(e);
 			}
 		}

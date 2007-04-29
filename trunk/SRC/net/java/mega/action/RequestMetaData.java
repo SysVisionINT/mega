@@ -19,13 +19,24 @@
 package net.java.mega.action;
 
 import net.java.mega.action.model.ActionConfig;
+import net.java.mega.action.util.Constants;
 import net.java.mega.action.util.MethodConstants;
+import net.java.mega.layout.util.Constant;
 
 public class RequestMetaData {
 	private ActionConfig actionConfig = null;
 	private String path = null;
 	private String methodName = MethodConstants.ON_LOAD;
+	private String doMethod = Constants.HTTP_GET;
 	
+	public String getDoMethod() {
+		return doMethod;
+	}
+
+	public void setDoMethod(String doMethod) {
+		this.doMethod = doMethod;
+	}
+
 	public String getMethodName() {
 		return methodName;
 	}

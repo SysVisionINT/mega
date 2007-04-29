@@ -27,40 +27,48 @@ import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
 import net.java.sjtools.util.BeanUtil;
 
-public class PageContextUtil {
-	private static Log log = LogFactory.getLog(PageContextUtil.class);
+public class WARContextUtil {
+	private static Log log = LogFactory.getLog(WARContextUtil.class);
 
 	public static Object getObject(PageContext context, String name) {
 		if (log.isDebugEnabled()) {
-			log.debug("write(" + name + ")");
+			log.debug("getObject(PageContext, " + name + ")");
 		}
 
 		Object obj = context.getAttribute(name);
 
 		if (obj == null) {
-			HttpServletRequest request = (HttpServletRequest) context.getRequest();
+			obj = getObject((HttpServletRequest) context.getRequest(), name);
+		}
 
-			obj = request.getAttribute(name);
+		return obj;
+	}
+
+	public static Object getObject(HttpServletRequest request, String name) {
+		if (log.isDebugEnabled()) {
+			log.debug("getObject(HttpServletRequest, " + name + ")");
+		}
+
+		Object obj = request.getAttribute(name);
+
+		if (obj == null) {
+			HttpSession session = request.getSession(true);
+
+			obj = session.getAttribute(name);
 
 			if (obj == null) {
-				HttpSession session = request.getSession(true);
+				ServletContext servletContext = session.getServletContext();
 
-				obj = session.getAttribute(name);
-
-				if (obj == null) {
-					ServletContext servletContext = session.getServletContext();
-
-					obj = servletContext.getAttribute(name);
-				}
+				obj = servletContext.getAttribute(name);
 			}
 		}
 
 		return obj;
 	}
 
-	public static Object getObject(PageContext context, String name, String propertyName) {
+	public static Object getValue(PageContext context, String name, String propertyName) {
 		if (log.isDebugEnabled()) {
-			log.debug("write(" + name + ", " + propertyName + ")");
+			log.debug("getValue(" + name + ", " + propertyName + ")");
 		}
 
 		Object ret = null;

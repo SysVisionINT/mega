@@ -28,7 +28,7 @@ import javax.servlet.jsp.tagext.TagSupport;
 import net.java.mega.action.util.Constants;
 import net.java.mega.action.util.FormatUtil;
 import net.java.mega.action.util.LocaleUtil;
-import net.java.mega.common.util.PageContextUtil;
+import net.java.mega.common.util.WARContextUtil;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
 
@@ -43,7 +43,7 @@ public class ValueTag extends TagSupport {
 
 	public int doEndTag() throws JspException {
 		try {
-			Object value = PageContextUtil.getObject(pageContext, name, property);
+			Object value = WARContextUtil.getValue(pageContext, name, property);
 
 			Locale locale = LocaleUtil.getUserLocate((HttpServletRequest) pageContext.getRequest());
 

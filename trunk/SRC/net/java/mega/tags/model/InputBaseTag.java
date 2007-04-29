@@ -21,7 +21,7 @@ package net.java.mega.tags.model;
 import java.io.IOException;
 
 import net.java.mega.action.util.Constants;
-import net.java.mega.common.util.PageContextUtil;
+import net.java.mega.common.util.WARContextUtil;
 
 public abstract class InputBaseTag extends BaseBodyTag {
 	private String property = null;
@@ -44,7 +44,7 @@ public abstract class InputBaseTag extends BaseBodyTag {
 	}
 
 	public Object getPropertyValue() {
-		return PageContextUtil.getObject(pageContext, Constants.CURRENT_ACTION, property);
+		return WARContextUtil.getValue(pageContext, Constants.CURRENT_ACTION, property);
 	}
 
 	public void writeAttributes() throws IOException {

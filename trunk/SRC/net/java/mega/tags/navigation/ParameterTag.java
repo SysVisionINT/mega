@@ -24,22 +24,12 @@ import javax.servlet.jsp.tagext.Tag;
 
 public class ParameterTag extends BodyTagSupport {
 	private static final long serialVersionUID = 374854394919535210L;
-	
-	private String name = null;
-	
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
 
 	public int doEndTag() throws JspException {
 		Tag tag = findAncestorWithClass(this, LinkTag.class);
 		
 		if (tag != null) {
-			((LinkTag)tag).addParameter(getName(), getBodyContent().getString().trim());
+			((LinkTag)tag).addParameter(getBodyContent().getString().trim());
 		}
 
 		return EVAL_PAGE;	
