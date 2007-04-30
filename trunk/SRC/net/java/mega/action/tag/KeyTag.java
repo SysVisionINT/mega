@@ -44,9 +44,7 @@ public class KeyTag extends TagSupport {
 
 		String message = MessageUtil.getMessage(key, locale);
 		
-		if (message == null) {
-			message = "{".concat(key).concat("}");
-		} else if (filter) {
+		if (filter) {
 			message = HTMLUtil.filter(message);
 		}
 
