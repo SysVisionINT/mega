@@ -21,7 +21,6 @@ package net.java.mega.action;
 import net.java.mega.action.model.ActionConfig;
 import net.java.mega.action.util.Constants;
 import net.java.mega.action.util.MethodConstants;
-import net.java.mega.layout.util.Constant;
 
 public class RequestMetaData {
 	private ActionConfig actionConfig = null;
