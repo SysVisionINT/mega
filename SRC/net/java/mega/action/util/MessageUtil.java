@@ -61,6 +61,6 @@ public class MessageUtil {
 			}
 		}
 
-		return null;
+		return "{".concat(messageKey).concat("}");
 	}
 }
