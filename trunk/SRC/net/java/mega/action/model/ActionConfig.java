@@ -96,7 +96,7 @@ public class ActionConfig implements Serializable {
 		}
 		
 		if (!name.equals(action.getName())) {
-			return true;
+			return false;
 		}
 
 		return true;

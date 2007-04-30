@@ -95,10 +95,6 @@ public class ControllerConfig implements Serializable {
 
 	public void addAction(ActionConfig action) throws ActionAlreadyInUseException {
 		ActionConfig other = getAction(action.getClazz());
-		
-		if (!other.sameConfig(action)) {
-			return;
-		}
 
 		if (other == null) {
 			lock.getWriteLock();
@@ -106,7 +102,11 @@ public class ControllerConfig implements Serializable {
 			actionsByName.put(action.getClazz().getName(), action);
 			lock.releaseLock();
 		} else {
-			throw new ActionAlreadyInUseException(action.getClazz());
+			if (!other.sameConfig(action)) {
+				return;
+			} else {
+				throw new ActionAlreadyInUseException(action.getClazz());
+			}
 		}
 	}
 
