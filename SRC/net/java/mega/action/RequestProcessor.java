@@ -156,18 +156,22 @@ public class RequestProcessor {
 			if (action != null) {
 				action.setRequestProcessor(this);
 			} else {
-				try {
-					action = (Action) clazz.newInstance();
-					action.setRequestProcessor(this);
+				action = (Action) getHttpSession().getAttribute(Constants.CURRENT_ACTION);
 
-					ActionConfig actionConfig = ActionManager.getInstance().getActionConfig(clazz);
+				if (action == null || !action.getClass().equals(clazz)) {
+					try {
+						action = (Action) clazz.newInstance();
+						action.setRequestProcessor(this);
 
-					if (actionConfig != null) {
-						action.setProperties(actionConfig.getProperties());
+						ActionConfig actionConfig = ActionManager.getInstance().getActionConfig(clazz);
+
+						if (actionConfig != null) {
+							action.setProperties(actionConfig.getProperties());
+						}
+					} catch (Exception e) {
+						log.error("Error while creating instance of " + clazz.getName(), e);
+						throw new ActionCreationException(clazz);
 					}
-				} catch (Exception e) {
-					log.error("Error while creating instance of " + clazz.getName(), e);
-					throw new ActionCreationException(clazz);
 				}
 			}
 
@@ -443,7 +447,8 @@ public class RequestProcessor {
 
 	private void execute(Action action, String methodName, Object[] parameters) {
 		if (log.isDebugEnabled()) {
-			log.debug("execute(" + action.getClass().getName() + ", " + methodName + ", [" + TextUtil.toString(parameters)+ "])");
+			log.debug("execute(" + action.getClass().getName() + ", " + methodName + ", ["
+					+ TextUtil.toString(parameters) + "])");
 		}
 
 		if (methodName.equals(MethodConstants.ON_LOAD)) {
