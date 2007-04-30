@@ -172,6 +172,8 @@ public class RequestProcessor {
 						log.error("Error while creating instance of " + clazz.getName(), e);
 						throw new ActionCreationException(clazz);
 					}
+				} else {
+					action.setRequestProcessor(this);
 				}
 			}
 
