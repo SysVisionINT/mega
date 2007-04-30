@@ -184,6 +184,8 @@ public class RequestProcessor {
 
 		Action action = getActionInstance(requestMetaData.getActionConfig().getClazz());
 
+		currentResponse.setAction(action);
+
 		if (requestMetaData.getDoMethod().equals(Constants.HTTP_POST)) {
 			processPOST(requestMetaData, action);
 		} else {
@@ -207,20 +209,22 @@ public class RequestProcessor {
 				getHttpServletRequest().setAttribute(contextName, action);
 			}
 		}
-		
+
 		if (!sessionInvalidated) {
-			getHttpSession().setAttribute(Constants.CURRENT_ACTION, action);
+			getHttpSession().setAttribute(Constants.CURRENT_ACTION, currentResponse.getAction());
 		} else {
-			getHttpServletRequest().setAttribute(Constants.CURRENT_ACTION, action);
+			getHttpServletRequest().setAttribute(Constants.CURRENT_ACTION, currentResponse.getAction());
 		}
 
 		currentResponse.setMessageContainer(messageContainer);
 		getHttpServletRequest().setAttribute(Constants.MESSAGE_CONTAINER, messageContainer);
 
 		if (currentResponse.getAction() instanceof CustomResponseProvider) {
-			currentResponse.setResponseProvider(((CustomResponseProvider) currentResponse.getAction()).getResponseProvider());
+			currentResponse.setResponseProvider(((CustomResponseProvider) currentResponse.getAction())
+					.getResponseProvider());
 		} else {
-			currentResponse.setResponseProvider(ActionManager.getInstance().getResponseProvider(currentResponse.getAction()));
+			currentResponse.setResponseProvider(ActionManager.getInstance().getResponseProvider(
+					currentResponse.getAction()));
 		}
 
 		return currentResponse;
@@ -243,7 +247,7 @@ public class RequestProcessor {
 		}
 
 		Collections.sort(attributeList);
-		
+
 		String[] parameters = new String[attributeList.size()];
 		int index = 0;
 
@@ -266,16 +270,21 @@ public class RequestProcessor {
 		List methods = beanUtil.getMethods(methodName);
 
 		if (methods.size() == 1) {
-			if (parameters.length != ((Method) methods.get(0)).getParameterTypes().length) {
-				log.error("Wrong number of arguments for method " + methodName + " of class " + action.getClass().getName());
-				throw new MethodExecuteError(action.getClass().getName(), methodName);
-			}
+			if (((Method) methods.get(0)).getParameterTypes().length == 0) {
+				ret = new Object[0];
+			} else {
+				if (parameters.length != ((Method) methods.get(0)).getParameterTypes().length) {
+					log.error("Wrong number of arguments for method " + methodName + " of class "
+							+ action.getClass().getName());
+					throw new MethodExecuteError(action.getClass().getName(), methodName);
+				}
 
-			for (int i = 0; i < parameters.length; i++) {
-				if (TextUtil.isEmptyString(parameters[i])) {
-					ret[i] = null;
-				} else {
-					ret[i] = convertType(parameters[i], ((Method) methods.get(0)).getParameterTypes()[i]);
+				for (int i = 0; i < parameters.length; i++) {
+					if (TextUtil.isEmptyString(parameters[i])) {
+						ret[i] = null;
+					} else {
+						ret[i] = convertType(parameters[i], ((Method) methods.get(0)).getParameterTypes()[i]);
+					}
 				}
 			}
 		} else {
@@ -318,8 +327,6 @@ public class RequestProcessor {
 			}
 		}
 
-		currentResponse.setAction(action);
-
 		if (valid) {
 			execute(action, requestMetaData.getMethodName(), new Object[0]);
 		}
@@ -345,8 +352,8 @@ public class RequestProcessor {
 
 	private void setProperty(Action action, String name, String[] parameterValue) throws PropertySetError {
 		if (log.isDebugEnabled()) {
-			log.debug("setProperty(" + action.getClass().getName() + ", " + name + ", [" + TextUtil.toString(parameterValue)
-					+ "])");
+			log.debug("setProperty(" + action.getClass().getName() + ", " + name + ", ["
+					+ TextUtil.toString(parameterValue) + "])");
 		}
 
 		BeanUtil beanUtil = new BeanUtil(action);
@@ -380,8 +387,8 @@ public class RequestProcessor {
 					try {
 						beanUtil.set(name, collection);
 					} catch (Exception e) {
-						log.error("Error trying to set property " + name + " with the value " + collection + " of class "
-								+ action.getClass().getName(), e);
+						log.error("Error trying to set property " + name + " with the value " + collection
+								+ " of class " + action.getClass().getName(), e);
 						throw new PropertySetError(name, collection);
 					}
 				} else {
@@ -436,7 +443,7 @@ public class RequestProcessor {
 
 	private void execute(Action action, String methodName, Object[] parameters) {
 		if (log.isDebugEnabled()) {
-			log.debug("execute(" + action.getClass().getName() + ", " + methodName + ")");
+			log.debug("execute(" + action.getClass().getName() + ", " + methodName + ", [" + TextUtil.toString(parameters)+ "])");
 		}
 
 		if (methodName.equals(MethodConstants.ON_LOAD)) {
@@ -447,22 +454,28 @@ public class RequestProcessor {
 			try {
 				beanUtil.invokeMethod(methodName, parameters);
 			} catch (SecurityException e) {
-				log.error("Error trying to execute method " + methodName + " of class " + action.getClass().getName(), e);
+				log.error("Error trying to execute method " + methodName + " of class " + action.getClass().getName(),
+						e);
 				throw new MethodExecuteError(action.getClass().getName(), methodName);
 			} catch (IllegalArgumentException e) {
-				log.error("Error trying to execute method " + methodName + " of class " + action.getClass().getName(), e);
+				log.error("Error trying to execute method " + methodName + " of class " + action.getClass().getName(),
+						e);
 				throw new MethodExecuteError(action.getClass().getName(), methodName);
 			} catch (NoSuchMethodException e) {
-				log.error("Error trying to execute method " + methodName + " of class " + action.getClass().getName(), e);
+				log.error("Error trying to execute method " + methodName + " of class " + action.getClass().getName(),
+						e);
 				throw new MethodExecuteError(action.getClass().getName(), methodName);
 			} catch (IllegalAccessException e) {
-				log.error("Error trying to execute method " + methodName + " of class " + action.getClass().getName(), e);
+				log.error("Error trying to execute method " + methodName + " of class " + action.getClass().getName(),
+						e);
 				throw new MethodExecuteError(action.getClass().getName(), methodName);
 			} catch (InvocationTargetException e) {
-				log.error("Error trying to execute method " + methodName + " of class " + action.getClass().getName(), e);
+				log.error("Error trying to execute method " + methodName + " of class " + action.getClass().getName(),
+						e);
 				throw new MethodExecuteError(action.getClass().getName(), methodName);
 			} catch (Exception e) {
-				log.error("Error trying to execute method " + methodName + " of class " + action.getClass().getName(), e);
+				log.error("Error trying to execute method " + methodName + " of class " + action.getClass().getName(),
+						e);
 				throw new MethodExecuteError(e);
 			}
 		}

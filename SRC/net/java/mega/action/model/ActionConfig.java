@@ -89,4 +89,16 @@ public class ActionConfig implements Serializable {
 	public void setForward(ResponseProvider forward) {
 		this.forward = forward;
 	}
+
+	public boolean sameConfig(ActionConfig action) {
+		if (!equals(action)) {
+			return false;
+		}
+		
+		if (!name.equals(action.getName())) {
+			return true;
+		}
+
+		return true;
+	}
 }
