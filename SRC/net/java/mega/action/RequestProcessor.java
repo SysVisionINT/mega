@@ -207,6 +207,7 @@ public class RequestProcessor {
 		for (Iterator i = actions.values().iterator(); i.hasNext();) {
 			action = (Action) i.next();
 
+			action.setRequestProcessor(null);
 			contextName = getContextName(action);
 
 			if (!sessionInvalidated && action instanceof SessionObject) {
