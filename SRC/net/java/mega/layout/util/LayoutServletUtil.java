@@ -25,6 +25,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.PageContext;
 
+import net.java.mega.common.util.LocaleUtil;
+import net.java.mega.common.util.MessageUtil;
 import net.java.mega.common.util.WARContextUtil;
 import net.java.mega.layout.extention.Controller;
 import net.java.mega.layout.model.BeanContent;
@@ -32,6 +34,7 @@ import net.java.mega.layout.model.Block;
 import net.java.mega.layout.model.BlockContent;
 import net.java.mega.layout.model.ControlerContent;
 import net.java.mega.layout.model.Layout;
+import net.java.mega.layout.model.MessageKeyContent;
 import net.java.mega.layout.model.Page;
 import net.java.mega.layout.model.PathContent;
 import net.java.mega.layout.model.StringContent;
@@ -97,6 +100,14 @@ public class LayoutServletUtil {
 			}
 
 			includeContent(pageContext, stringContent);
+		} else if (content instanceof MessageKeyContent) {
+			MessageKeyContent keyContent = (MessageKeyContent) content;
+
+			if (log.isDebugEnabled()) {
+				log.debug(pageName + "." + blockName + " = '" + keyContent.getValue() + "'");
+			}
+
+			includeContent(pageContext, keyContent);			
 		} else if (content instanceof BeanContent) {
 			BeanContent beanContent = (BeanContent) content;
 
@@ -162,6 +173,12 @@ public class LayoutServletUtil {
 	private static void includeContent(PageContext pageContext, StringContent content) throws IOException {
 		pageContext.getOut().print(content.getValue());
 	}
+	
+	private static void includeContent(PageContext pageContext, MessageKeyContent content) throws IOException {
+		Layout layout = (Layout) pageContext.getServletContext().getAttribute(Constant.LAYOUT);
+		
+		pageContext.getOut().print(MessageUtil.getMessage(layout.getBundleList(), content.getValue(), LocaleUtil.getUserLocate((HttpServletRequest) pageContext.getRequest())));
+	}	
 
 	private static void includeContent(PageContext pageContext, BeanContent content) throws IOException {
 		pageContext.getOut().print(WARContextUtil.getValue(pageContext, content.getName(), content.getProperty()));

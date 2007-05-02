@@ -26,8 +26,8 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import net.java.mega.action.util.HTMLUtil;
-import net.java.mega.action.util.LocaleUtil;
-import net.java.mega.action.util.MessageUtil;
+import net.java.mega.action.util.ActionMessageUtil;
+import net.java.mega.common.util.LocaleUtil;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
 
@@ -42,7 +42,7 @@ public class KeyTag extends TagSupport {
 	public int doEndTag() throws JspException {
 		Locale locale = LocaleUtil.getUserLocate((HttpServletRequest) pageContext.getRequest());
 
-		String message = MessageUtil.getMessage(key, locale);
+		String message = ActionMessageUtil.getMessage(key, locale);
 		
 		if (filter) {
 			message = HTMLUtil.filter(message);

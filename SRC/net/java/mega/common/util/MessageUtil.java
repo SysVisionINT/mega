@@ -16,26 +16,24 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package net.java.mega.action.util;
+package net.java.mega.common.util;
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import net.java.mega.action.ActionManager;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
+import net.java.sjtools.util.TextUtil;
 
 public class MessageUtil {
 	private static Log log = LogFactory.getLog(MessageUtil.class);
 
-	public static String getMessage(String messageKey, Locale locale) {
+	public static String getMessage(List bundleList, String messageKey, Locale locale) {
 		if (log.isDebugEnabled()) {
-			log.debug("getMessage(" + messageKey + ", " + locale + ")");
+			log.debug("getMessage([" +TextUtil.toString(bundleList) + "], "+  messageKey + ", " + locale + ")");
 		}
-
-		List bundleList = ActionManager.getInstance().getBundleList();
 
 		String message = null;
 		String bundleName = null;

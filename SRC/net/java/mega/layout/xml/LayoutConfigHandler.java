@@ -18,15 +18,7 @@
  */
 package net.java.mega.layout.xml;
 
-import net.java.mega.layout.model.BeanContent;
-import net.java.mega.layout.model.Block;
-import net.java.mega.layout.model.ControlerContent;
-import net.java.mega.layout.model.Layout;
-import net.java.mega.layout.model.LayoutPath;
-import net.java.mega.layout.model.Page;
-import net.java.mega.layout.model.PageExtend;
-import net.java.mega.layout.model.PathContent;
-import net.java.mega.layout.model.StringContent;
+import net.java.mega.layout.model.*;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
 import net.java.sjtools.util.TextUtil;
@@ -35,7 +27,6 @@ import net.java.sjtools.xml.SimpleHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
-
 
 public class LayoutConfigHandler extends SimpleHandler {
 
@@ -58,6 +49,16 @@ public class LayoutConfigHandler extends SimpleHandler {
 			}
 
 			return ret;
+		} else if (elementType.equals("message-resources")) {
+			Layout layout = (Layout) currentObject;
+
+			String bundleName = attributes.getValue("name");
+
+			layout.addBundle(bundleName);
+
+			if (log.isDebugEnabled()) {
+				log.debug("bundle = " + bundleName);
+			}
 		} else if (elementType.equals("layout-path")) {
 			Page page = (Page) currentObject;
 
@@ -114,6 +115,20 @@ public class LayoutConfigHandler extends SimpleHandler {
 			}
 
 			return ret;
+		} else if (elementType.equals("message-key")) {
+			Block block = (Block) currentObject;
+
+			MessageKeyContent ret = new MessageKeyContent();
+
+			ret.setValue(attributes.getValue("value"));
+
+			block.setContent(ret);
+
+			if (log.isDebugEnabled()) {
+				log.debug(" -- Block(" + block.getBlockName() + ") -> key = '" + ret.getValue() + "'");
+			}
+
+			return ret;			
 		} else if (elementType.equals("path")) {
 			Block block = (Block) currentObject;
 
@@ -159,9 +174,9 @@ public class LayoutConfigHandler extends SimpleHandler {
 			if (log.isDebugEnabled()) {
 				log.debug(" -- Block(" + block.getBlockName() + ") -> controler = " + ret.getClassName());
 			}
-			
+
 			return ret;
-		}else if (elementType.equals("parameter")) {
+		} else if (elementType.equals("parameter")) {
 			ControlerContent controlerContent = (ControlerContent) currentObject;
 
 			String name = attributes.getValue("name");
@@ -170,9 +185,10 @@ public class LayoutConfigHandler extends SimpleHandler {
 			controlerContent.addParameter(name, value);
 
 			if (log.isDebugEnabled()) {
-				log.debug(" --- Controler(" + controlerContent.getClassName() + ") -> addParameter(" + name + ", " + value + ")");
+				log.debug(" --- Controler(" + controlerContent.getClassName() + ") -> addParameter(" + name + ", "
+						+ value + ")");
 			}
-			
+
 			return null;
 		}
 
@@ -181,10 +197,10 @@ public class LayoutConfigHandler extends SimpleHandler {
 
 	public void processPCDATA(String elementType, Object currentObject, String value) {
 	}
-	
+
 	public void error(SAXParseException error) throws SAXException {
 		log.error("SAX Error", error);
-		
+
 		throw new SAXException(error);
-	}	
+	}
 }
