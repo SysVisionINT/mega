@@ -86,11 +86,11 @@ public abstract class AbstractAction implements Action, Serializable {
 		return requestProcessor.getServletContext();
 	}
 
-	public Locale getLocate() {
+	public Locale getLocale() {
 		return LocaleUtil.getUserLocate(getHttpServletRequest());
 	}
 
-	public void setLocate(Locale locale) {
+	public void setLocale(Locale locale) {
 		LocaleUtil.setUserLocate(getHttpServletRequest(), locale);
 	}
 	

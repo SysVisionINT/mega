@@ -7,7 +7,7 @@ import net.java.mega.action.api.AbstractAction;
 public class CurrentLocate extends AbstractAction {
 	
 	public String getCurrentLocate() {
-		return getLocate().getDisplayLanguage();
+		return getLocale().getDisplayLanguage();
 	}
 
 	public void onLoad() {
@@ -15,10 +15,10 @@ public class CurrentLocate extends AbstractAction {
 	}
 
 	public void change() {
-		if (getLocate().equals(Locale.US)) {
-			setLocate(new Locale("pt", "PT"));
+		if (getLocale().equals(Locale.US)) {
+			setLocale(new Locale("pt", "PT"));
 		} else {
-			setLocate(Locale.US);
+			setLocale(Locale.US);
 		}
 	}
 }
