@@ -32,8 +32,8 @@ import net.java.mega.action.MessageContainer;
 import net.java.mega.action.api.Message;
 import net.java.mega.action.util.Constants;
 import net.java.mega.action.util.HTMLUtil;
-import net.java.mega.action.util.LocaleUtil;
-import net.java.mega.action.util.MessageUtil;
+import net.java.mega.action.util.ActionMessageUtil;
+import net.java.mega.common.util.LocaleUtil;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
 import net.java.sjtools.util.TextUtil;
@@ -57,10 +57,10 @@ public class MessageTag extends TagSupport {
 
 		Locale locale = LocaleUtil.getUserLocate(request);
 
-		String header = MessageUtil.getMessage(HEADER, locale);
-		String prefix = MessageUtil.getMessage(PREFIX, locale);
-		String suffix = MessageUtil.getMessage(SUFFIX, locale);
-		String footer = MessageUtil.getMessage(FOOTER, locale);
+		String header = ActionMessageUtil.getMessage(HEADER, locale);
+		String prefix = ActionMessageUtil.getMessage(PREFIX, locale);
+		String suffix = ActionMessageUtil.getMessage(SUFFIX, locale);
+		String footer = ActionMessageUtil.getMessage(FOOTER, locale);
 		
 		if (header == null) {
 			header = "";
@@ -102,7 +102,7 @@ public class MessageTag extends TagSupport {
 					for (Iterator i = messages.iterator(); i.hasNext();) {
 						message = (Message) i.next();
 						
-						value = MessageUtil.getMessage(message.getMessageKey(), locale);
+						value = ActionMessageUtil.getMessage(message.getMessageKey(), locale);
 						
 						if (message.getParameters() != null && !message.getParameters().isEmpty()) {
 							value = TextUtil.replace(value, message.getParameters());

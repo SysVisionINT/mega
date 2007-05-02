@@ -30,7 +30,7 @@ import javax.servlet.http.HttpSession;
 
 import net.java.mega.action.RequestProcessor;
 import net.java.mega.action.model.Action;
-import net.java.mega.action.util.LocaleUtil;
+import net.java.mega.common.util.LocaleUtil;
 
 public abstract class AbstractAction implements Action, Serializable {
 	private transient RequestProcessor requestProcessor = null;

@@ -91,6 +91,6 @@ public class FormatUtil {
 	}
 
 	private static String retrieveFormatString(String key, Locale locale) {
-		return MessageUtil.getMessage(key, locale);
+		return ActionMessageUtil.getMessage(key, locale);
 	}
 }

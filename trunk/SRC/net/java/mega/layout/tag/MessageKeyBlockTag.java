@@ -16,26 +16,28 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package net.java.mega.action.util;
+package net.java.mega.layout.tag;
 
-import java.util.Locale;
+import net.java.mega.layout.model.BlockContent;
+import net.java.mega.layout.model.MessageKeyContent;
 
-import javax.servlet.http.HttpServletRequest;
-
-public class LocaleUtil {
-	private static final String LOCALE = "MEGA_ACTION_LOCALE";
+public class MessageKeyBlockTag extends BaseBlockTag {
+	private static final long serialVersionUID = -427852391259046306L;
 	
-	public static Locale getUserLocate(HttpServletRequest request) {
-		Locale locale = (Locale) request.getSession(true).getAttribute(LOCALE);
-		
-		if (locale ==null) {
-			locale = request.getLocale();
-		}
-		
-		return locale;
+	private String value = null;
+
+	public String getValue() {
+		return value;
 	}
-	
-	public static void setUserLocate(HttpServletRequest request, Locale locale) {
-		request.getSession(true).setAttribute(LOCALE, locale);
-	}	
+
+	public void setValue(String value) {
+		this.value = value;
+	}
+
+	public BlockContent getBlockContent() {
+		MessageKeyContent content = new MessageKeyContent();
+		content.setValue(getValue());
+
+		return content;
+	}
 }

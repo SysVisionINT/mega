@@ -1,6 +1,6 @@
 <?xml encoding="ISO-8859-1" ?>
 
-<!ELEMENT layout-config (page*)>
+<!ELEMENT layout-config (page*, message-resources?)>
 
 <!ELEMENT page ((layout-path|extends), block*)>
 <!ATTLIST page name CDATA #REQUIRED>
@@ -11,11 +11,14 @@
 <!ELEMENT extends EMPTY>
 <!ATTLIST extends page-name CDATA #REQUIRED>
 
-<!ELEMENT block (string|path|bean|controler)>
+<!ELEMENT block (string|path|bean|controler|message-key)>
 <!ATTLIST block name CDATA #REQUIRED>
 
 <!ELEMENT string EMPTY>
 <!ATTLIST string value CDATA #REQUIRED>
+
+<!ELEMENT message-key EMPTY>
+<!ATTLIST message-key value CDATA #REQUIRED>
 
 <!ELEMENT path EMPTY>
 <!ATTLIST path value CDATA #REQUIRED>
@@ -30,3 +33,6 @@
 <!ELEMENT parameter EMPTY>
 <!ATTLIST parameter name  CDATA #REQUIRED
 				    value CDATA #REQUIRED>
+				    
+<!ELEMENT message-resources EMPTY>
+<!ATTLIST message-resources name CDATA #REQUIRED> 				    
