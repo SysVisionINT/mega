@@ -28,31 +28,23 @@ public class RadioButtonTag extends InputBaseTag {
 	private static final long serialVersionUID = -1717073186853398272L;
 
 	private static Log log = LogFactory.getLog(RadioButtonTag.class);
-	
-	private String value = null;
-
-	public String getValue() {
-		return value;
-	}
-
-	public void setValue(String value) {
-		this.value = value;
-	}
 
 	public int writeStartTag() throws JspException {		
 		return NOT_INCLUDE_INNER_HTML;
 	}
 	
 	public void writeEndTag() throws JspException {
+		String value = getInnerHtml();
+		
 		try {
 			pageContext.getOut().print("<input type=\"radio\" name=\"");
 			pageContext.getOut().print(getProperty());
 			pageContext.getOut().print("\" value=\"");
-			pageContext.getOut().print(getValue());
+			pageContext.getOut().print(value);
 			pageContext.getOut().print("\"");
 			writeAttributes();
 			
-			if (getValue().equals(String.valueOf(getPropertyValue()))) {
+			if (value.equals(String.valueOf(getPropertyValue()))) {
 				pageContext.getOut().print(" checked=\"checked\"");
 			}
 			
