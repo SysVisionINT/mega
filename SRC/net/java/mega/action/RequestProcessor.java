@@ -383,6 +383,11 @@ public class RequestProcessor {
 					throw new PropertySetError(name, value);
 				}
 			} else {
+				// IF the property is a Collection I will use String[]
+				if (!value.getClass().isArray() && Collection.class.isAssignableFrom(((Method)methods.get(0)).getParameterTypes()[0])) {
+					value = parameterValue;
+				}
+				
 				if (value.getClass().isArray()) {
 					String[] values = (String[]) value;
 					Collection collection = new ArrayList();

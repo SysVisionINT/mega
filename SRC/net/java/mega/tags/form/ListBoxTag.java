@@ -18,52 +18,88 @@
  */
 package net.java.mega.tags.form;
 
+import java.util.Collection;
+
 import javax.servlet.jsp.JspException;
 
+import net.java.mega.action.util.Constants;
+import net.java.mega.common.util.WARContextUtil;
 import net.java.mega.tags.model.InputBaseTag;
 import net.java.mega.tags.model.SelectBox;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
 
-public class ComboBoxTag extends InputBaseTag implements SelectBox {
-	private static final long serialVersionUID = 1891172739255099324L;
+public class ListBoxTag extends InputBaseTag implements SelectBox {
+	private static final long serialVersionUID = 9074354870725252355L;
 
-	private static Log log = LogFactory.getLog(ComboBoxTag.class);
+	private static Log log = LogFactory.getLog(ListBoxTag.class);
+
+	private String size = null;
+
+	public String getSize() {
+		return size;
+	}
+
+	public void setSize(String size) {
+		this.size = size;
+	}
 
 	public int writeStartTag() throws JspException {
 		try {
 			pageContext.getOut().print("<select name=\"");
 			pageContext.getOut().print(getProperty());
+			pageContext.getOut().print("\" size=\"");
+			pageContext.getOut().print(getSize());
 			pageContext.getOut().print("\"");
 			writeAttributes();
+
+			if (isMultiSelect()) {
+				pageContext.getOut().print(" multiple=\"multiple\"");
+			}
+
 			pageContext.getOut().println(">");
 		} catch (Exception e) {
-			log.error("Error while writing SELECT (comboBox) TAG", e);
+			log.error("Error while writing SELECT (listBox) TAG", e);
 			throw new JspException(e);
 		}
-		
+
 		return INCLUDE_INNER_HTML;
 	}
-	
+
+	private boolean isMultiSelect() {
+		Class returnType = WARContextUtil.getPropertyType(pageContext, Constants.CURRENT_ACTION, getProperty());
+		return (Collection.class.isAssignableFrom(returnType));
+	}
+
 	public void writeEndTag() throws JspException {
 		try {
 			pageContext.getOut().println("</select>");
 		} catch (Exception e) {
-			log.error("Error while writing SELECT (comboBox) TAG", e);
+			log.error("Error while writing SELECT (listBox) TAG", e);
 			throw new JspException(e);
 		}
 	}
 
-	public void initTag() {		
+	public void initTag() {
 	}
 
-	public boolean isSelected(String value) {
-		Object object = getPropertyValue();
-		
-		if (object == null) {
+	public boolean isSelected(String value) {		
+		if (isMultiSelect()) {
+			Collection list = (Collection) getPropertyValue();
+
+			if (list != null && list.contains(value)) {
+				return true;
+			}
+
 			return false;
+		} else {
+			Object object = getPropertyValue();
+
+			if (object == null) {
+				return false;
+			}
+
+			return value.equals(String.valueOf(object));
 		}
-		
-		return value.equals(String.valueOf(object));
 	}
 }

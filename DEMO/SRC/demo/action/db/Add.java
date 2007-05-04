@@ -1,5 +1,6 @@
 package demo.action.db;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.java.mega.action.api.AbstractAction;
@@ -19,6 +20,26 @@ public class Add extends AbstractAction implements Validator {
 	private boolean admin = false;
 	private String obs = null;
 	private List xpto = null;
+	private String opcao = null;
+	private List opcoes = null;
+	
+	public List getValores() {
+		List list = new ArrayList();
+		
+		list.add("Opcao 1");
+		list.add("Opcao 2");
+		list.add("Opcao 3");
+		
+		return list;
+	}
+
+	public String getOpcao() {
+		return opcao;
+	}
+
+	public void setOpcao(String opcao) {
+		this.opcao = opcao;
+	}
 
 	public void onLoad() {
 		log.info("onLoad()");
@@ -102,4 +123,13 @@ public class Add extends AbstractAction implements Validator {
 	public void setXpto(List xpto) {
 		this.xpto = xpto;
 	}
+
+	public List getOpcoes() {
+		return opcoes;
+	}
+
+	public void setOpcoes(List opcoes) {
+		this.opcoes = opcoes;
+	}
 }
+

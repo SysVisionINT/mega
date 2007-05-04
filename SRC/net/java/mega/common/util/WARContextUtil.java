@@ -18,6 +18,9 @@
  */
 package net.java.mega.common.util;
 
+import java.lang.reflect.Method;
+import java.util.List;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -68,7 +71,7 @@ public class WARContextUtil {
 
 	public static Object getValue(PageContext context, String name, String propertyName) {
 		if (log.isDebugEnabled()) {
-			log.debug("getValue(" + name + ", " + propertyName + ")");
+			log.debug("getValue(PageContext, " + name + ", " + propertyName + ")");
 		}
 
 		Object ret = null;
@@ -86,6 +89,33 @@ public class WARContextUtil {
 			} else {
 				ret = obj;
 			}
+		}
+
+		return ret;
+	}
+
+	public static Class getPropertyType(PageContext context, String name, String propertyName) {
+		if (log.isDebugEnabled()) {
+			log.debug("getPropertyType(PageContext, " + name + ", " + propertyName + ")");
+		}
+
+		Object obj = getObject(context, name);
+		Class ret = null;
+
+		if (obj != null) {
+			BeanUtil beanUtil = new BeanUtil(obj);
+
+			List methods = beanUtil.getMethods(beanUtil.getGetMethodName(propertyName));
+
+			if (methods.size() != 1) {
+				log.error("Property " + propertyName + " not found on bean " + beanUtil.getClassName());
+				throw new RuntimeException("Property " + propertyName + " not found on bean " + beanUtil.getClassName());
+			}
+
+			ret = ((Method) methods.get(0)).getReturnType();
+		} else {
+			log.error("Object " + name + " not found!");
+			throw new RuntimeException("Object " + name + " not found!");
 		}
 
 		return ret;
