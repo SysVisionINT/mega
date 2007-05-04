@@ -29,6 +29,16 @@
 		4 <t:multiCheck property="xpto">4</t:multiCheck><br/>
 		5 <t:multiCheck property="xpto">5</t:multiCheck></TD>
 	</TR>	
+	</TR>	
+	<TR>
+		<TD><a:key key="add.label.opcao"/></TD>
+		<TD><t:listBox property="opcao" size="3"><t:options property="valores"/></t:listBox></TD>
+	</TR>
+	</TR>	
+	<TR>
+		<TD><a:key key="add.label.opcoes"/></TD>
+		<TD><t:listBox property="opcoes" size="3"><t:options property="valores"/></t:listBox></TD>
+	</TR>		
 	<TR>
 		<TD COLSPAN="2"><t:submit method="insert"><a:key key="add.label.insert"/></t:submit></TD>
 	</TR>

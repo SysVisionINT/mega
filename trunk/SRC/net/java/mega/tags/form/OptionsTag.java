@@ -22,12 +22,11 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.Tag;
 
 import net.java.mega.action.util.Constants;
 import net.java.mega.common.util.WARContextUtil;
 import net.java.mega.tags.model.BaseBodyTag;
-import net.java.mega.tags.model.InputBaseTag;
+import net.java.mega.tags.model.SelectBox;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
 import net.java.sjtools.util.BeanUtil;
@@ -74,7 +73,7 @@ public class OptionsTag extends BaseBodyTag {
 		this.value = value;
 	}
 
-	private void write(Object element, Object propertyValue) throws JspException {
+	private void write(Object element, SelectBox select) throws JspException {
 		BeanUtil beanUtil = new BeanUtil(element);
 
 		try {
@@ -90,10 +89,8 @@ public class OptionsTag extends BaseBodyTag {
 			pageContext.getOut().print(value);
 			pageContext.getOut().print("\"");
 
-			if (propertyValue != null) {
-				if (value.equals(String.valueOf(propertyValue))) {
-					pageContext.getOut().print("selected=\"selected\"");
-				}
+			if (select.isSelected(value)) {
+				pageContext.getOut().print("selected=\"selected\"");
 			}
 
 			writeAttributes();
@@ -113,14 +110,8 @@ public class OptionsTag extends BaseBodyTag {
 		}
 	}
 
-	private Object getPropertyValue() {
-		Tag tag = findAncestorWithClass(this, InputBaseTag.class);
-
-		if (tag != null) {
-			return ((InputBaseTag) tag).getPropertyValue();
-		}
-
-		return null;
+	private SelectBox getSelectBox() {
+		return (SelectBox) findAncestorWithClass(this, SelectBox.class);
 	}
 
 	public void initTag() {
@@ -134,13 +125,13 @@ public class OptionsTag extends BaseBodyTag {
 		Collection list = (Collection) WARContextUtil.getValue(pageContext, name, property);
 
 		if (list != null) {
-			Object propertyValue = getPropertyValue();
+			SelectBox select = getSelectBox();
 			Object element = null;
 
 			for (Iterator i = list.iterator(); i.hasNext();) {
 				element = i.next();
 
-				write(element, propertyValue);
+				write(element, select);
 			}
 		}
 	}
