@@ -27,8 +27,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.java.mega.common.util.RequestUtil;
-import net.java.mega.common.util.ServletContextUtil;
+import net.java.mega.common.http.RequestUtil;
+import net.java.mega.common.http.ServletContextUtil;
 import net.java.mega.layout.model.Layout;
 import net.java.mega.layout.util.Constant;
 import net.java.mega.layout.util.LayoutUtil;

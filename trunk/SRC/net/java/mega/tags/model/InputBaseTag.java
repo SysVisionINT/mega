@@ -21,7 +21,7 @@ package net.java.mega.tags.model;
 import java.io.IOException;
 
 import net.java.mega.action.util.Constants;
-import net.java.mega.common.util.WARContextUtil;
+import net.java.mega.common.http.WARContextUtil;
 
 public abstract class InputBaseTag extends BaseBodyTag {
 	private String property = null;

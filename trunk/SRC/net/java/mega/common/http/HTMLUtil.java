@@ -16,7 +16,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package net.java.mega.action.util;
+package net.java.mega.common.http;
 
 public class HTMLUtil {
 	private static final String CHAR_LIST = "«»?<>&\"'ºªçÇñÑáàãâÁÀÃÂéèêÉÈÊíìîÍÌÎóòõôÓÒÕÔúùûÚÙÛ";
