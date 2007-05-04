@@ -27,8 +27,8 @@ import javax.servlet.jsp.tagext.TagSupport;
 
 import net.java.mega.action.util.Constants;
 import net.java.mega.action.util.FormatUtil;
-import net.java.mega.common.util.LocaleUtil;
-import net.java.mega.common.util.WARContextUtil;
+import net.java.mega.common.http.WARContextUtil;
+import net.java.mega.common.resource.LocaleUtil;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
 

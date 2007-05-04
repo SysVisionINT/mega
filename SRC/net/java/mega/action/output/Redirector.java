@@ -25,7 +25,7 @@ import net.java.mega.action.RequestMetaData;
 import net.java.mega.action.ResponseMetaData;
 import net.java.mega.action.api.ResponseProvider;
 import net.java.mega.action.error.ActionException;
-import net.java.mega.common.util.NavigationUtil;
+import net.java.mega.common.http.NavigationUtil;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
 

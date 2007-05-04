@@ -19,15 +19,17 @@
 package net.java.mega.layout.util;
 
 import java.io.IOException;
+import java.util.Locale;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.PageContext;
 
-import net.java.mega.common.util.LocaleUtil;
-import net.java.mega.common.util.MessageUtil;
-import net.java.mega.common.util.WARContextUtil;
+import net.java.mega.common.http.HTMLUtil;
+import net.java.mega.common.http.WARContextUtil;
+import net.java.mega.common.resource.LocaleUtil;
+import net.java.mega.common.resource.MessageUtil;
 import net.java.mega.layout.extention.Controller;
 import net.java.mega.layout.model.BeanContent;
 import net.java.mega.layout.model.Block;
@@ -176,8 +178,11 @@ public class LayoutServletUtil {
 	
 	private static void includeContent(PageContext pageContext, MessageKeyContent content) throws IOException {
 		Layout layout = (Layout) pageContext.getServletContext().getAttribute(Constant.LAYOUT);
+		Locale locale = LocaleUtil.getUserLocate((HttpServletRequest) pageContext.getRequest());
 		
-		pageContext.getOut().print(MessageUtil.getMessage(layout.getBundleList(), content.getValue(), LocaleUtil.getUserLocate((HttpServletRequest) pageContext.getRequest())));
+		String msg = MessageUtil.getMessage(layout.getBundleList(), content.getValue(), locale); 
+		
+		pageContext.getOut().print(HTMLUtil.filter(msg));
 	}	
 
 	private static void includeContent(PageContext pageContext, BeanContent content) throws IOException {

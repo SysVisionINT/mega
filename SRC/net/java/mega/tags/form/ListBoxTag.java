@@ -23,7 +23,7 @@ import java.util.Collection;
 import javax.servlet.jsp.JspException;
 
 import net.java.mega.action.util.Constants;
-import net.java.mega.common.util.WARContextUtil;
+import net.java.mega.common.http.WARContextUtil;
 import net.java.mega.tags.model.InputBaseTag;
 import net.java.mega.tags.model.SelectBox;
 import net.java.sjtools.logging.Log;

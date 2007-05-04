@@ -25,8 +25,8 @@ import net.java.mega.action.ActionManager;
 import net.java.mega.action.error.ActionException;
 import net.java.mega.action.model.Action;
 import net.java.mega.action.model.ActionConfig;
+import net.java.mega.common.http.WARContextUtil;
 import net.java.mega.common.model.ServletMapping;
-import net.java.mega.common.util.WARContextUtil;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
 

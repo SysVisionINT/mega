@@ -16,7 +16,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package net.java.mega.common.util;
+package net.java.mega.common.http;
 
 import java.io.InputStream;
 import java.net.MalformedURLException;

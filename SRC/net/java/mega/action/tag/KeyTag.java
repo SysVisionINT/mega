@@ -25,9 +25,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
-import net.java.mega.action.util.HTMLUtil;
 import net.java.mega.action.util.ActionMessageUtil;
-import net.java.mega.common.util.LocaleUtil;
+import net.java.mega.common.http.HTMLUtil;
+import net.java.mega.common.resource.LocaleUtil;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
 

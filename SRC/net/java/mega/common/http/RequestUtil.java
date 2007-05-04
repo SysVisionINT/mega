@@ -16,10 +16,11 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package net.java.mega.common.util;
+package net.java.mega.common.http;
 
 import javax.servlet.http.HttpServletRequest;
 
+import net.java.mega.common.util.CommonConstants;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
 import net.java.sjtools.util.TextUtil;

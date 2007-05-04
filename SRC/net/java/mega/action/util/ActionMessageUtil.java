@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Locale;
 
 import net.java.mega.action.ActionManager;
-import net.java.mega.common.util.MessageUtil;
+import net.java.mega.common.resource.MessageUtil;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
 
