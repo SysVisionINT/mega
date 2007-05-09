@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<classpath>
-	<classpathentry kind="src" path="SRC"/>
-	<classpathentry kind="src" path="DEMO/SRC"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="LIB/sjtools.jar"/>
-	<classpathentry kind="lib" path="DEMO/LIB/j2ee.jar"/>
-	<classpathentry kind="output" path="BUILD/CLASSES"/>
-</classpath>
