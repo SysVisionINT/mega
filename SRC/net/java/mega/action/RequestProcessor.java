@@ -262,6 +262,7 @@ public class RequestProcessor {
 			attributeName = (String) i.next();
 
 			parameters[index] = getHttpServletRequest().getParameter(attributeName);
+			index++;
 		}
 
 		Object[] args = convertArgs(parameters, action, requestMetaData.getMethodName());

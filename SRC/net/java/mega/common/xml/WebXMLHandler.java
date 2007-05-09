@@ -20,14 +20,16 @@ package net.java.mega.common.xml;
 
 import net.java.mega.common.model.ServletConfig;
 import net.java.mega.common.model.ServletMapping;
+import net.java.sjtools.logging.Log;
+import net.java.sjtools.logging.LogFactory;
 import net.java.sjtools.xml.SimpleHandler;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-
 public class WebXMLHandler extends SimpleHandler {
+	private static Log log = LogFactory.getLog(WebXMLHandler.class);
 
 	public Object proccessElement(String elementType, Object currentObject, Attributes attributes) {
 		if (elementType.equals("web-app")) {
@@ -43,14 +45,23 @@ public class WebXMLHandler extends SimpleHandler {
 		return null;
 	}
 
-	public void processPCDATA(String elementType, Object currentObject, String value) {
+	public void processPCDATA(String elementType, Object currentObject, String value) {		
 		if (elementType.equals("servlet-name") && currentObject instanceof ServletMapping) {
+			if (log.isErrorEnabled()) {
+				log.debug("servlet-name = " + value);
+			}
+			
 			((ServletMapping)currentObject).setName(value);
 		} else if (elementType.equals("url-pattern") && currentObject instanceof ServletMapping) {
+			if (log.isErrorEnabled()) {
+				log.debug("url-pattern = " + value);
+			}
+			
 			((ServletMapping)currentObject).setUrl(value);
 		}
 	}
 	
 	public void error(SAXParseException error) throws SAXException {
+		log.warn("SAXParseException while reading web.xml", error);
 	}	
 }
