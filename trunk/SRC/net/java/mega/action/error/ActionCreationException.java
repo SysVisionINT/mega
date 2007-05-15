@@ -24,4 +24,8 @@ public class ActionCreationException extends RuntimeException {
 	public ActionCreationException (Class clazz) {
 		super("Error while creating instance of " + clazz.getName());
 	}
+	
+	public ActionCreationException (String path) {
+		super("Error while searching action " + path + " configuratin");
+	}
 }
