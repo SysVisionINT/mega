@@ -38,7 +38,9 @@ import net.java.mega.action.api.CustomResponseProvider;
 import net.java.mega.action.api.Message;
 import net.java.mega.action.api.SessionObject;
 import net.java.mega.action.api.Validator;
+import net.java.mega.action.error.ActionAlreadyInUseException;
 import net.java.mega.action.error.ActionCreationException;
+import net.java.mega.action.error.ActionNotFound;
 import net.java.mega.action.error.ConfigurationError;
 import net.java.mega.action.error.MethodExecuteError;
 import net.java.mega.action.error.PropertySetError;
@@ -118,6 +120,23 @@ public class RequestProcessor {
 		}
 
 		return getHttpSession().getServletContext();
+	}
+	
+	public void gotoAction(String path) {
+		if (log.isDebugEnabled()) {
+			log.debug("gotoAction(" + path + ")");
+		}
+
+		ActionConfig actionConfig = null;
+		
+		try {
+			actionConfig = ActionManager.getInstance().getActionConfig(path);
+		} catch (Exception e) {
+			log.error("Configuration of action " + path + " not found!", e);
+			throw new ActionCreationException(path);
+		}
+		
+		gotoAction(getActionInstance(actionConfig.getClazz()));
 	}
 
 	public void gotoAction(Class clazz) {

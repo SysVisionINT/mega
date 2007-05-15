@@ -91,7 +91,7 @@ public class ActionManager {
 		return requestMetaData;
 	}
 
-	private ActionConfig getActionConfig(String actionPath) throws ActionNotFound, ConfigurationError,
+	public ActionConfig getActionConfig(String actionPath) throws ActionNotFound, ConfigurationError,
 			ActionAlreadyInUseException {
 		ActionConfig actionConfig = controllerConfig.getAction(actionPath);
 
