@@ -57,6 +57,10 @@ public abstract class AbstractAction implements Action, Serializable {
 	public void gotoAction(Action action) {
 		requestProcessor.gotoAction(action);
 	}
+	
+	public void gotoAction(String path) {
+		requestProcessor.gotoAction(path);
+	}	
 
 	public Action getAction(Class clazz) {
 		return requestProcessor.getActionInstance(clazz);
