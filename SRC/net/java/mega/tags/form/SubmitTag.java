@@ -35,4 +35,7 @@ public class SubmitTag extends SubmitBaseTag {
 		}
 	}
 
+	public boolean elementCanBeDisabled() {
+		return true;
+	}
 }

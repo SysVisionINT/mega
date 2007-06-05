@@ -16,40 +16,14 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package net.java.mega.tags.model;
+package net.java.mega.action.error;
 
-import java.io.Serializable;
+import net.java.mega.action.model.Action;
 
-public class Attribute implements Serializable {
-	private static final long serialVersionUID = -2757255365412110570L;
-	
-	private String name = null;
-	private String value = null;
-	
-	public Attribute(String name, String value) {
-		this.name = name;
-		this.value = value;
-	}
-	
-	public String getName() {
-		return name;
-	}
-	
-	public String getValue() {
-		return value;
-	}
+public class WorkflowError extends ActionException {
+	private static final long serialVersionUID = -2824415763720820115L;
 
-	public boolean equals(Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		
-		if (!(obj instanceof Attribute)) {
-			return false;
-		}
-		
-		Attribute other = (Attribute) obj;
-		
-		return getName().toUpperCase().equals(other.getName().toUpperCase());
-	}
+	public WorkflowError (Action action, String token) {
+		super("Action " + action.getClass().getName() + " was call with used token " + token);
+	}	
 }

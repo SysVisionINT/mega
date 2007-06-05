@@ -27,18 +27,18 @@ import net.java.mega.action.ResponseMetaData;
 import net.java.mega.action.api.AbstractWrapper;
 import net.java.mega.action.util.Constants;
 
-
 public class SessionValidatorWrapper extends AbstractWrapper {
 	private static final long serialVersionUID = 3799931686999152093L;
 
 	public ResponseMetaData execute(HttpServletRequest request, HttpServletResponse response,
 			RequestMetaData requestMetaData) throws Exception {
-		
-		if (sessionObjectExists(request)){
+
+		if (sessionObjectExists(request)) {
 			return executeNext(request, response, requestMetaData);
 		} else {
-			RequestMetaData forward = ActionManager.getInstance().getRequestMetaData(getProperty("forward-url"), Constants.HTTP_GET);
-			
+			RequestMetaData forward = ActionManager.getInstance().getRequestMetaData(getProperty("forward-url"),
+					Constants.HTTP_GET);
+
 			return executeNext(request, response, forward);
 		}
 	}
@@ -47,7 +47,7 @@ public class SessionValidatorWrapper extends AbstractWrapper {
 		if (request.getSession(true).getAttribute(getProperty("attribute-name")) != null) {
 			return true;
 		}
-		
+
 		return false;
 	}
 

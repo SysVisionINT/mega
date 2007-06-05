@@ -31,6 +31,8 @@ import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
 
 public abstract class SubmitBaseTag extends BaseBodyTag {
+	private static final String ONCLICK = "onclick";
+
 	private static Log log = LogFactory.getLog(SubmitBaseTag.class);
 	
 	private String method = null;
@@ -51,6 +53,8 @@ public abstract class SubmitBaseTag extends BaseBodyTag {
 	public void setTabIndex(String tabIndex) {
 		this.tabIndex = tabIndex;
 	}
+	
+	public abstract boolean elementCanBeDisabled(); 
 
 	public void writeAttributes() throws IOException {
 		if (getTabIndex() != null) {
@@ -70,6 +74,16 @@ public abstract class SubmitBaseTag extends BaseBodyTag {
 			
 			StringBuffer buffer  = new StringBuffer();
 			
+			String userOnClick = getUserOnClick();
+			
+			if (userOnClick != null) {
+				buffer.append(userOnClick);
+			}
+			
+			if (elementCanBeDisabled()) {
+				buffer.append("this.disabled=true;");
+			}
+			
 			buffer.append("document.forms['");
 			buffer.append(formName);
 			buffer.append("']['");
@@ -87,9 +101,23 @@ public abstract class SubmitBaseTag extends BaseBodyTag {
 			buffer.append(formName);
 			buffer.append("'].submit();return false;");
 			
-			addAttribute(new Attribute("onclick", buffer.toString()));
+			addAttribute(new Attribute(ONCLICK, buffer.toString()));
 		}
 		
 		super.writeAttributes();
+	}
+
+	private String getUserOnClick() {
+		String value = deleteAttribute(ONCLICK);
+		
+		if (value != null) {
+			value = value.trim();
+			
+			if (!value.endsWith(";")) {
+				value = value.concat(";");
+			}
+		}
+		
+		return value;
 	}
 }

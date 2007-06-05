@@ -38,4 +38,7 @@ public class LinkSubmitTag extends SubmitBaseTag {
 		}
 	}
 
+	public boolean elementCanBeDisabled() {
+		return false;
+	}
 }

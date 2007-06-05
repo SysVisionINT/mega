@@ -338,7 +338,7 @@ public class ActionManager {
 		return provider;
 	}
 
-	public ResponseProvider getResponseProvider(Exception e) {
+	public ResponseProvider getResponseProvider(Throwable e) {
 		ExceptionConfig exceptionConfig = controllerConfig.getException(e.getClass().getName());
 
 		if (exceptionConfig != null) {

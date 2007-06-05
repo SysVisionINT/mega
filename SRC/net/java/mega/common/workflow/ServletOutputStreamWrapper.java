@@ -16,40 +16,25 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package net.java.mega.tags.model;
+package net.java.mega.common.workflow;
 
-import java.io.Serializable;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
-public class Attribute implements Serializable {
-	private static final long serialVersionUID = -2757255365412110570L;
-	
-	private String name = null;
-	private String value = null;
-	
-	public Attribute(String name, String value) {
-		this.name = name;
-		this.value = value;
-	}
-	
-	public String getName() {
-		return name;
-	}
-	
-	public String getValue() {
-		return value;
+import javax.servlet.ServletOutputStream;
+
+public class ServletOutputStreamWrapper extends ServletOutputStream {
+	private ByteArrayOutputStream output = new ByteArrayOutputStream();
+
+	public void write(int character) throws IOException {
+		output.write(character);
 	}
 
-	public boolean equals(Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		
-		if (!(obj instanceof Attribute)) {
-			return false;
-		}
-		
-		Attribute other = (Attribute) obj;
-		
-		return getName().toUpperCase().equals(other.getName().toUpperCase());
+	public String toString() {
+		return output.toString();
+	}
+	
+	public byte[] getBuffer() {
+		return output.toByteArray();
 	}
 }

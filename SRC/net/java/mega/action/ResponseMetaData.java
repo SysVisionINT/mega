@@ -25,6 +25,7 @@ public class ResponseMetaData {
 	private Action action = null;
 	private MessageContainer messageContainer = null;
 	private ResponseProvider responseProvider = null;
+	private boolean sessionInvalidated = false;
 
 	public Action getAction() {
 		return action;
@@ -48,5 +49,13 @@ public class ResponseMetaData {
 
 	public void setResponseProvider(ResponseProvider responseProvider) {
 		this.responseProvider = responseProvider;
+	}
+
+	public boolean isSessionInvalidated() {
+		return sessionInvalidated;
+	}
+
+	public void setSessionInvalidated(boolean sessionInvalidated) {
+		this.sessionInvalidated = sessionInvalidated;
 	}
 }

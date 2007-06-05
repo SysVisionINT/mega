@@ -22,14 +22,14 @@ public class Add extends AbstractAction implements Validator {
 	private List xpto = null;
 	private String opcao = null;
 	private List opcoes = null;
-	
+
 	public List getValores() {
 		List list = new ArrayList();
-		
+
 		list.add("Opcao 1");
 		list.add("Opcao 2");
 		list.add("Opcao 3");
-		
+
 		return list;
 	}
 
@@ -79,7 +79,7 @@ public class Add extends AbstractAction implements Validator {
 
 	public void insert() {
 		log.info("insert()");
-		
+
 		log.info("XPTO = " + TextUtil.toString(getXpto()));
 
 		RecordList recordList = (RecordList) getAction(RecordList.class);
@@ -132,4 +132,3 @@ public class Add extends AbstractAction implements Validator {
 		this.opcoes = opcoes;
 	}
 }
-

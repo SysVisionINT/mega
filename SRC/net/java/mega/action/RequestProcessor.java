@@ -38,9 +38,7 @@ import net.java.mega.action.api.CustomResponseProvider;
 import net.java.mega.action.api.Message;
 import net.java.mega.action.api.SessionObject;
 import net.java.mega.action.api.Validator;
-import net.java.mega.action.error.ActionAlreadyInUseException;
 import net.java.mega.action.error.ActionCreationException;
-import net.java.mega.action.error.ActionNotFound;
 import net.java.mega.action.error.ConfigurationError;
 import net.java.mega.action.error.MethodExecuteError;
 import net.java.mega.action.error.PropertySetError;
@@ -49,6 +47,7 @@ import net.java.mega.action.model.ActionConfig;
 import net.java.mega.action.util.CheckBoxUtil;
 import net.java.mega.action.util.Constants;
 import net.java.mega.action.util.MethodConstants;
+import net.java.mega.common.workflow.WorkflowUtil;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
 import net.java.sjtools.util.BeanUtil;
@@ -67,8 +66,6 @@ public class RequestProcessor {
 
 	private MessageContainer messageContainer = new MessageContainer();
 
-	private boolean sessionInvalidated = false;
-
 	public RequestProcessor(HttpServletRequest request, HttpServletResponse response) {
 		if (log.isDebugEnabled()) {
 			log.debug("new RequestProcessor(...)");
@@ -83,7 +80,7 @@ public class RequestProcessor {
 	}
 
 	public void invalidateSession() {
-		sessionInvalidated = true;
+		currentResponse.setSessionInvalidated(true);
 	}
 
 	public void addMessage(String key, Message message) {
@@ -121,21 +118,21 @@ public class RequestProcessor {
 
 		return getHttpSession().getServletContext();
 	}
-	
+
 	public void gotoAction(String path) {
 		if (log.isDebugEnabled()) {
 			log.debug("gotoAction(" + path + ")");
 		}
 
 		ActionConfig actionConfig = null;
-		
+
 		try {
 			actionConfig = ActionManager.getInstance().getActionConfig(path);
 		} catch (Exception e) {
 			log.error("Configuration of action " + path + " not found!", e);
 			throw new ActionCreationException(path);
 		}
-		
+
 		gotoAction(getActionInstance(actionConfig.getClazz()));
 	}
 
@@ -211,14 +208,14 @@ public class RequestProcessor {
 
 		currentResponse.setAction(action);
 
-		if (requestMetaData.getDoMethod().equals(Constants.HTTP_POST)) {
-			processPOST(requestMetaData, action);
+		if (isWorkflowOK(requestMetaData)) {
+			if (requestMetaData.getDoMethod().equals(Constants.HTTP_POST)) {
+				processPOST(requestMetaData, action);
+			} else {
+				processGET(requestMetaData, action);
+			}
 		} else {
-			processGET(requestMetaData, action);
-		}
-
-		if (sessionInvalidated) {
-			getHttpSession().invalidate();
+			action.workflowError();
 		}
 
 		String contextName = null;
@@ -229,14 +226,14 @@ public class RequestProcessor {
 			action.setRequestProcessor(null);
 			contextName = getContextName(action);
 
-			if (!sessionInvalidated && action instanceof SessionObject) {
+			if (!currentResponse.isSessionInvalidated() && action instanceof SessionObject) {
 				getHttpSession().setAttribute(contextName, action);
 			} else {
 				getHttpServletRequest().setAttribute(contextName, action);
 			}
 		}
 
-		if (!sessionInvalidated) {
+		if (!currentResponse.isSessionInvalidated()) {
 			getHttpSession().setAttribute(Constants.CURRENT_ACTION, currentResponse.getAction());
 		} else {
 			getHttpServletRequest().setAttribute(Constants.CURRENT_ACTION, currentResponse.getAction());
@@ -254,6 +251,16 @@ public class RequestProcessor {
 		}
 
 		return currentResponse;
+	}
+
+	private boolean isWorkflowOK(RequestMetaData requestMetaData) {
+		String userToken = WorkflowUtil.getUserToken(getHttpServletRequest());
+		
+		if (TextUtil.isEmptyString(userToken)) {
+			return true;
+		}
+		
+		return requestMetaData.getToken().equals(userToken);
 	}
 
 	private void processGET(RequestMetaData requestMetaData, Action action) {
@@ -404,10 +411,11 @@ public class RequestProcessor {
 				}
 			} else {
 				// IF the property is a Collection I will use String[]
-				if (!value.getClass().isArray() && Collection.class.isAssignableFrom(((Method)methods.get(0)).getParameterTypes()[0])) {
+				if (!value.getClass().isArray()
+						&& Collection.class.isAssignableFrom(((Method) methods.get(0)).getParameterTypes()[0])) {
 					value = parameterValue;
 				}
-				
+
 				if (value.getClass().isArray()) {
 					String[] values = (String[]) value;
 					Collection collection = new ArrayList();

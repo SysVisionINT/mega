@@ -21,11 +21,11 @@ package net.java.mega.common.http;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.PageContext;
 
+import net.java.mega.common.http.scope.Scope;
+import net.java.mega.common.http.scope.ScopeUtil;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
 import net.java.sjtools.util.BeanUtil;
@@ -38,13 +38,13 @@ public class WARContextUtil {
 			log.debug("getObject(PageContext, " + name + ")");
 		}
 
-		Object obj = context.getAttribute(name);
-
-		if (obj == null) {
-			obj = getObject((HttpServletRequest) context.getRequest(), name);
+		Scope scope = ScopeUtil.findAttribute(context, name);
+		
+		if (scope == null) {
+			return null;	
+		} else {
+			return scope.getAttribute(name);
 		}
-
-		return obj;
 	}
 
 	public static Object getObject(HttpServletRequest request, String name) {
@@ -52,21 +52,13 @@ public class WARContextUtil {
 			log.debug("getObject(HttpServletRequest, " + name + ")");
 		}
 
-		Object obj = request.getAttribute(name);
-
-		if (obj == null) {
-			HttpSession session = request.getSession(true);
-
-			obj = session.getAttribute(name);
-
-			if (obj == null) {
-				ServletContext servletContext = session.getServletContext();
-
-				obj = servletContext.getAttribute(name);
-			}
+		Scope scope = ScopeUtil.findAttribute(request, name);
+		
+		if (scope == null) {
+			return null;	
+		} else {
+			return scope.getAttribute(name);
 		}
-
-		return obj;
 	}
 
 	public static Object getValue(PageContext context, String name, String propertyName) {
