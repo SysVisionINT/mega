@@ -30,6 +30,7 @@ import javax.servlet.jsp.JspException;
 
 import net.java.mega.action.util.Constants;
 import net.java.mega.action.util.URLUtil;
+import net.java.mega.common.workflow.WorkflowUtil;
 import net.java.mega.tags.model.BaseBodyTag;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
@@ -75,9 +76,7 @@ public class LinkTag extends BaseBodyTag {
 		for (Iterator i = parameters.iterator(); i.hasNext();) {
 			value = (String) i.next();
 
-			if (buffer.length() != 0) {
-				buffer.append("&");
-			}
+			buffer.append("&");
 
 			buffer.append(getArgName(count));
 			buffer.append("=");
@@ -120,6 +119,11 @@ public class LinkTag extends BaseBodyTag {
 
 			if (!parameters.isEmpty()) {
 				pageContext.getOut().print("?");
+				
+				pageContext.getOut().print(WorkflowUtil.WORKFLOW_CONTROL_FIELD);
+				pageContext.getOut().print("=");
+				pageContext.getOut().print(WorkflowUtil.getCurrentToken(request));
+				
 				pageContext.getOut().print(getParameters());
 			}
 

@@ -16,40 +16,40 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package net.java.mega.tags.model;
+package net.java.mega.common.workflow;
 
 import java.io.Serializable;
 
-public class Attribute implements Serializable {
-	private static final long serialVersionUID = -2757255365412110570L;
+import javax.servlet.http.HttpServletResponse;
+
+public class WorkflowControl implements Serializable {
+	private static final long serialVersionUID = -8532602864873242413L;
 	
-	private String name = null;
-	private String value = null;
-	
-	public Attribute(String name, String value) {
-		this.name = name;
-		this.value = value;
-	}
-	
-	public String getName() {
-		return name;
-	}
-	
-	public String getValue() {
-		return value;
+	private HttpServletResponse response = null;
+	private boolean lock = false;
+	private long currentToken = 0;
+
+	public HttpServletResponse getResponse() {
+		return response;
 	}
 
-	public boolean equals(Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		
-		if (!(obj instanceof Attribute)) {
-			return false;
-		}
-		
-		Attribute other = (Attribute) obj;
-		
-		return getName().toUpperCase().equals(other.getName().toUpperCase());
+	public void setResponse(HttpServletResponse response) {
+		this.response = response;
+	}
+
+	public boolean isLock() {
+		return lock;
+	}
+
+	public void setLock(boolean lock) {
+		this.lock = lock;
+	}
+
+	public long getCurrentToken() {
+		return currentToken;
+	}
+
+	public void setCurrentToken(long lastToken) {
+		this.currentToken = lastToken;
 	}
 }

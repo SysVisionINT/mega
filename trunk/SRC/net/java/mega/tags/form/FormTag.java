@@ -24,6 +24,7 @@ import javax.servlet.jsp.JspException;
 
 import net.java.mega.action.util.URLUtil;
 import net.java.mega.common.util.CommonConstants;
+import net.java.mega.common.workflow.WorkflowUtil;
 import net.java.mega.tags.model.BaseBodyTag;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
@@ -51,6 +52,12 @@ public class FormTag extends BaseBodyTag {
 			pageContext.getOut().print("<input type=\"hidden\" name=\"");
 			pageContext.getOut().print(getActionField());
 			pageContext.getOut().println("\"/>");			
+			
+			pageContext.getOut().print("<input type=\"hidden\" name=\"");
+			pageContext.getOut().print(WorkflowUtil.WORKFLOW_CONTROL_FIELD);
+			pageContext.getOut().print("\" value=\"");
+			pageContext.getOut().print(WorkflowUtil.getCurrentToken(request));
+			pageContext.getOut().println("\"/>");				
 		} catch (Exception e) {
 			log.error("Error while writing FORM TAG", e);
 			throw new JspException(e);

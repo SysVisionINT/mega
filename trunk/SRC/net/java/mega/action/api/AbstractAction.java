@@ -29,12 +29,20 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import net.java.mega.action.RequestProcessor;
+import net.java.mega.action.error.WorkflowError;
 import net.java.mega.action.model.Action;
+import net.java.mega.action.util.ActionMessageUtil;
 import net.java.mega.common.resource.LocaleUtil;
+import net.java.mega.common.workflow.WorkflowUtil;
+import net.java.sjtools.util.TextUtil;
 
 public abstract class AbstractAction implements Action, Serializable {
 	private transient RequestProcessor requestProcessor = null;
 	private Properties config = null;
+	
+	public void workflowError() throws WorkflowError {
+		throw new WorkflowError(this, getRequestToken());
+	}
 
 	public void setRequestProcessor(RequestProcessor rp) {
 		requestProcessor = rp;
@@ -100,5 +108,17 @@ public abstract class AbstractAction implements Action, Serializable {
 	
 	public void invalidateSession() {
 		requestProcessor.invalidateSession();
+	}
+	
+	public boolean containsMessage(Locale locale, String key) {
+		return !TextUtil.isEmptyString(ActionMessageUtil.getMessage(key, locale));
+	}
+	
+	public String getRequestToken() {
+		return WorkflowUtil.getUserToken(getHttpServletRequest());
+	}
+	
+	public String getNextRequestToken() {
+		return WorkflowUtil.getCurrentToken(getHttpServletRequest());
 	}
 }

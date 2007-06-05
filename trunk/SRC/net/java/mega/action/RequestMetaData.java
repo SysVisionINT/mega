@@ -25,6 +25,7 @@ import net.java.mega.action.util.MethodConstants;
 public class RequestMetaData {
 	private ActionConfig actionConfig = null;
 	private String path = null;
+	private String token = null;
 	private String methodName = MethodConstants.ON_LOAD;
 	private String doMethod = Constants.HTTP_GET;
 	
@@ -58,5 +59,13 @@ public class RequestMetaData {
 
 	public void setActionConfig(ActionConfig actionConfig) {
 		this.actionConfig = actionConfig;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
 	}
 }

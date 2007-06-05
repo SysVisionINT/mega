@@ -50,4 +50,8 @@ public class HTMLSubmitTag extends SubmitBaseTag {
 			throw new JspException(e);
 		}
 	}
+	
+	public boolean elementCanBeDisabled() {
+		return false;
+	}	
 }

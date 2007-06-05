@@ -129,6 +129,19 @@ public abstract class BaseBodyTag extends BodyTagSupport implements AttributeCon
 		attributes.add(attribute);
 	}
 
+	public String deleteAttribute(String name) {
+		Attribute attribute = new Attribute(name, null);
+		
+		int pos = attributes.indexOf(attribute);
+		
+		if (pos >= 0) {
+			attribute = (Attribute) attributes.get(pos);
+			attributes.remove(attribute);
+		}
+		
+		return attribute.getValue();
+	}
+
 	private void writeAttribute(String name, String value) throws IOException {
 		pageContext.getOut().print(" ");
 		pageContext.getOut().print(name);

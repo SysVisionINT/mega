@@ -16,40 +16,12 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package net.java.mega.tags.model;
+package net.java.mega.common.http.scope;
 
-import java.io.Serializable;
-
-public class Attribute implements Serializable {
-	private static final long serialVersionUID = -2757255365412110570L;
-	
-	private String name = null;
-	private String value = null;
-	
-	public Attribute(String name, String value) {
-		this.name = name;
-		this.value = value;
-	}
-	
-	public String getName() {
-		return name;
-	}
-	
-	public String getValue() {
-		return value;
-	}
-
-	public boolean equals(Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		
-		if (!(obj instanceof Attribute)) {
-			return false;
-		}
-		
-		Attribute other = (Attribute) obj;
-		
-		return getName().toUpperCase().equals(other.getName().toUpperCase());
-	}
+public interface Scope {
+	public void setAttribute(String name, Object value);
+	public Object getAttribute(String name);
+	public void removeAttribute(String name);
+	public boolean existsAttribute(String name);
+	public Scope getNextScope();
 }

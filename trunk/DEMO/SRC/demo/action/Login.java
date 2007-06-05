@@ -1,12 +1,15 @@
 package demo.action;
 
-import demo.action.db.RecordList;
 import net.java.mega.action.api.AbstractAction;
 import net.java.mega.action.api.Message;
 import net.java.mega.action.api.Validator;
+import net.java.sjtools.logging.Log;
+import net.java.sjtools.logging.LogFactory;
 import net.java.sjtools.util.TextUtil;
+import demo.action.db.RecordList;
 
-public class Login extends AbstractAction implements Validator{
+public class Login extends AbstractAction implements Validator {
+	private static Log log = LogFactory.getLog(Login.class);
 	
 	private String user = null;
 	

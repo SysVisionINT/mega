@@ -29,12 +29,16 @@ import javax.servlet.http.HttpServletResponse;
 import net.java.mega.action.api.ResponseProvider;
 import net.java.mega.action.error.ActionException;
 import net.java.mega.action.error.ActionNotFound;
+import net.java.mega.action.error.WorkflowError;
 import net.java.mega.action.model.ActionWrapper;
 import net.java.mega.action.model.ControllerConfig;
 import net.java.mega.action.util.Constants;
 import net.java.mega.action.xml.ActionConfigReader;
 import net.java.mega.common.http.RequestUtil;
 import net.java.mega.common.http.ServletContextUtil;
+import net.java.mega.common.workflow.ResponseWrapper;
+import net.java.mega.common.workflow.WorkflowControl;
+import net.java.mega.common.workflow.WorkflowUtil;
 import net.java.mega.common.xml.ServletConfigReader;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
@@ -60,39 +64,89 @@ public class ActionServlet extends HttpServlet {
 		process(request, response, Constants.HTTP_POST);
 	}
 
-	private void process(HttpServletRequest request, HttpServletResponse response, String doMethod) throws IOException, ServletException {
+	private void process(HttpServletRequest request, HttpServletResponse response, String doMethod) throws IOException,
+			ServletException {
 		ActionManager actionManager = ActionManager.getInstance();
-		
+
 		String path = RequestUtil.getAction(request);
 
-		RequestMetaData requestMetaData = null;
-		ResponseMetaData responseMetaData = null;
+		WorkflowControl workflowControl = WorkflowUtil.getWorkflowControl(request);
+
+		synchronized (workflowControl) {
+			if (workflowControl.isLock()) {
+				workflowControl.setResponse(response);
+
+				try {
+					workflowControl.wait();
+				} catch (InterruptedException e) {
+					log.error("Runtime error", e);
+				}
+
+				return;
+			}
+
+			workflowControl.setLock(true);
+		}
 
 		try {
-			requestMetaData = actionManager.getRequestMetaData(path, doMethod);
+			ResponseProvider responseProvider = null;
+			RequestMetaData requestMetaData = actionManager.getRequestMetaData(path, doMethod);
+			ResponseMetaData responseMetaData = null;
+			
+			requestMetaData.setToken(WorkflowUtil.getCurrentToken(request));
+			WorkflowUtil.generateToken(request);
 
 			ActionWrapper actionWrapper = actionManager.getActionWrapper(requestMetaData.getActionConfig()
 					.getWrapperChain());
 
-			responseMetaData = actionWrapper.execute(request, response, requestMetaData);
+			ResponseWrapper responseWrapper = new ResponseWrapper(response);
 
-			responseMetaData.getResponseProvider().process(request, response, requestMetaData, responseMetaData);
+			try {
+				responseMetaData = actionWrapper.execute(request, responseWrapper, requestMetaData);
+
+				responseProvider = responseMetaData.getResponseProvider();
+			} catch (Throwable e) {
+				responseProvider = actionManager.getResponseProvider(e);
+
+				if (responseProvider == null) {
+					throw e;
+				}
+			}
+			
+			responseProvider.process(request, responseWrapper, requestMetaData, responseMetaData);
+
+			if (responseMetaData.isSessionInvalidated()) {
+				request.getSession(true).invalidate();
+			}
+
+			workflowControl = WorkflowUtil.getWorkflowControl(request);
+
+			synchronized (workflowControl) {
+				HttpServletResponse lastResponse = workflowControl.getResponse();
+
+				if (lastResponse == null) {
+					lastResponse = response;
+				}
+
+				responseWrapper.update(lastResponse);
+
+				workflowControl.setResponse(null);
+			}
 		} catch (ActionNotFound e) {
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);
+		} catch (WorkflowError e) {
+			response.sendError(HttpServletResponse.SC_FORBIDDEN);
 		} catch (ActionException e) {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		} catch (Exception e) {
-			ResponseProvider responseProvider = actionManager.getResponseProvider(e);
+		} catch (Throwable e) {
+			log.error("Runtime error", e);
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		} finally {
+			workflowControl = WorkflowUtil.getWorkflowControl(request);
 
-			if (responseProvider == null) {
-				log.error("Runtime error", e);
-				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			} else {
-				try {
-					responseProvider.process(request, response, requestMetaData, responseMetaData);
-				} catch (ActionException e1) {
-					response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-				}
+			synchronized (workflowControl) {
+				workflowControl.setLock(false);
+				workflowControl.notifyAll();
 			}
 		}
 	}

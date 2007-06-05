@@ -28,6 +28,8 @@ import javax.servlet.jsp.tagext.TagSupport;
 import net.java.mega.action.util.Constants;
 import net.java.mega.action.util.FormatUtil;
 import net.java.mega.common.http.WARContextUtil;
+import net.java.mega.common.http.scope.Scope;
+import net.java.mega.common.http.scope.ScopeUtil;
 import net.java.mega.common.resource.LocaleUtil;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
@@ -43,14 +45,29 @@ public class ValueTag extends TagSupport {
 
 	public int doEndTag() throws JspException {
 		try {
-			Object value = WARContextUtil.getValue(pageContext, name, property);
+			Scope scope = ScopeUtil.findAttribute(pageContext, name);
 
-			Locale locale = LocaleUtil.getUserLocate((HttpServletRequest) pageContext.getRequest());
+			if (scope == null) {
+				pageContext.getOut().print("[");
+				pageContext.getOut().print(name);
+				
+				if (property != null) {
+					pageContext.getOut().print(".");
+					pageContext.getOut().print(property);
+				}
+				
+				pageContext.getOut().print("]");
+			} else {
+				Object value = WARContextUtil.getValue(pageContext, name, property);
 
-			pageContext.getOut().print(FormatUtil.format(value, format, locale));
+				Locale locale = LocaleUtil.getUserLocate((HttpServletRequest) pageContext.getRequest());
+
+				pageContext.getOut().print(FormatUtil.format(value, format, locale));
+			}
 		} catch (IOException e) {
-			log.error("Error while formating " + name + (property == null ? "." + property : "") + " with "
-					+ format, e);
+			log
+					.error("Error while formating " + name + (property == null ? "." + property : "") + " with "
+							+ format, e);
 
 			throw new JspException(e);
 		}
