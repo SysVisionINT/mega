@@ -30,7 +30,7 @@ import javax.servlet.jsp.JspException;
 
 import net.java.mega.action.util.Constants;
 import net.java.mega.action.util.URLUtil;
-import net.java.mega.common.workflow.WorkflowUtil;
+import net.java.mega.action.util.WorkflowControlUtil;
 import net.java.mega.tags.model.BaseBodyTag;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
@@ -120,9 +120,9 @@ public class LinkTag extends BaseBodyTag {
 			if (!parameters.isEmpty()) {
 				pageContext.getOut().print("?");
 				
-				pageContext.getOut().print(WorkflowUtil.WORKFLOW_CONTROL_FIELD);
+				pageContext.getOut().print(WorkflowControlUtil.WORKFLOW_CONTROL_FIELD);
 				pageContext.getOut().print("=");
-				pageContext.getOut().print(WorkflowUtil.getCurrentToken(request));
+				pageContext.getOut().print(WorkflowControlUtil.getCurrentToken(request));
 				
 				pageContext.getOut().print(getParameters());
 			}

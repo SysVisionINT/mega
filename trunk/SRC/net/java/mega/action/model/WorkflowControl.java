@@ -16,34 +16,18 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package net.java.mega.common.workflow;
+package net.java.mega.action.model;
 
-import java.io.Serializable;
+import net.java.mega.common.load.LoadControl;
 
-import javax.servlet.http.HttpServletResponse;
-
-public class WorkflowControl implements Serializable {
-	private static final long serialVersionUID = -8532602864873242413L;
+public class WorkflowControl extends LoadControl {
+	private static final long serialVersionUID = 5548851519003266640L;
 	
-	private HttpServletResponse response = null;
-	private boolean lock = false;
+	public WorkflowControl() {
+		super();
+	}
+	
 	private long currentToken = 0;
-
-	public HttpServletResponse getResponse() {
-		return response;
-	}
-
-	public void setResponse(HttpServletResponse response) {
-		this.response = response;
-	}
-
-	public boolean isLock() {
-		return lock;
-	}
-
-	public void setLock(boolean lock) {
-		this.lock = lock;
-	}
 
 	public long getCurrentToken() {
 		return currentToken;
