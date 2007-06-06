@@ -16,14 +16,16 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package net.java.mega.common.workflow;
+package net.java.mega.action.util;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-public class WorkflowUtil {
-	public static final String WORKFLOW_CONTROL = WorkflowControl.class.getName();
+import net.java.mega.action.model.WorkflowControl;
+
+public class WorkflowControlUtil {
 	public static final String WORKFLOW_CONTROL_FIELD = "_WRK_FLW_CNTRL_";
+	public static final String WORKFLOW_CONTROL = WorkflowControl.class.getName();
 
 	public static WorkflowControl getWorkflowControl(HttpServletRequest request) {
 		HttpSession session = request.getSession(true);
@@ -32,6 +34,17 @@ public class WorkflowUtil {
 
 		if (controler == null) {
 			controler = createWorkflowControl(session);
+		}
+
+		return controler;
+	}
+
+	private static synchronized WorkflowControl createWorkflowControl(HttpSession session) {
+		WorkflowControl controler = (WorkflowControl) session.getAttribute(WORKFLOW_CONTROL);
+
+		if (controler == null) {
+			controler = new WorkflowControl();
+			session.setAttribute(WORKFLOW_CONTROL, controler);
 		}
 
 		return controler;
@@ -60,16 +73,5 @@ public class WorkflowUtil {
 	private static void updateWorkflowControl(HttpServletRequest request, WorkflowControl control) {
 		HttpSession session = request.getSession(true);
 		session.setAttribute(WORKFLOW_CONTROL, control);
-	}
-
-	private static synchronized WorkflowControl createWorkflowControl(HttpSession session) {
-		WorkflowControl controler = (WorkflowControl) session.getAttribute(WORKFLOW_CONTROL);
-
-		if (controler == null) {
-			controler = new WorkflowControl();
-			session.setAttribute(WORKFLOW_CONTROL, controler);
-		}
-
-		return controler;
 	}
 }

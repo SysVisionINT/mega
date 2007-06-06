@@ -32,13 +32,13 @@ import net.java.mega.action.error.ActionNotFound;
 import net.java.mega.action.error.WorkflowError;
 import net.java.mega.action.model.ActionWrapper;
 import net.java.mega.action.model.ControllerConfig;
+import net.java.mega.action.model.WorkflowControl;
 import net.java.mega.action.util.Constants;
+import net.java.mega.action.util.WorkflowControlUtil;
 import net.java.mega.action.xml.ActionConfigReader;
 import net.java.mega.common.http.RequestUtil;
 import net.java.mega.common.http.ServletContextUtil;
-import net.java.mega.common.workflow.ResponseWrapper;
-import net.java.mega.common.workflow.WorkflowControl;
-import net.java.mega.common.workflow.WorkflowUtil;
+import net.java.mega.common.load.ResponseWrapper;
 import net.java.mega.common.xml.ServletConfigReader;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
@@ -70,7 +70,7 @@ public class ActionServlet extends HttpServlet {
 
 		String path = RequestUtil.getAction(request);
 
-		WorkflowControl workflowControl = WorkflowUtil.getWorkflowControl(request);
+		WorkflowControl workflowControl = WorkflowControlUtil.getWorkflowControl(request);
 
 		synchronized (workflowControl) {
 			if (workflowControl.isLock()) {
@@ -93,8 +93,8 @@ public class ActionServlet extends HttpServlet {
 			RequestMetaData requestMetaData = actionManager.getRequestMetaData(path, doMethod);
 			ResponseMetaData responseMetaData = null;
 			
-			requestMetaData.setToken(WorkflowUtil.getCurrentToken(request));
-			WorkflowUtil.generateToken(request);
+			requestMetaData.setToken(WorkflowControlUtil.getCurrentToken(request));
+			WorkflowControlUtil.generateToken(request);
 
 			ActionWrapper actionWrapper = actionManager.getActionWrapper(requestMetaData.getActionConfig()
 					.getWrapperChain());
@@ -119,7 +119,7 @@ public class ActionServlet extends HttpServlet {
 				request.getSession(true).invalidate();
 			}
 
-			workflowControl = WorkflowUtil.getWorkflowControl(request);
+			workflowControl = WorkflowControlUtil.getWorkflowControl(request);
 
 			synchronized (workflowControl) {
 				HttpServletResponse lastResponse = workflowControl.getResponse();
@@ -142,7 +142,7 @@ public class ActionServlet extends HttpServlet {
 			log.error("Runtime error", e);
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		} finally {
-			workflowControl = WorkflowUtil.getWorkflowControl(request);
+			workflowControl = WorkflowControlUtil.getWorkflowControl(request);
 
 			synchronized (workflowControl) {
 				workflowControl.setLock(false);

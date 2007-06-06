@@ -47,7 +47,7 @@ import net.java.mega.action.model.ActionConfig;
 import net.java.mega.action.util.CheckBoxUtil;
 import net.java.mega.action.util.Constants;
 import net.java.mega.action.util.MethodConstants;
-import net.java.mega.common.workflow.WorkflowUtil;
+import net.java.mega.action.util.WorkflowControlUtil;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
 import net.java.sjtools.util.BeanUtil;
@@ -254,7 +254,11 @@ public class RequestProcessor {
 	}
 
 	private boolean isWorkflowOK(RequestMetaData requestMetaData) {
-		String userToken = WorkflowUtil.getUserToken(getHttpServletRequest());
+		if (requestMetaData.getToken().equals("0")) {
+			return true;
+		}
+		
+		String userToken = WorkflowControlUtil.getUserToken(getHttpServletRequest());
 		
 		if (TextUtil.isEmptyString(userToken)) {
 			return true;

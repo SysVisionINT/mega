@@ -32,8 +32,8 @@ import net.java.mega.action.RequestProcessor;
 import net.java.mega.action.error.WorkflowError;
 import net.java.mega.action.model.Action;
 import net.java.mega.action.util.ActionMessageUtil;
+import net.java.mega.action.util.WorkflowControlUtil;
 import net.java.mega.common.resource.LocaleUtil;
-import net.java.mega.common.workflow.WorkflowUtil;
 import net.java.sjtools.util.TextUtil;
 
 public abstract class AbstractAction implements Action, Serializable {
@@ -115,10 +115,10 @@ public abstract class AbstractAction implements Action, Serializable {
 	}
 	
 	public String getRequestToken() {
-		return WorkflowUtil.getUserToken(getHttpServletRequest());
+		return WorkflowControlUtil.getUserToken(getHttpServletRequest());
 	}
 	
 	public String getNextRequestToken() {
-		return WorkflowUtil.getCurrentToken(getHttpServletRequest());
+		return WorkflowControlUtil.getCurrentToken(getHttpServletRequest());
 	}
 }

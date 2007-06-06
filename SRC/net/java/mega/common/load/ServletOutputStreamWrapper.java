@@ -16,7 +16,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package net.java.mega.common.workflow;
+package net.java.mega.common.load;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
