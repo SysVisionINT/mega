@@ -254,7 +254,7 @@ public class RequestProcessor {
 	}
 
 	private boolean isWorkflowOK(RequestMetaData requestMetaData) {
-		if (requestMetaData.getToken().equals("0")) {
+		if (requestMetaData.getToken() == null || requestMetaData.getToken().equals("0")) {
 			return true;
 		}
 		

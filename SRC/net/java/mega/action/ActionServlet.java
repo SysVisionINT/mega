@@ -115,7 +115,7 @@ public class ActionServlet extends HttpServlet {
 			
 			responseProvider.process(request, responseWrapper, requestMetaData, responseMetaData);
 
-			if (responseMetaData.isSessionInvalidated()) {
+			if (responseMetaData != null && responseMetaData.isSessionInvalidated()) {
 				request.getSession(true).invalidate();
 			}
 
