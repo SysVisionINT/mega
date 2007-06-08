@@ -23,24 +23,9 @@ import javax.servlet.http.HttpServletRequest;
 import net.java.mega.common.util.CommonConstants;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
-import net.java.sjtools.util.TextUtil;
 
 public class RequestUtil {
 	private static Log log = LogFactory.getLog(RequestUtil.class);
-	
-	public static String getAction(HttpServletRequest request) {
-		if (log.isDebugEnabled()) {
-			log.debug("getAction(...)");
-		}
-		
-		String path = request.getParameter(CommonConstants.MEGA_FORM_ACTION);
-
-		if (!TextUtil.isEmptyString(path)) {			
-			return path;
-		}
-		
-		return getPath(request);
-	}
 
 	public static String getPath(HttpServletRequest request) {
 		if (log.isDebugEnabled()) {

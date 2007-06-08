@@ -5,6 +5,7 @@ import net.java.mega.action.api.Message;
 import net.java.mega.action.api.Validator;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
+import net.java.sjtools.time.Sleep;
 import net.java.sjtools.util.TextUtil;
 import demo.action.db.RecordList;
 
@@ -35,8 +36,14 @@ public class Login extends AbstractAction implements Validator {
 	}
 	
 	public void login() {
+		log.info("***************** INICIO *****************");
+		
 		getHttpSession().setAttribute("USER", getUser());
 		
+		Sleep.seconds(3);
+		
 		gotoAction(RecordList.class);
+		
+		log.info("***************** FIM *****************");
 	}
 }

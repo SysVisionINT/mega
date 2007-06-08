@@ -16,9 +16,31 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package net.java.mega.common.util;
+package net.java.mega.action.util;
 
-public class CommonConstants {
-	public static final String PATH_INFO = "javax.servlet.include.path_info";
-	public static final String SERVLET_PATH = "javax.servlet.include.servlet_path";
+import javax.servlet.http.HttpServletRequest;
+
+import net.java.mega.common.http.RequestUtil;
+import net.java.sjtools.logging.Log;
+import net.java.sjtools.logging.LogFactory;
+import net.java.sjtools.util.TextUtil;
+
+public class ActionRequestUtil extends RequestUtil {
+	private static Log log = LogFactory.getLog(ActionRequestUtil.class);
+
+	public static String getAction(HttpServletRequest request) {
+		if (log.isDebugEnabled()) {
+			log.debug("getAction(...)");
+		}
+
+		if (!WorkflowControlUtil.isTheSameRequest(request)) {
+			String path = request.getParameter(Constants.MEGA_FORM_ACTION);
+
+			if (!TextUtil.isEmptyString(path)) {
+				return path;
+			}
+		}
+
+		return getPath(request);
+	}
 }

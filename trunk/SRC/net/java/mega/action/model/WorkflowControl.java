@@ -18,9 +18,7 @@
  */
 package net.java.mega.action.model;
 
-import net.java.mega.common.load.LoadControl;
-
-public class WorkflowControl extends LoadControl {
+public class WorkflowControl {
 	private static final long serialVersionUID = 5548851519003266640L;
 	
 	public WorkflowControl() {

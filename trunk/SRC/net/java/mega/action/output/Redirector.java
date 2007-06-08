@@ -25,6 +25,7 @@ import net.java.mega.action.RequestMetaData;
 import net.java.mega.action.ResponseMetaData;
 import net.java.mega.action.api.ResponseProvider;
 import net.java.mega.action.error.ActionException;
+import net.java.mega.action.util.WorkflowControlUtil;
 import net.java.mega.common.http.NavigationUtil;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
@@ -40,6 +41,9 @@ public class Redirector implements ResponseProvider {
 
 	public void process(HttpServletRequest request, HttpServletResponse response, RequestMetaData requestMetaData,
 			ResponseMetaData responseMetaData) throws ActionException {
+		
+		WorkflowControlUtil.markAsSameRequest(request);
+		
 		try {
 			NavigationUtil.redirect(request, response, location);
 		} catch (Exception e) {

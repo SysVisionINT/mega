@@ -32,13 +32,11 @@ import net.java.mega.action.error.ActionNotFound;
 import net.java.mega.action.error.WorkflowError;
 import net.java.mega.action.model.ActionWrapper;
 import net.java.mega.action.model.ControllerConfig;
-import net.java.mega.action.model.WorkflowControl;
+import net.java.mega.action.util.ActionRequestUtil;
 import net.java.mega.action.util.Constants;
 import net.java.mega.action.util.WorkflowControlUtil;
 import net.java.mega.action.xml.ActionConfigReader;
-import net.java.mega.common.http.RequestUtil;
 import net.java.mega.common.http.ServletContextUtil;
-import net.java.mega.common.load.ResponseWrapper;
 import net.java.mega.common.xml.ServletConfigReader;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
@@ -68,41 +66,25 @@ public class ActionServlet extends HttpServlet {
 			ServletException {
 		ActionManager actionManager = ActionManager.getInstance();
 
-		String path = RequestUtil.getAction(request);
+		String path = ActionRequestUtil.getAction(request);
 
-		WorkflowControl workflowControl = WorkflowControlUtil.getWorkflowControl(request);
-
-		synchronized (workflowControl) {
-			if (workflowControl.isLock()) {
-				workflowControl.setResponse(response);
-
-				try {
-					workflowControl.wait();
-				} catch (InterruptedException e) {
-					log.error("Runtime error", e);
-				}
-
-				return;
-			}
-
-			workflowControl.setLock(true);
-		}
+		boolean sameRequest = WorkflowControlUtil.isTheSameRequest(request);
 
 		try {
 			ResponseProvider responseProvider = null;
 			RequestMetaData requestMetaData = actionManager.getRequestMetaData(path, doMethod);
 			ResponseMetaData responseMetaData = null;
-			
-			requestMetaData.setToken(WorkflowControlUtil.getCurrentToken(request));
-			WorkflowControlUtil.generateToken(request);
+
+			if (!sameRequest) {
+				requestMetaData.setToken(WorkflowControlUtil.getCurrentToken(request));
+				WorkflowControlUtil.generateToken(request);
+			}
 
 			ActionWrapper actionWrapper = actionManager.getActionWrapper(requestMetaData.getActionConfig()
 					.getWrapperChain());
 
-			ResponseWrapper responseWrapper = new ResponseWrapper(response);
-
 			try {
-				responseMetaData = actionWrapper.execute(request, responseWrapper, requestMetaData);
+				responseMetaData = actionWrapper.execute(request, response, requestMetaData);
 
 				responseProvider = responseMetaData.getResponseProvider();
 			} catch (Throwable e) {
@@ -110,27 +92,17 @@ public class ActionServlet extends HttpServlet {
 
 				if (responseProvider == null) {
 					throw e;
+				} else {
+					if (log.isDebugEnabled()) {
+						log.debug("The ResponseProvider for the Throwable " + e.getClass().getName() + " was found");
+					}
 				}
 			}
-			
-			responseProvider.process(request, responseWrapper, requestMetaData, responseMetaData);
+
+			responseProvider.process(request, response, requestMetaData, responseMetaData);
 
 			if (responseMetaData != null && responseMetaData.isSessionInvalidated()) {
 				request.getSession(true).invalidate();
-			}
-
-			workflowControl = WorkflowControlUtil.getWorkflowControl(request);
-
-			synchronized (workflowControl) {
-				HttpServletResponse lastResponse = workflowControl.getResponse();
-
-				if (lastResponse == null) {
-					lastResponse = response;
-				}
-
-				responseWrapper.update(lastResponse);
-
-				workflowControl.setResponse(null);
 			}
 		} catch (ActionNotFound e) {
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);
@@ -141,13 +113,6 @@ public class ActionServlet extends HttpServlet {
 		} catch (Throwable e) {
 			log.error("Runtime error", e);
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		} finally {
-			workflowControl = WorkflowControlUtil.getWorkflowControl(request);
-
-			synchronized (workflowControl) {
-				workflowControl.setLock(false);
-				workflowControl.notifyAll();
-			}
 		}
 	}
 
