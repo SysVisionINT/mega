@@ -40,4 +40,6 @@ public class Constants {
 	public static final String HTTP_POST = "POST";
 	
 	public static final String WEB_XML = "/WEB-INF/web.xml";
+	
+	public static final String MEGA_FORM_ACTION = "_MG_FRM_ACTN_FLD_";
 }

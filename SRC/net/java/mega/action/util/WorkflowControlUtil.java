@@ -26,6 +26,22 @@ import net.java.mega.action.model.WorkflowControl;
 public class WorkflowControlUtil {
 	public static final String WORKFLOW_CONTROL_FIELD = "_WRK_FLW_CNTRL_";
 	public static final String WORKFLOW_CONTROL = WorkflowControl.class.getName();
+	public static final String WORKFLOW_CONTROL_SAME_REQUEST = "_WRK_FLW_CNTRL_SM_RQST_";
+
+	public static void markAsSameRequest(HttpServletRequest request) {
+		WorkflowControl control = getWorkflowControl(request);
+		request.setAttribute(WORKFLOW_CONTROL_SAME_REQUEST, String.valueOf(control.getCurrentToken()));
+	}
+
+	public static boolean isTheSameRequest(HttpServletRequest request) {
+		String rid = (String) request.getAttribute(WORKFLOW_CONTROL_SAME_REQUEST);
+		if (rid == null) {
+			return false;
+		} else {
+			WorkflowControl control = getWorkflowControl(request);
+			return String.valueOf(control.getCurrentToken()).equals(rid);
+		}
+	}
 
 	public static WorkflowControl getWorkflowControl(HttpServletRequest request) {
 		HttpSession session = request.getSession(true);
@@ -65,7 +81,7 @@ public class WorkflowControlUtil {
 
 		return String.valueOf(control.getCurrentToken());
 	}
-	
+
 	public static String getUserToken(HttpServletRequest request) {
 		return request.getParameter(WORKFLOW_CONTROL_FIELD);
 	}

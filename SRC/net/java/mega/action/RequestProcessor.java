@@ -215,6 +215,10 @@ public class RequestProcessor {
 				processGET(requestMetaData, action);
 			}
 		} else {
+			if (log.isDebugEnabled()) {
+				log.debug("Request " + requestMetaData.getPath() + " with invalid token " + requestMetaData.getToken() + ", calling workflowError() on action " + action.getClass().getName());
+			}
+			
 			action.workflowError();
 		}
 

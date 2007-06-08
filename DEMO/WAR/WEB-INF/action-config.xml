@@ -21,6 +21,7 @@
 	</actions>
 	
 	<errors>
+		<exception class-name="net.java.mega.action.error.WorkflowError" forward="/login.action"/>
 	</errors>
 	
 	<resources>

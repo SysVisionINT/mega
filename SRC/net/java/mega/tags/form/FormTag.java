@@ -22,9 +22,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.JspException;
 
+import net.java.mega.action.util.Constants;
 import net.java.mega.action.util.URLUtil;
 import net.java.mega.action.util.WorkflowControlUtil;
-import net.java.mega.common.util.CommonConstants;
 import net.java.mega.tags.model.BaseBodyTag;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
@@ -86,7 +86,7 @@ public class FormTag extends BaseBodyTag {
 	}
 	
 	public String getActionField() {
-		return CommonConstants.MEGA_FORM_ACTION;
+		return Constants.MEGA_FORM_ACTION;
 	}
 
 	public void writeEndTag() throws JspException {
