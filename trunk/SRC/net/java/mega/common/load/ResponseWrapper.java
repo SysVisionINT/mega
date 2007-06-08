@@ -40,7 +40,7 @@ public class ResponseWrapper extends HttpServletResponseWrapper {
 	private String contentType = null;
 	private List cookieList = new ArrayList();
 	private Map headerMap = new HashMap();
-	private String redirect;
+	private String redirect = null;
 
 	public ResponseWrapper(HttpServletResponse response) {
 		super(response);
