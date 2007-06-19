@@ -49,6 +49,7 @@ public class ActionManager {
 	private static ActionManager mySelf = new ActionManager();
 
 	private ControllerConfig controllerConfig = null;
+	private Boolean workflowControlActive = null;
 
 	private Map forwardMap = null;
 
@@ -98,7 +99,7 @@ public class ActionManager {
 		if (actionConfig == null) {
 			actionConfig = createActionConfig(actionPath, null);
 		}
-		
+
 		if (actionConfig.getWrapperChain() == null) {
 			actionConfig.setWrapperChain(findWrapperChain(actionConfig.getName()));
 		}
@@ -148,15 +149,15 @@ public class ActionManager {
 
 	private String findWrapperChain(String path) {
 		WrapperChain chain = null;
-		
+
 		for (Iterator i = controllerConfig.getWrapperChains().iterator(); i.hasNext();) {
-			chain = (WrapperChain)i.next();
-			
+			chain = (WrapperChain) i.next();
+
 			if (chain.matches(path)) {
 				return chain.getName();
 			}
 		}
-		
+
 		return Constants.DEFAULT_WRAPPER_CHAIN;
 	}
 
@@ -281,6 +282,22 @@ public class ActionManager {
 		return provider;
 	}
 
+	public boolean isWorkflowControlActive() {
+		if (log.isDebugEnabled()) {
+			log.debug("isWorkflowControlActive()");
+		}
+
+		if (workflowControlActive == null) {
+			String wfControl = controllerConfig.getProperty(Constants.WORKFLOW_CONTROL_PROPERTY,
+					Constants.DEFAULT_WORKFLOW_CONTROL_PROPERTY_VALUE);
+
+			workflowControlActive = new Boolean(Constants.DEFAULT_WORKFLOW_CONTROL_PROPERTY_VALUE.equals(wfControl
+					.toUpperCase()));
+		}
+
+		return workflowControlActive.booleanValue();
+	}
+
 	private ResponseProvider createResponseProvider(String className) throws ConfigurationError {
 		if (log.isDebugEnabled()) {
 			log.debug("createResponseProvider(" + className + ")");
@@ -313,13 +330,13 @@ public class ActionManager {
 		}
 
 		int pos = path.lastIndexOf("/");
-		
+
 		if (pos != -1) {
 			buffer.append(path.substring(0, pos + 1));
-			
+
 			path = path.substring(pos + 1);
 		}
-		
+
 		buffer.append(path.substring(0, 1).toLowerCase());
 		buffer.append(path.substring(1));
 

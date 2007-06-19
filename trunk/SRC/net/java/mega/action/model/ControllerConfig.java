@@ -64,6 +64,10 @@ public class ControllerConfig implements Serializable {
 	public String getProperty(String name) {
 		return config.getProperty(name);
 	}
+	
+	public String getProperty(String name, String value) {
+		return config.getProperty(name, value);
+	}	
 
 	public void addBundle(String bundle) {
 		resources.add(bundle);
