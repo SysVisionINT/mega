@@ -258,6 +258,10 @@ public class RequestProcessor {
 	}
 
 	private boolean isWorkflowOK(RequestMetaData requestMetaData) {
+		if (!ActionManager.getInstance().isWorkflowControlActive()) {
+			return true;
+		}
+		
 		if (requestMetaData.getToken() == null || requestMetaData.getToken().equals("0")) {
 			return true;
 		}

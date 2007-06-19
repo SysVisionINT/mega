@@ -27,6 +27,9 @@ public class Constants {
 	public static final String DEFAULT_OUTPUT_RENDER_EXTENTION_PROPERTY = "render-extention";
 	public static final String OUTPUT_RENDER_ROOT_PROPERTY = "render-root";
 	
+	public static final String WORKFLOW_CONTROL_PROPERTY = "workflow-control";
+	public static final String DEFAULT_WORKFLOW_CONTROL_PROPERTY_VALUE = "ON";	
+	
 	public static final String DEFAULT_OUTPUT_RENDER_EXTENTION_PROPERTY_VALUE = ".page";
 	public static final String OUTPUT_RENDER_ROOT_PROPERTY_VALUE = "/";
 	
