@@ -18,6 +18,7 @@
  */
 package net.java.mega.common.http;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
@@ -29,6 +30,7 @@ import net.java.mega.common.http.scope.ScopeUtil;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
 import net.java.sjtools.util.BeanUtil;
+import net.java.sjtools.util.TextUtil;
 
 public class WARContextUtil {
 	private static Log log = LogFactory.getLog(WARContextUtil.class);
@@ -39,9 +41,9 @@ public class WARContextUtil {
 		}
 
 		Scope scope = ScopeUtil.findAttribute(context, name);
-		
+
 		if (scope == null) {
-			return null;	
+			return null;
 		} else {
 			return scope.getAttribute(name);
 		}
@@ -53,9 +55,9 @@ public class WARContextUtil {
 		}
 
 		Scope scope = ScopeUtil.findAttribute(request, name);
-		
+
 		if (scope == null) {
-			return null;	
+			return null;
 		} else {
 			return scope.getAttribute(name);
 		}
@@ -74,7 +76,7 @@ public class WARContextUtil {
 				BeanUtil beanUtil = new BeanUtil(obj);
 
 				try {
-					ret = beanUtil.get(propertyName);
+					ret = getValue(beanUtil, propertyName);
 				} catch (Exception e) {
 					log.error("Error while accessing property " + propertyName + " of attribute " + name, e);
 				}
@@ -84,6 +86,21 @@ public class WARContextUtil {
 		}
 
 		return ret;
+	}
+
+	private static Object getValue(BeanUtil beanUtil, String propertyName) throws Exception {
+		BeanUtil bu = beanUtil;
+		List list = TextUtil.split(propertyName, ".");
+		String pn = (String) list.get(list.size() - 1);
+
+		Object obj = null;
+		
+		for (int i = 0; i < list.size() - 1; i++) {
+			obj = bu.get((String) list.get(i));
+			bu = new BeanUtil(obj);
+		}
+
+		return bu.get(pn);
 	}
 
 	public static Class getPropertyType(PageContext context, String name, String propertyName) {
