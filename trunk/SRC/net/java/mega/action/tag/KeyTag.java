@@ -43,9 +43,13 @@ public class KeyTag extends TagSupport {
 		Locale locale = LocaleUtil.getUserLocate((HttpServletRequest) pageContext.getRequest());
 
 		String message = ActionMessageUtil.getMessage(key, locale);
-		
-		if (filter) {
-			message = HTMLUtil.filter(message);
+
+		if (message != null) {
+			if (filter) {
+				message = HTMLUtil.filter(message);
+			}
+		} else {
+			message = "{".concat(key).concat("}");
 		}
 
 		try {

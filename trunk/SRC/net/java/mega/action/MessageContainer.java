@@ -21,21 +21,18 @@ package net.java.mega.action;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import net.java.mega.action.api.Message;
-
+import net.java.mega.action.util.map.ListMap;
 
 public class MessageContainer implements Serializable {
 	private static final long serialVersionUID = 6209135557365223874L;
 
 	private static final String GLOBAL_MESSAGE = MessageContainer.class.getName();
 
-	private Map messages = new HashMap();
+	private ListMap messages = new ListMap();
 
 	public void clearMessages() {
 		messages.clear();
@@ -94,7 +91,7 @@ public class MessageContainer implements Serializable {
 	}
 
 	public Collection getKeys() {
-		Set keys = messages.keySet();
+		Collection keys = messages.keys();
 
 		keys.remove(GLOBAL_MESSAGE);
 

@@ -56,7 +56,7 @@ public class FormatUtil {
 			String formatString = format;
 
 			if (format == null) {
-				formatString = retrieveFormatString(obj.getClass().getName(), locale);
+				formatString = retrieveFormatString(obj.getClass(), locale);
 				
 				if (log.isDebugEnabled()) {
 					log.debug(obj.getClass().getName() + "  -> formatString = " + formatString);
@@ -72,7 +72,7 @@ public class FormatUtil {
 			String formatString = format;
 
 			if (format == null) {
-				formatString = retrieveFormatString(obj.getClass().getName(), locale);
+				formatString = retrieveFormatString(obj.getClass(), locale);
 				
 				if (log.isDebugEnabled()) {
 					log.debug(obj.getClass().getName() + "  -> formatString = " + formatString);
@@ -91,7 +91,17 @@ public class FormatUtil {
 		}
 	}
 
-	private static String retrieveFormatString(String key, Locale locale) {
-		return ActionMessageUtil.getMessage(key, locale);
+	private static String retrieveFormatString(Class clazz, Locale locale) {
+		String format = null;
+		
+		Class objectClass = clazz;
+		
+		do {		
+			format = ActionMessageUtil.getMessage(objectClass.getName(), locale);
+			objectClass = objectClass.getSuperclass();
+		} while (format == null && objectClass != null);
+		
+		
+		return format;
 	}
 }
