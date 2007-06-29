@@ -29,7 +29,6 @@ import net.java.mega.common.http.scope.ScopeUtil;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
 import net.java.sjtools.util.BeanUtil;
-import net.java.sjtools.util.TextUtil;
 
 public class WARContextUtil {
 	private static Log log = LogFactory.getLog(WARContextUtil.class);
@@ -72,10 +71,8 @@ public class WARContextUtil {
 
 		if (obj != null) {
 			if (propertyName != null) {
-				BeanUtil beanUtil = new BeanUtil(obj);
-
 				try {
-					ret = getValue(beanUtil, propertyName);
+					ret = BeanUtil.getPropertyValue(obj, propertyName);
 				} catch (Exception e) {
 					log.error("Error while accessing property " + propertyName + " of attribute " + name, e);
 				}
@@ -85,21 +82,6 @@ public class WARContextUtil {
 		}
 
 		return ret;
-	}
-
-	private static Object getValue(BeanUtil beanUtil, String propertyName) throws Exception {
-		BeanUtil bu = beanUtil;
-		List list = TextUtil.split(propertyName, ".");
-		String pn = (String) list.get(list.size() - 1);
-
-		Object obj = null;
-		
-		for (int i = 0; i < list.size() - 1; i++) {
-			obj = bu.get((String) list.get(i));
-			bu = new BeanUtil(obj);
-		}
-
-		return bu.get(pn);
 	}
 
 	public static Class getPropertyType(PageContext context, String name, String propertyName) {

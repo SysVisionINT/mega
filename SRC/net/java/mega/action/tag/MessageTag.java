@@ -61,19 +61,19 @@ public class MessageTag extends TagSupport {
 		String prefix = ActionMessageUtil.getMessage(PREFIX, locale);
 		String suffix = ActionMessageUtil.getMessage(SUFFIX, locale);
 		String footer = ActionMessageUtil.getMessage(FOOTER, locale);
-		
+
 		if (header == null) {
 			header = "";
 		}
-		
+
 		if (prefix == null) {
 			prefix = "";
 		}
-		
+
 		if (suffix == null) {
 			suffix = "";
 		}
-		
+
 		if (footer == null) {
 			footer = "";
 		}
@@ -98,20 +98,24 @@ public class MessageTag extends TagSupport {
 			if (messages != null && !messages.isEmpty()) {
 				try {
 					writer.print(header);
-					
+
 					for (Iterator i = messages.iterator(); i.hasNext();) {
 						message = (Message) i.next();
-						
+
 						value = ActionMessageUtil.getMessage(message.getMessageKey(), locale);
-						
-						if (message.getParameters() != null && !message.getParameters().isEmpty()) {
-							value = TextUtil.replace(value, message.getParameters());
+
+						if (value != null) {
+							if (message.getParameters() != null && !message.getParameters().isEmpty()) {
+								value = TextUtil.replace(value, message.getParameters());
+							}
+
+							if (filter) {
+								value = HTMLUtil.filter(value);
+							}
+						} else {
+							value = "{".concat(message.getMessageKey()).concat("}");
 						}
-						
-						if (filter) {
-							value = HTMLUtil.filter(value);
-						}
-						
+
 						writer.print(prefix);
 						writer.print(value);
 						writer.print(suffix);

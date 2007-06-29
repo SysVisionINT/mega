@@ -180,9 +180,15 @@ public class LayoutServletUtil {
 		Layout layout = (Layout) pageContext.getServletContext().getAttribute(Constant.LAYOUT);
 		Locale locale = LocaleUtil.getUserLocate((HttpServletRequest) pageContext.getRequest());
 		
-		String msg = MessageUtil.getMessage(layout.getBundleList(), content.getValue(), locale); 
+		String msg = MessageUtil.getMessage(layout.getBundleList(), content.getValue(), locale);
 		
-		pageContext.getOut().print(HTMLUtil.filter(msg));
+		if (msg != null) {
+			msg = HTMLUtil.filter(msg);
+		} else {
+			msg = "{".concat(content.getValue()).concat("}");
+		}
+		
+		pageContext.getOut().print(msg);
 	}	
 
 	private static void includeContent(PageContext pageContext, BeanContent content) throws IOException {
