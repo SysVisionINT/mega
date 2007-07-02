@@ -32,7 +32,7 @@ import javax.servlet.http.HttpServletResponse;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
 
-public class LoadControlFilter implements Filter {
+public class LoadControlFilter implements Filter {	
 	private static Log log = LogFactory.getLog(LoadControlFilter.class);
 
 	public void destroy() {
@@ -47,6 +47,13 @@ public class LoadControlFilter implements Filter {
 		if (!(response instanceof HttpServletResponse)) {
 			chain.doFilter(request, response);
 			return;
+		}
+		
+		if (LoadControlUtil.isTheSameRequest((HttpServletRequest) request)) {
+			chain.doFilter(request, response);
+			return;
+		} else {
+			LoadControlUtil.markAsSameRequest((HttpServletRequest) request);
 		}
 		
 		LoadControl control = LoadControlUtil.getLoadControl((HttpServletRequest) request);

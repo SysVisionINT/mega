@@ -21,7 +21,10 @@ package net.java.mega.common.load;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import net.java.sjtools.util.TextUtil;
+
 public class LoadControlUtil {
+	public static final String LOAD_CONTROL_SAME_REQUEST = "_LD_CNTRL_SM_RQST_";
 	public static final String LOAD_CONTROL = LoadControl.class.getName();
 
 	public static LoadControl getLoadControl(HttpServletRequest request) {
@@ -46,4 +49,14 @@ public class LoadControlUtil {
 
 		return controler;
 	}
+	
+	public static void markAsSameRequest(HttpServletRequest request) {
+		request.setAttribute(LOAD_CONTROL_SAME_REQUEST, LOAD_CONTROL_SAME_REQUEST);
+	}
+
+	public static boolean isTheSameRequest(HttpServletRequest request) {
+		String rid = (String) request.getAttribute(LOAD_CONTROL_SAME_REQUEST);
+		
+		return !TextUtil.isEmptyString(rid);
+	}	
 }
