@@ -34,7 +34,7 @@ public class ListMap implements Serializable {
 	}
 
 	public void put(String key, Object value) {
-		ListMapEntry entry = (ListMapEntry) get(key);
+		ListMapEntry entry = getListMapEntry(key);
 		
 		if (entry != null) {
 			entry.setValue(value);
@@ -48,16 +48,26 @@ public class ListMap implements Serializable {
 	}
 
 	public Object get(String key) {
+		ListMapEntry entry = getListMapEntry(key);
+	
+		if (entry != null) {
+			return entry.getValue();
+		}
+			
+		return null;
+	}
+	
+	private ListMapEntry getListMapEntry(String key) {
 		ListMapEntry entry = new ListMapEntry(key, null);
 		
 		int pos = keyPares.indexOf(entry);
 		
 		if (pos >= 0) {
-			return keyPares.get(pos);
+			return (ListMapEntry) keyPares.get(pos);
 		}
 			
 		return null;
-	}
+	}	
 
 	public Collection values() {
 		List list = new ArrayList();
