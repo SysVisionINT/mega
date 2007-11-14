@@ -40,6 +40,10 @@
 		<TD><t:listBox property="opcoes" size="3"><t:options property="valores"/></t:listBox></TD>
 	</TR>		
 	<TR>
+		<TD><a:key key="add.label.file"/></TD>
+		<TD><t:file property="ficheiro"/></TD>
+	</TR>	
+	<TR>
 		<TD COLSPAN="2"><t:submit method="insert"><a:key key="add.label.insert"/></t:submit></TD>
 	</TR>
 	</TABLE>
