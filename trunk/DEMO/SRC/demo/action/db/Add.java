@@ -131,4 +131,8 @@ public class Add extends AbstractAction implements Validator {
 	public void setOpcoes(List opcoes) {
 		this.opcoes = opcoes;
 	}
+	
+	public void setFicheiro(String file) {
+		log.info("setFicheiro = " + file);
+	}
 }
