@@ -33,6 +33,7 @@ import net.java.mega.action.error.WorkflowError;
 import net.java.mega.action.model.ActionWrapper;
 import net.java.mega.action.model.ControllerConfig;
 import net.java.mega.action.util.ActionRequestUtil;
+import net.java.mega.action.util.ActionRequestWrapper;
 import net.java.mega.action.util.Constants;
 import net.java.mega.action.util.WorkflowControlUtil;
 import net.java.mega.action.xml.ActionConfigReader;
@@ -62,15 +63,15 @@ public class ActionServlet extends HttpServlet {
 		process(request, response, Constants.HTTP_POST);
 	}
 
-	private void process(HttpServletRequest request, HttpServletResponse response, String doMethod) throws IOException,
+	private void process(HttpServletRequest servletRequest, HttpServletResponse response, String doMethod) throws IOException,
 			ServletException {
 		ActionManager actionManager = ActionManager.getInstance();
 
-		String path = ActionRequestUtil.getAction(request);
-
-		boolean sameRequest = WorkflowControlUtil.isTheSameRequest(request);
-
 		try {
+			ActionRequestWrapper request = new ActionRequestWrapper(servletRequest);
+			String path = ActionRequestUtil.getAction(request);
+			boolean sameRequest = WorkflowControlUtil.isTheSameRequest(request);
+			
 			ResponseProvider responseProvider = null;
 			RequestMetaData requestMetaData = actionManager.getRequestMetaData(path, doMethod);
 			ResponseMetaData responseMetaData = null;
@@ -99,10 +100,10 @@ public class ActionServlet extends HttpServlet {
 				}
 			}
 
-			responseProvider.process(request, response, requestMetaData, responseMetaData);
+			responseProvider.process(servletRequest, response, requestMetaData, responseMetaData);
 
 			if (responseMetaData != null && responseMetaData.isSessionInvalidated()) {
-				request.getSession(true).invalidate();
+				servletRequest.getSession(true).invalidate();
 			}
 		} catch (ActionNotFound e) {
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);

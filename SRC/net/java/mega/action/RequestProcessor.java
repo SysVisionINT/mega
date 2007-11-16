@@ -35,6 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import net.java.mega.action.api.CustomResponseProvider;
+import net.java.mega.action.api.FormFile;
 import net.java.mega.action.api.Message;
 import net.java.mega.action.api.SessionObject;
 import net.java.mega.action.api.Validator;
@@ -216,9 +217,10 @@ public class RequestProcessor {
 			}
 		} else {
 			if (log.isDebugEnabled()) {
-				log.debug("Request " + requestMetaData.getPath() + " with invalid token " + requestMetaData.getToken() + ", calling workflowError() on action " + action.getClass().getName());
+				log.debug("Request " + requestMetaData.getPath() + " with invalid token " + requestMetaData.getToken()
+						+ ", calling workflowError() on action " + action.getClass().getName());
 			}
-			
+
 			action.workflowError();
 		}
 
@@ -261,17 +263,17 @@ public class RequestProcessor {
 		if (!ActionManager.getInstance().isWorkflowControlActive()) {
 			return true;
 		}
-		
+
 		if (requestMetaData.getToken() == null || requestMetaData.getToken().equals("0")) {
 			return true;
 		}
-		
+
 		String userToken = WorkflowControlUtil.getUserToken(getHttpServletRequest());
-		
+
 		if (TextUtil.isEmptyString(userToken)) {
 			return true;
 		}
-		
+
 		return requestMetaData.getToken().equals(userToken);
 	}
 
@@ -362,7 +364,7 @@ public class RequestProcessor {
 				}
 			}
 
-			setProperty(action, attributeName, (String[]) parameters.get(attributeValue));
+			setProperty(action, attributeName, parameters.get(attributeValue));
 		}
 
 		boolean valid = true;
@@ -396,72 +398,91 @@ public class RequestProcessor {
 		return newName;
 	}
 
-	private void setProperty(Action action, String name, String[] parameterValue) throws PropertySetError {
-		if (log.isDebugEnabled()) {
-			log.debug("setProperty(" + action.getClass().getName() + ", " + name + ", ["
-					+ TextUtil.toString(parameterValue) + "])");
-		}
-
+	private void setProperty(Action action, String name, Object parameterValue) throws PropertySetError {
 		BeanUtil beanUtil = new BeanUtil(action);
 
 		List methods = beanUtil.getMethods(beanUtil.getMethodName("set", name));
 
-		Object value = parameterValue;
+		if (parameterValue instanceof FormFile) {
+			FormFile formFile = (FormFile) parameterValue;
 
-		if (parameterValue != null && parameterValue.length == 1) {
-			value = parameterValue[0];
-		}
+			if (log.isDebugEnabled()) {
+				log.debug("setProperty(" + action.getClass().getName() + ", " + name + ", " + formFile.getFileName()
+						+ ")");
+			}
 
-		if (!methods.isEmpty()) {
-			if (methods.size() > 1) {
-				try {
-					beanUtil.set(name, value);
-				} catch (Exception e) {
-					log.error("Error trying to set property " + name + " with the value " + value + " of class "
-							+ action.getClass().getName(), e);
-					throw new PropertySetError(name, value);
-				}
-			} else {
-				// IF the property is a Collection I will use String[]
-				if (!value.getClass().isArray()
-						&& Collection.class.isAssignableFrom(((Method) methods.get(0)).getParameterTypes()[0])) {
-					value = parameterValue;
-				}
+			try {
+				beanUtil.set(name, formFile);
+			} catch (Exception e) {
+				log.error("Error trying to set property " + name + " with the file " + formFile.getFileName()
+						+ " of class " + action.getClass().getName(), e);
+				throw new PropertySetError(name, formFile.getFileName());
+			}
+		} else {
+			String[] parameterArray = (String[]) parameterValue;
 
-				if (value.getClass().isArray()) {
-					String[] values = (String[]) value;
-					Collection collection = new ArrayList();
+			if (log.isDebugEnabled()) {
+				log.debug("setProperty(" + action.getClass().getName() + ", " + name + ", ["
+						+ TextUtil.toString(parameterArray) + "])");
+			}
 
-					for (int i = 0; i < values.length; i++) {
-						collection.add(values[i]);
-					}
+			Object value = parameterValue;
 
+			if (parameterArray != null && parameterArray.length == 1) {
+				value = parameterArray[0];
+			}
+
+			if (!methods.isEmpty()) {
+				if (methods.size() > 1) {
 					try {
-						beanUtil.set(name, collection);
+						beanUtil.set(name, value);
 					} catch (Exception e) {
-						log.error("Error trying to set property " + name + " with the value " + collection
-								+ " of class " + action.getClass().getName(), e);
-						throw new PropertySetError(name, collection);
+						log.error("Error trying to set property " + name + " with the value " + value + " of class "
+								+ action.getClass().getName(), e);
+						throw new PropertySetError(name, value);
 					}
 				} else {
-					if (TextUtil.isEmptyString((String) value)) {
-						try {
-							beanUtil.set(name, null);
-						} catch (Exception e) {
-							log.error("Error trying to set property " + name + " with the value NULL of class "
-									+ action.getClass().getName(), e);
-							throw new PropertySetError(name, null);
+					// IF the property is a Collection I will use String[]
+					if (!value.getClass().isArray()
+							&& Collection.class.isAssignableFrom(((Method) methods.get(0)).getParameterTypes()[0])) {
+						value = parameterArray;
+					}
+
+					if (value.getClass().isArray()) {
+						String[] values = (String[]) value;
+						Collection collection = new ArrayList();
+
+						for (int i = 0; i < values.length; i++) {
+							collection.add(values[i]);
 						}
-					} else {
-						Class clazz = ((Method) methods.get(0)).getParameterTypes()[0];
-						Object object = convertType((String) value, clazz);
 
 						try {
-							beanUtil.set(name, object);
+							beanUtil.set(name, collection);
 						} catch (Exception e) {
-							log.error("Error trying to set property " + name + " with the value " + parameterValue
+							log.error("Error trying to set property " + name + " with the value " + collection
 									+ " of class " + action.getClass().getName(), e);
-							throw new PropertySetError(name, parameterValue);
+							throw new PropertySetError(name, collection);
+						}
+					} else {
+						if (TextUtil.isEmptyString((String) value)) {
+							try {
+								beanUtil.set(name, null);
+							} catch (Exception e) {
+								log.error("Error trying to set property " + name + " with the value NULL of class "
+										+ action.getClass().getName(), e);
+								throw new PropertySetError(name, null);
+							}
+						} else {
+							Class clazz = ((Method) methods.get(0)).getParameterTypes()[0];
+							Object object = convertType((String) value, clazz);
+
+							try {
+								beanUtil.set(name, object);
+							} catch (Exception e) {
+								log.error("Error trying to set property " + name + " with the value " + parameterArray
+										+ " of class " + action.getClass().getName(), e);
+								throw new PropertySetError(name, parameterArray);
+							}
 						}
 					}
 				}

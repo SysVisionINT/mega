@@ -19,7 +19,9 @@
 package net.java.mega.tags.form;
 
 import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.Tag;
 
+import net.java.mega.tags.model.Attribute;
 import net.java.mega.tags.model.InputBaseTag;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
@@ -66,5 +68,10 @@ public class FileTag extends InputBaseTag {
 	}
 
 	public void initTag() {
+		Tag tag = findAncestorWithClass(this, FormTag.class);
+		
+		if (tag != null) {
+			((FormTag)tag).addAttribute(new Attribute("enctype", "multipart/form-data"));
+		}		
 	}
 }

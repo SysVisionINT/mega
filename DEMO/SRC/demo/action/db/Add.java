@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.java.mega.action.api.AbstractAction;
+import net.java.mega.action.api.FormFile;
 import net.java.mega.action.api.Message;
 import net.java.mega.action.api.Validator;
 import net.java.sjtools.logging.Log;
@@ -132,7 +133,9 @@ public class Add extends AbstractAction implements Validator {
 		this.opcoes = opcoes;
 	}
 	
-	public void setFicheiro(String file) {
-		log.info("setFicheiro = " + file);
+	public void setFicheiro(FormFile file) {
+		log.info("FileName = " + file.getFileName());
+		log.info("ContentType = " + file.getContentType());
+		log.info("FileSize = " + file.getFileSize());
 	}
 }
