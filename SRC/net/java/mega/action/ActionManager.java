@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import net.java.mega.action.api.RequestParameters;
 import net.java.mega.action.api.ResponseProvider;
 import net.java.mega.action.error.ActionAlreadyInUseException;
 import net.java.mega.action.error.ActionNotFound;
@@ -80,7 +81,7 @@ public class ActionManager {
 		servletConfig = null;
 	}
 
-	public RequestMetaData getRequestMetaData(String path, String doMethod) throws ActionNotFound, ConfigurationError,
+	public RequestMetaData getRequestMetaData(String path, String doMethod, RequestParameters parameters) throws ActionNotFound, ConfigurationError,
 			ActionAlreadyInUseException {
 		RequestMetaData requestMetaData = new RequestMetaData();
 
@@ -88,6 +89,7 @@ public class ActionManager {
 		requestMetaData.setActionConfig(getActionConfig(getActionPath(path)));
 		requestMetaData.setMethodName(getMethod(path));
 		requestMetaData.setDoMethod(doMethod);
+		requestMetaData.setParameters(parameters);
 
 		return requestMetaData;
 	}

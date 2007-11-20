@@ -9,12 +9,14 @@ public class Record implements Serializable{
 	private String name = null;
 	private boolean admin = false;
 	private String obs = null;
+	private String ficheiro = null;
 	
-	public Record(int i, String n, boolean b, String o) {
+	public Record(int i, String n, boolean b, String o, String ficheiro) {
 		setId(i);
 		setName(n);
 		setAdmin(b);
 		setObs(o);
+		setFicheiro(ficheiro);
 	}
 
 	public int getId() {
@@ -59,6 +61,14 @@ public class Record implements Serializable{
 		}
 		
 		return id == ((Record)obj).id;
+	}
+
+	public String getFicheiro() {
+		return ficheiro;
+	}
+
+	public void setFicheiro(String ficheiro) {
+		this.ficheiro = ficheiro;
 	}
 	
 	

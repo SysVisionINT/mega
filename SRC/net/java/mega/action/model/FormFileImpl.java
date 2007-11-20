@@ -20,14 +20,17 @@
 package net.java.mega.action.model;
 
 import java.io.InputStream;
+import java.io.Serializable;
 
 import net.java.mega.action.api.FormFile;
 
-public class FormFileImpl implements FormFile {
+public class FormFileImpl implements FormFile, Serializable{
+	private static final long serialVersionUID = -50442671044374266L;
+	
 	private String fileName = null;
 	private String contentType = null;
 	private long fileSize = 0;
-	private InputStream inputStream = null;
+	private transient InputStream inputStream = null;
 	
 	public String getContentType() {
 		return contentType;

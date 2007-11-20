@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.java.mega.action.api.RequestParameters;
 import net.java.mega.action.api.ResponseProvider;
 import net.java.mega.action.error.ActionException;
 import net.java.mega.action.error.ActionNotFound;
@@ -33,7 +34,7 @@ import net.java.mega.action.error.WorkflowError;
 import net.java.mega.action.model.ActionWrapper;
 import net.java.mega.action.model.ControllerConfig;
 import net.java.mega.action.util.ActionRequestUtil;
-import net.java.mega.action.util.ActionRequestWrapper;
+import net.java.mega.action.util.RequestParametersFactory;
 import net.java.mega.action.util.Constants;
 import net.java.mega.action.util.WorkflowControlUtil;
 import net.java.mega.action.xml.ActionConfigReader;
@@ -63,17 +64,19 @@ public class ActionServlet extends HttpServlet {
 		process(request, response, Constants.HTTP_POST);
 	}
 
-	private void process(HttpServletRequest servletRequest, HttpServletResponse response, String doMethod) throws IOException,
+	private void process(HttpServletRequest request, HttpServletResponse response, String doMethod) throws IOException,
 			ServletException {
 		ActionManager actionManager = ActionManager.getInstance();
 
 		try {
-			ActionRequestWrapper request = new ActionRequestWrapper(servletRequest);
-			String path = ActionRequestUtil.getAction(request);
+			RequestParameters parameters = RequestParametersFactory.getRequestParameters(request);
+			
+			String path = ActionRequestUtil.getAction(request, parameters);
 			boolean sameRequest = WorkflowControlUtil.isTheSameRequest(request);
 			
 			ResponseProvider responseProvider = null;
-			RequestMetaData requestMetaData = actionManager.getRequestMetaData(path, doMethod);
+			RequestMetaData requestMetaData = actionManager.getRequestMetaData(path, doMethod, parameters);
+			
 			ResponseMetaData responseMetaData = null;
 
 			if (!sameRequest) {
@@ -100,10 +103,10 @@ public class ActionServlet extends HttpServlet {
 				}
 			}
 
-			responseProvider.process(servletRequest, response, requestMetaData, responseMetaData);
+			responseProvider.process(request, response, requestMetaData, responseMetaData);
 
 			if (responseMetaData != null && responseMetaData.isSessionInvalidated()) {
-				servletRequest.getSession(true).invalidate();
+				request.getSession(true).invalidate();
 			}
 		} catch (ActionNotFound e) {
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);

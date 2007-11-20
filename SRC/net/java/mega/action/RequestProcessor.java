@@ -58,22 +58,22 @@ public class RequestProcessor {
 	private static Log log = LogFactory.getLog(RequestProcessor.class);
 
 	private HttpServletRequest request = null;
-
 	private HttpServletResponse response = null;
+	private RequestMetaData requestMetaData = null;
 
 	private Map actions = new HashMap();
 
 	private ResponseMetaData currentResponse = new ResponseMetaData();
-
 	private MessageContainer messageContainer = new MessageContainer();
 
-	public RequestProcessor(HttpServletRequest request, HttpServletResponse response) {
+	public RequestProcessor(HttpServletRequest request, HttpServletResponse response, RequestMetaData requestMetaData) {
 		if (log.isDebugEnabled()) {
 			log.debug("new RequestProcessor(...)");
 		}
 
 		this.request = request;
 		this.response = response;
+		this.requestMetaData = requestMetaData;
 	}
 
 	public void addMessage(Message message) {
@@ -88,6 +88,14 @@ public class RequestProcessor {
 		messageContainer.addMessage(key, message);
 	}
 
+	public RequestMetaData getRequestMetaData() {
+		if (log.isDebugEnabled()) {
+			log.debug("getRequestMetaData()");
+		}
+
+		return requestMetaData;
+	}
+	
 	public HttpServletRequest getHttpServletRequest() {
 		if (log.isDebugEnabled()) {
 			log.debug("getHttpServletRequest()");
@@ -200,24 +208,24 @@ public class RequestProcessor {
 		return action;
 	}
 
-	public ResponseMetaData process(RequestMetaData requestMetaData) throws Exception {
+	public ResponseMetaData process() throws Exception {
 		if (log.isDebugEnabled()) {
-			log.debug("process(...)");
+			log.debug("process()");
 		}
 
-		Action action = getActionInstance(requestMetaData.getActionConfig().getClazz());
+		Action action = getActionInstance(getRequestMetaData().getActionConfig().getClazz());
 
 		currentResponse.setAction(action);
 
-		if (isWorkflowOK(requestMetaData)) {
-			if (requestMetaData.getDoMethod().equals(Constants.HTTP_POST)) {
-				processPOST(requestMetaData, action);
+		if (isWorkflowOK(getRequestMetaData())) {
+			if (getRequestMetaData().getDoMethod().equals(Constants.HTTP_POST)) {
+				processPOST(action);
 			} else {
-				processGET(requestMetaData, action);
+				processGET(action);
 			}
 		} else {
 			if (log.isDebugEnabled()) {
-				log.debug("Request " + requestMetaData.getPath() + " with invalid token " + requestMetaData.getToken()
+				log.debug("Request " + getRequestMetaData().getPath() + " with invalid token " + getRequestMetaData().getToken()
 						+ ", calling workflowError() on action " + action.getClass().getName());
 			}
 
@@ -268,7 +276,7 @@ public class RequestProcessor {
 			return true;
 		}
 
-		String userToken = WorkflowControlUtil.getUserToken(getHttpServletRequest());
+		String userToken = WorkflowControlUtil.getUserToken(requestMetaData.getParameters());
 
 		if (TextUtil.isEmptyString(userToken)) {
 			return true;
@@ -277,7 +285,7 @@ public class RequestProcessor {
 		return requestMetaData.getToken().equals(userToken);
 	}
 
-	private void processGET(RequestMetaData requestMetaData, Action action) {
+	private void processGET(Action action) {
 		if (log.isDebugEnabled()) {
 			log.debug("processGET(...)");
 		}
@@ -285,7 +293,7 @@ public class RequestProcessor {
 		List attributeList = new ArrayList();
 		String attributeName = null;
 
-		for (Enumeration e = getHttpServletRequest().getParameterNames(); e.hasMoreElements();) {
+		for (Enumeration e = getRequestMetaData().getParameters().getParameterNames(); e.hasMoreElements();) {
 			attributeName = (String) e.nextElement();
 
 			if (attributeName.startsWith(Constants.GET_ARG)) {
@@ -301,13 +309,13 @@ public class RequestProcessor {
 		for (Iterator i = attributeList.iterator(); i.hasNext();) {
 			attributeName = (String) i.next();
 
-			parameters[index] = getHttpServletRequest().getParameter(attributeName);
+			parameters[index] = getRequestMetaData().getParameters().getParameter(attributeName);
 			index++;
 		}
 
-		Object[] args = convertArgs(parameters, action, requestMetaData.getMethodName());
+		Object[] args = convertArgs(parameters, action, getRequestMetaData().getMethodName());
 
-		execute(action, requestMetaData.getMethodName(), args);
+		execute(action, getRequestMetaData().getMethodName(), args);
 	}
 
 	private Object[] convertArgs(String[] parameters, Action action, String methodName) {
@@ -342,7 +350,7 @@ public class RequestProcessor {
 		return ret;
 	}
 
-	private void processPOST(RequestMetaData requestMetaData, Action action) throws Exception {
+	private void processPOST(Action action) throws Exception {
 		if (log.isDebugEnabled()) {
 			log.debug("processPOST(...)");
 		}
@@ -350,7 +358,7 @@ public class RequestProcessor {
 		String attributeName = null;
 		String attributeValue = null;
 
-		Map parameters = getHttpServletRequest().getParameterMap();
+		Map parameters = getRequestMetaData().getParameters().getParameterMap();
 
 		for (Iterator i = parameters.keySet().iterator(); i.hasNext();) {
 			attributeName = (String) i.next();
@@ -369,14 +377,14 @@ public class RequestProcessor {
 
 		boolean valid = true;
 
-		if (!requestMetaData.getMethodName().equals(MethodConstants.ON_LOAD)) {
+		if (!getRequestMetaData().getMethodName().equals(MethodConstants.ON_LOAD)) {
 			if (action instanceof Validator) {
-				valid = ((Validator) action).isInputValid(requestMetaData.getMethodName());
+				valid = ((Validator) action).isInputValid(getRequestMetaData().getMethodName());
 			}
 		}
 
 		if (valid) {
-			execute(action, requestMetaData.getMethodName(), new Object[0]);
+			execute(action, getRequestMetaData().getMethodName(), new Object[0]);
 		}
 	}
 

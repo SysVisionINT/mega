@@ -23,6 +23,7 @@ public class Add extends AbstractAction implements Validator {
 	private List xpto = null;
 	private String opcao = null;
 	private List opcoes = null;
+	private String ficheiro = null; 
 
 	public List getValores() {
 		List list = new ArrayList();
@@ -85,7 +86,7 @@ public class Add extends AbstractAction implements Validator {
 
 		RecordList recordList = (RecordList) getAction(RecordList.class);
 
-		Record record = new Record(Integer.parseInt(id), nome, admin, obs);
+		Record record = new Record(Integer.parseInt(id), nome, admin, obs, ficheiro);
 
 		if (recordList.getRecordList().contains(record)) {
 			addMessage(new Message("add.error.duplicated"));
@@ -134,8 +135,10 @@ public class Add extends AbstractAction implements Validator {
 	}
 	
 	public void setFicheiro(FormFile file) {
-		log.info("FileName = " + file.getFileName());
-		log.info("ContentType = " + file.getContentType());
-		log.info("FileSize = " + file.getFileSize());
+		if (file == null) {
+			ficheiro = null;
+		} else {
+			ficheiro = file.getFileName();
+		}
 	}
 }
