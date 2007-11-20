@@ -45,6 +45,7 @@ import net.java.mega.action.error.MethodExecuteError;
 import net.java.mega.action.error.PropertySetError;
 import net.java.mega.action.model.Action;
 import net.java.mega.action.model.ActionConfig;
+import net.java.mega.action.model.EmptyFormFile;
 import net.java.mega.action.util.CheckBoxUtil;
 import net.java.mega.action.util.Constants;
 import net.java.mega.action.util.MethodConstants;
@@ -95,7 +96,7 @@ public class RequestProcessor {
 
 		return requestMetaData;
 	}
-	
+
 	public HttpServletRequest getHttpServletRequest() {
 		if (log.isDebugEnabled()) {
 			log.debug("getHttpServletRequest()");
@@ -225,8 +226,9 @@ public class RequestProcessor {
 			}
 		} else {
 			if (log.isDebugEnabled()) {
-				log.debug("Request " + getRequestMetaData().getPath() + " with invalid token " + getRequestMetaData().getToken()
-						+ ", calling workflowError() on action " + action.getClass().getName());
+				log.debug("Request " + getRequestMetaData().getPath() + " with invalid token "
+						+ getRequestMetaData().getToken() + ", calling workflowError() on action "
+						+ action.getClass().getName());
 			}
 
 			action.workflowError();
@@ -414,9 +416,13 @@ public class RequestProcessor {
 		if (parameterValue instanceof FormFile) {
 			FormFile formFile = (FormFile) parameterValue;
 
-			if (log.isDebugEnabled()) {
-				log.debug("setProperty(" + action.getClass().getName() + ", " + name + ", " + formFile.getFileName()
-						+ ")");
+			if (formFile instanceof EmptyFormFile) {
+				formFile = null;
+			} else {
+				if (log.isDebugEnabled()) {
+					log.debug("setProperty(" + action.getClass().getName() + ", " + name + ", "
+							+ formFile.getFileName() + ")");
+				}
 			}
 
 			try {
