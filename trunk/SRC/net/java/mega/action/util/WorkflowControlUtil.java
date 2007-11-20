@@ -21,6 +21,7 @@ package net.java.mega.action.util;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import net.java.mega.action.api.RequestParameters;
 import net.java.mega.action.model.WorkflowControl;
 
 public class WorkflowControlUtil {
@@ -82,8 +83,8 @@ public class WorkflowControlUtil {
 		return String.valueOf(control.getCurrentToken());
 	}
 
-	public static String getUserToken(HttpServletRequest request) {
-		return request.getParameter(WORKFLOW_CONTROL_FIELD);
+	public static String getUserToken(RequestParameters parameters) {
+		return parameters.getParameter(WORKFLOW_CONTROL_FIELD);
 	}
 
 	private static void updateWorkflowControl(HttpServletRequest request, WorkflowControl control) {

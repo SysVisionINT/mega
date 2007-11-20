@@ -37,7 +37,7 @@ public class SessionValidatorWrapper extends AbstractWrapper {
 			return executeNext(request, response, requestMetaData);
 		} else {
 			RequestMetaData forward = ActionManager.getInstance().getRequestMetaData(getProperty("forward-url"),
-					Constants.HTTP_GET);
+					Constants.HTTP_GET, requestMetaData.getParameters());
 
 			return executeNext(request, response, forward);
 		}

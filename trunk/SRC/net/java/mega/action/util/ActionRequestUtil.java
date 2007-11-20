@@ -20,6 +20,7 @@ package net.java.mega.action.util;
 
 import javax.servlet.http.HttpServletRequest;
 
+import net.java.mega.action.api.RequestParameters;
 import net.java.mega.common.http.RequestUtil;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
@@ -27,14 +28,14 @@ import net.java.sjtools.util.TextUtil;
 
 public class ActionRequestUtil extends RequestUtil {
 	private static Log log = LogFactory.getLog(ActionRequestUtil.class);
-
-	public static String getAction(HttpServletRequest request) {
+	
+	public static String getAction(HttpServletRequest request, RequestParameters parameters) {
 		if (log.isDebugEnabled()) {
 			log.debug("getAction(...)");
 		}
 
 		if (!WorkflowControlUtil.isTheSameRequest(request)) {
-			String path = request.getParameter(Constants.MEGA_FORM_ACTION);
+			String path = parameters.getParameter(Constants.MEGA_FORM_ACTION);
 
 			if (!TextUtil.isEmptyString(path)) {
 				return path;
@@ -42,5 +43,5 @@ public class ActionRequestUtil extends RequestUtil {
 		}
 
 		return getPath(request);
-	}
+	}	
 }

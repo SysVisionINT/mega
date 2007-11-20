@@ -50,9 +50,9 @@ public abstract class AbstractWrapper implements ActionWrapper {
 			RequestMetaData requestMetaData) throws Exception {
 
 		if (next == null) {
-			RequestProcessor processor = new RequestProcessor(request, response);
+			RequestProcessor processor = new RequestProcessor(request, response, requestMetaData);
 
-			return processor.process(requestMetaData);
+			return processor.process();
 		}
 
 		return next.execute(request, response, requestMetaData);

@@ -10,6 +10,7 @@
 		<TD><a:key key="list.label.name"/></TD>
 		<TD><a:key key="list.label.admin"/></TD>
 		<TD><a:key key="list.label.obs"/></TD>
+		<TD><a:key key="list.label.ficheiro"/></TD>		
 		<TD>&nbsp;</TD>
 	</TR>
 <c:forEach var="elemento" items="${this.recordList}" varStatus="forEachStatus1">
@@ -18,6 +19,7 @@
 		<TD><c:out value="${elemento.name}"/></TD>
 		<TD><c:out value="${elemento.admin}"/></TD>
 		<TD><c:out value="${elemento.obs}"/></TD>
+		<TD><c:out value="${elemento.ficheiro}"/></TD>
 		<TD>[
 			<t:link method="delete">
 				<t:parameter>

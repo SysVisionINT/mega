@@ -18,6 +18,7 @@
  */
 package net.java.mega.action;
 
+import net.java.mega.action.api.RequestParameters;
 import net.java.mega.action.model.ActionConfig;
 import net.java.mega.action.util.Constants;
 import net.java.mega.action.util.MethodConstants;
@@ -28,6 +29,7 @@ public class RequestMetaData {
 	private String token = null;
 	private String methodName = MethodConstants.ON_LOAD;
 	private String doMethod = Constants.HTTP_GET;
+	private RequestParameters parameters = null; 
 	
 	public String getDoMethod() {
 		return doMethod;
@@ -67,5 +69,13 @@ public class RequestMetaData {
 
 	public void setToken(String token) {
 		this.token = token;
+	}
+
+	public RequestParameters getParameters() {
+		return parameters;
+	}
+
+	public void setParameters(RequestParameters parameters) {
+		this.parameters = parameters;
 	}
 }
