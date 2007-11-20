@@ -23,7 +23,7 @@ public class Add extends AbstractAction implements Validator {
 	private List xpto = null;
 	private String opcao = null;
 	private List opcoes = null;
-	private String ficheiro = null; 
+	private String ficheiro = null;
 
 	public List getValores() {
 		List list = new ArrayList();
@@ -133,11 +133,13 @@ public class Add extends AbstractAction implements Validator {
 	public void setOpcoes(List opcoes) {
 		this.opcoes = opcoes;
 	}
-	
+
 	public void setFicheiro(FormFile file) {
 		if (file == null) {
+			log.debug("setFicheiro(NULL)");
 			ficheiro = null;
 		} else {
+			log.debug("setFicheiro(" + file.getFileName() + ")");
 			ficheiro = file.getFileName();
 		}
 	}

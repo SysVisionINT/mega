@@ -29,7 +29,10 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import net.java.mega.action.api.RequestParameters;
+import net.java.mega.action.model.EmptyFormFile;
 import net.java.mega.action.model.FormFileImpl;
+import net.java.sjtools.logging.Log;
+import net.java.sjtools.logging.LogFactory;
 import net.java.sjtools.util.TextUtil;
 
 import org.apache.commons.fileupload.FileItem;
@@ -38,11 +41,20 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 public class RequestParametersFactory {
+	private static Log log = LogFactory.getLog(RequestParametersFactory.class);
 
 	public static RequestParameters getRequestParameters(HttpServletRequest request) throws Exception {
+		if (log.isDebugEnabled()) {
+			log.debug("getRequestParameters()");
+		}
+
 		Hashtable parameters = new Hashtable();
 
 		if (ServletFileUpload.isMultipartContent(request)) {
+			if (log.isDebugEnabled()) {
+				log.debug("isMultipartContent...");
+			}
+
 			FileItemFactory factory = new DiskFileItemFactory();
 			ServletFileUpload upload = new ServletFileUpload(factory);
 			List items = upload.parseRequest(request);
@@ -61,19 +73,39 @@ public class RequestParametersFactory {
 
 				fieldName = item.getFieldName();
 
+				if (log.isDebugEnabled()) {
+					log.debug("fieldName = " + item.getFieldName());
+				}
+
 				if (!item.isFormField()) {
-					if (TextUtil.isEmptyString(fieldName)) {
-						continue;
+					if (log.isDebugEnabled()) {
+						log.debug(item.getFieldName() + " NOT isFormField...");
 					}
 
-					FormFileImpl file = new FormFileImpl();
-					file.setFileName(item.getName());
-					file.setContentType(item.getContentType());
-					file.setFileSize(item.getSize());
-					file.setInputStream(item.getInputStream());
+					if (TextUtil.isEmptyString(item.getName())) {
+						if (log.isDebugEnabled()) {
+							log.debug(item.getFieldName() + " NO fileName");
+						}
+						
+						parameters.put(fieldName, new EmptyFormFile());
+					} else {
+						if (log.isDebugEnabled()) {
+							log.debug(item.getFieldName() + " = File(" + item.getName() + ")");
+						}
+						
+						FormFileImpl file = new FormFileImpl();
+						file.setFileName(item.getName());
+						file.setContentType(item.getContentType());
+						file.setFileSize(item.getSize());
+						file.setInputStream(item.getInputStream());
 
-					parameters.put(fieldName, file);
+						parameters.put(fieldName, file);
+					}
 				} else {
+					if (log.isDebugEnabled()) {
+						log.debug(item.getFieldName() + " isFormField...");
+					}
+
 					String value = null;
 
 					try {
@@ -101,6 +133,10 @@ public class RequestParametersFactory {
 				parameters.put(name, values.toArray(new String[values.size()]));
 			}
 		} else {
+			if (log.isDebugEnabled()) {
+				log.debug("NOT isMultipartContent...");
+			}
+
 			parameters.putAll(request.getParameterMap());
 		}
 
