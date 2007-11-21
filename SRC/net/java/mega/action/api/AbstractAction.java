@@ -121,4 +121,8 @@ public abstract class AbstractAction implements Action, Serializable {
 	public String getNextRequestToken() {
 		return WorkflowControlUtil.getCurrentToken(getHttpServletRequest());
 	}
+	
+	public String getActionPath() {
+		return requestProcessor.getRequestMetaData().getPath();
+	}
 }
