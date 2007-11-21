@@ -34,6 +34,7 @@ import javax.servlet.http.HttpServletResponseWrapper;
 public class ResponseWrapper extends HttpServletResponseWrapper {
 	private ServletOutputStreamWrapper output = new ServletOutputStreamWrapper();
 	private PrintWriter pw = new PrintWriter(output);
+	private boolean useOutput = true;
 	
 	private Integer status = null;
 	private String characterEncoding = null;
@@ -47,15 +48,13 @@ public class ResponseWrapper extends HttpServletResponseWrapper {
 	}
 
 	public ServletOutputStream getOutputStream() throws java.io.IOException {
+		useOutput = true;
 		return output;
 	}
 
 	public PrintWriter getWriter() throws java.io.IOException {
+		useOutput = false;
 		return pw;
-	}
-
-	public byte[] getResponseContent() {
-		return output.getBuffer();
 	}
 	
 	public void flushBuffer() throws IOException {
@@ -168,7 +167,12 @@ public class ResponseWrapper extends HttpServletResponseWrapper {
 			response.setContentType(contentType);
 		}
 		
-		response.getOutputStream().write(getResponseContent());
+		if (useOutput) {
+			response.getOutputStream().write(output.getBuffer());
+		} else {
+			response.getWriter().write(output.toString());
+		}
+		
 		response.flushBuffer();
 	}
 
