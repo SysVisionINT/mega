@@ -34,9 +34,10 @@ import javax.servlet.http.HttpServletResponseWrapper;
 public class ResponseWrapper extends HttpServletResponseWrapper {
 	private ServletOutputStreamWrapper output = new ServletOutputStreamWrapper();
 	private PrintWriter pw = new PrintWriter(output);
-	private boolean useOutput = true;
 	
 	private Integer status = null;
+	private Integer error = null;
+	private String errorMsg = null;
 	private String characterEncoding = null;
 	private String contentType = null;
 	private List cookieList = new ArrayList();
@@ -47,13 +48,20 @@ public class ResponseWrapper extends HttpServletResponseWrapper {
 		super(response);
 	}
 
+	public void sendError(int error, String msg) throws IOException {
+		sendError(error);
+		errorMsg = msg;
+	}
+
+	public void sendError(int error) throws IOException {
+		this.error = new Integer(error);
+	}
+
 	public ServletOutputStream getOutputStream() throws java.io.IOException {
-		useOutput = true;
 		return output;
 	}
 
 	public PrintWriter getWriter() throws java.io.IOException {
-		useOutput = false;
 		return pw;
 	}
 	
@@ -100,7 +108,7 @@ public class ResponseWrapper extends HttpServletResponseWrapper {
 	public void setStatus(int value) {
 		status = new Integer(value);
 	}
-	
+
 	public void setCharacterEncoding(String value) {
 		characterEncoding = value;
 	}
@@ -117,7 +125,17 @@ public class ResponseWrapper extends HttpServletResponseWrapper {
 		return redirect;
 	}
 
-	public void update(HttpServletResponse response) throws IOException {				
+	public void update(HttpServletResponse response) throws IOException {	
+		if (error != null) {
+			if (errorMsg != null) {
+				response.sendError(error.intValue(), errorMsg);
+			} else {
+				response.sendError(error.intValue());
+			}
+			
+			return;
+		}
+		
 		for (Iterator i = cookieList.iterator(); i.hasNext();) {
 			response.addCookie((Cookie) i.next());
 		}
@@ -167,11 +185,7 @@ public class ResponseWrapper extends HttpServletResponseWrapper {
 			response.setContentType(contentType);
 		}
 		
-		if (useOutput) {
-			response.getOutputStream().write(output.getBuffer());
-		} else {
-			response.getWriter().write(output.toString());
-		}
+		response.getOutputStream().write(output.getBuffer());
 		
 		response.flushBuffer();
 	}
