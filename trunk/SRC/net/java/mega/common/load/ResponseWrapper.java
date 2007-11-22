@@ -31,10 +31,16 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
+import net.java.sjtools.logging.Log;
+import net.java.sjtools.logging.LogFactory;
+
 public class ResponseWrapper extends HttpServletResponseWrapper {
+	private static Log log = LogFactory.getLog(ResponseWrapper.class);
+
 	private ServletOutputStreamWrapper output = new ServletOutputStreamWrapper();
 	private PrintWriter pw = new PrintWriter(output);
-	
+	private boolean usedWriter = true;
+
 	private Integer status = null;
 	private Integer error = null;
 	private String errorMsg = null;
@@ -58,17 +64,23 @@ public class ResponseWrapper extends HttpServletResponseWrapper {
 	}
 
 	public ServletOutputStream getOutputStream() throws java.io.IOException {
+		usedWriter = false;
 		return output;
 	}
 
 	public PrintWriter getWriter() throws java.io.IOException {
+		usedWriter = true;
 		return pw;
 	}
-	
+
 	public void flushBuffer() throws IOException {
+		if (usedWriter) {
+			pw.flush();
+		}
+
 		output.flush();
 	}
-	
+
 	public String getResponseContentAsString() {
 		return output.toString();
 	}
@@ -100,7 +112,7 @@ public class ResponseWrapper extends HttpServletResponseWrapper {
 	public void setIntHeader(String name, int value) {
 		headerMap.put(name, new Integer(value));
 	}
-	
+
 	public boolean containsHeader(String name) {
 		return headerMap.containsKey(name);
 	}
@@ -112,41 +124,41 @@ public class ResponseWrapper extends HttpServletResponseWrapper {
 	public void setCharacterEncoding(String value) {
 		characterEncoding = value;
 	}
-	
+
 	public void setContentType(String value) {
 		contentType = value;
 	}
-	
+
 	public void sendRedirect(String location) throws java.io.IOException {
 		redirect = location;
 	}
-	
+
 	public String getRedirect() {
 		return redirect;
 	}
 
-	public void update(HttpServletResponse response) throws IOException {	
+	public void update(HttpServletResponse response) throws IOException {
 		if (error != null) {
 			if (errorMsg != null) {
 				response.sendError(error.intValue(), errorMsg);
 			} else {
 				response.sendError(error.intValue());
 			}
-			
+
 			return;
 		}
-		
+
 		for (Iterator i = cookieList.iterator(); i.hasNext();) {
 			response.addCookie((Cookie) i.next());
 		}
-		
+
 		String name = null;
 		Object value = null;
-		
+
 		for (Iterator i = headerMap.keySet().iterator(); i.hasNext();) {
 			name = (String) i.next();
 			value = headerMap.get(name);
-			
+
 			if (value instanceof String) {
 				if (response.containsHeader(name)) {
 					response.setHeader(name, (String) value);
@@ -167,26 +179,28 @@ public class ResponseWrapper extends HttpServletResponseWrapper {
 				}
 			}
 		}
-		
+
 		if (redirect != null) {
 			response.sendRedirect(redirect);
 			return;
 		}
-		
+
 		if (status != null) {
 			response.setStatus(status.intValue());
 		}
-		
+
 		if (characterEncoding != null) {
 			response.setCharacterEncoding(characterEncoding);
 		}
-		
+
 		if (contentType != null) {
 			response.setContentType(contentType);
 		}
-		
+
+		flushBuffer();
+
 		response.getOutputStream().write(output.getBuffer());
-		
+
 		response.flushBuffer();
 	}
 
