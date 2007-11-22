@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import net.java.mega.action.ActionManager;
 import net.java.mega.action.RequestProcessor;
 import net.java.mega.action.error.WorkflowError;
 import net.java.mega.action.model.Action;
@@ -120,9 +121,5 @@ public abstract class AbstractAction implements Action, Serializable {
 	
 	public String getNextRequestToken() {
 		return WorkflowControlUtil.getCurrentToken(getHttpServletRequest());
-	}
-	
-	public String getActionPath() {
-		return requestProcessor.getRequestMetaData().getPath();
 	}
 }

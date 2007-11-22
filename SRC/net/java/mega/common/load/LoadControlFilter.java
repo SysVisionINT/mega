@@ -93,6 +93,10 @@ public class LoadControlFilter implements Filter {
 				HttpServletResponse lastResponse = control.getResponse();
 
 				if (lastResponse == null) {
+					if (log.isDebugEnabled()) {
+						log.debug("No response in LoadControl!");
+					}
+					
 					lastResponse = (HttpServletResponse) response;
 				}
 

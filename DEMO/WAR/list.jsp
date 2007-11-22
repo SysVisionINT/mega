@@ -35,6 +35,8 @@
 <BR/>
 
 <t:link method="add"><a:key key="list.label.addnew"/></t:link>
+<BR/>
+<t:link method="list"><a:key key="list.label.list"/></t:link>
 
 
 <BR/>

@@ -25,6 +25,10 @@ import javax.servlet.ServletOutputStream;
 
 public class ServletOutputStreamWrapper extends ServletOutputStream {
 	private ByteArrayOutputStream output = new ByteArrayOutputStream();
+	
+	public ServletOutputStreamWrapper () {
+		super();
+	}
 
 	public void write(int character) throws IOException {
 		output.write(character);
