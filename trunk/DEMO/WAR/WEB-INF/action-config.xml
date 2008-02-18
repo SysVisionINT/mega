@@ -8,25 +8,14 @@
 	</controller>
 	
 	<wrapper-chains>
-		<wrapper-chain name="secured">
-			<url-pattern>/db/*</url-pattern>
-			<action-wrapper class-name="net.java.mega.action.wrapper.SessionValidatorWrapper">
-				<property name="attribute-name" value="USER"/>
-				<property name="forward-url" value="/login"/>
-			</action-wrapper>
-		</wrapper-chain>
 	</wrapper-chains>
 	
 	<actions>
 	</actions>
 	
 	<errors>
-		<exception class-name="net.java.mega.action.error.WorkflowError" forward="/login.action"/>
 	</errors>
 	
 	<resources>
-		<bundle name="Message"/>
-		<bundle name="Format"/>
-		<bundle name="System"/>
 	</resources>
 </action-config>

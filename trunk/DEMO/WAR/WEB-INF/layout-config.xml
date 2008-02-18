@@ -3,48 +3,13 @@
 <!DOCTYPE layout-config PUBLIC "-//MEGA//DTD layout-config 1.0//EN" "http://www.sysvision.pt/dtds/mega-layout_1_0.dtd">
 
 <layout-config>
-	<page name="/base">
-		<layout-path value="/layout/layout.jsp"/>
-	</page>
-	
-	<page name="/db/add">
-		<extends page-name="/base"/>
+	<page name="/hello">
+		<layout-path value="/JSP/LAYOUT/layout.jsp"/>
 		<block name="title">
-			<string value="MEGA-DEMO - Adicionar"/>
+			<string value="Hello world using Mega"/>
 		</block>		
 		<block name="body">
-			<path value="/add.jsp"/>
+			<path value="/JSP/hello.jsp"/>
 		</block>	
 	</page>
-	
-	<page name="/db/recordList">
-		<extends page-name="/base"/>
-		<block name="title">
-			<string value="MEGA-DEMO - Lista"/>
-		</block>		
-		<block name="body">
-			<path value="/list.jsp"/>
-		</block>	
-	</page>	
-	
-	<page name="/login">
-		<extends page-name="/base"/>
-		<block name="title">
-			<string value="MEGA-DEMO - Login"/>
-		</block>		
-		<block name="body">
-			<path value="/login.jsp"/>
-		</block>	
-	</page>		
-	
-	<page name="/currentLocate">
-		<extends page-name="/base"/>
-		<block name="title">
-			<string value="MEGA-DEMO - Locate"/>
-		</block>		
-		<block name="body">
-			<path value="/locate.jsp"/>
-		</block>	
-	</page>		
-	
 </layout-config>
