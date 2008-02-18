@@ -14,14 +14,21 @@
 		<fileset dir="${lib}">
 			<include name="*.jar" />
 		</fileset>
-		
-		<pathelement location="${war.jar}" />
 	</path>
 
 	<target name="all" depends="common, layout, action, tags" />
 
 	<target name="layout" depends="compile">
 		<jar destfile="${dist}/${layout.file}">
+			<manifest>
+				<section name="net/java/mega">
+					<attribute name="Implementation-Title" value="MEGA Web Framework - Layout"/>
+					<attribute name="Implementation-Version" value="${layout.version}"/>
+					<attribute name="Implementation-Vendor" value="SysVision - Consultadoria e Desenvolvimento em Sistemas de Informática, Lda"/>
+					<attribute name="Implementation-URL" value="https://mega.dev.java.net/"/>
+					<attribute name="Implementation-License" value="Apache Licence, Version 2"/>
+				</section>
+			</manifest>
 			<fileset dir="${classes}">
 				<include name="**/layout/**" />
 			</fileset>
@@ -33,6 +40,15 @@
 	
 	<target name="action" depends="compile">
 		<jar destfile="${dist}/${action.file}">
+			<manifest>
+				<section name="net/java/mega">
+					<attribute name="Implementation-Title" value="MEGA Web Framework - Action"/>
+					<attribute name="Implementation-Version" value="${action.version}"/>
+					<attribute name="Implementation-Vendor" value="SysVision - Consultadoria e Desenvolvimento em Sistemas de Informática, Lda"/>
+					<attribute name="Implementation-URL" value="https://mega.dev.java.net/"/>
+					<attribute name="Implementation-License" value="Apache Licence, Version 2"/>
+				</section>
+			</manifest>
 			<fileset dir="${classes}">
 				<include name="**/action/**" />
 			</fileset>
@@ -44,6 +60,15 @@
 	
 	<target name="tags" depends="compile">
 		<jar destfile="${dist}/${tags.file}">
+			<manifest>
+				<section name="net/java/mega">
+					<attribute name="Implementation-Title" value="MEGA Web Framework - Tags"/>
+					<attribute name="Implementation-Version" value="${tags.version}"/>
+					<attribute name="Implementation-Vendor" value="SysVision - Consultadoria e Desenvolvimento em Sistemas de Informática, Lda"/>
+					<attribute name="Implementation-URL" value="https://mega.dev.java.net/"/>
+					<attribute name="Implementation-License" value="Apache Licence, Version 2"/>
+				</section>
+			</manifest>
 			<fileset dir="${classes}">
 				<include name="**/tags/**" />
 			</fileset>
@@ -52,6 +77,15 @@
 	
 	<target name="common" depends="compile">
 		<jar destfile="${dist}/${common.file}">
+			<manifest>
+				<section name="net/java/mega">
+					<attribute name="Implementation-Title" value="MEGA Web Framework - Common"/>
+					<attribute name="Implementation-Version" value="${common.version}"/>
+					<attribute name="Implementation-Vendor" value="SysVision - Consultadoria e Desenvolvimento em Sistemas de Informática, Lda"/>
+					<attribute name="Implementation-URL" value="https://mega.dev.java.net/"/>
+					<attribute name="Implementation-License" value="Apache Licence, Version 2"/>
+				</section>
+			</manifest>
 			<fileset dir="${classes}">
 				<include name="**/common/**" />
 			</fileset>
