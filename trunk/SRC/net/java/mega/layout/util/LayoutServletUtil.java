@@ -1,15 +1,15 @@
 /*  ------------------
  *  MEGA Web Framework
  *  ------------------
- *  
+ *
  *  Copyright 2006 SysVision - Consultadoria e Desenvolvimento em Sistemas de Informática, Lda.
- *  
+ *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
- *  
+ *
  *  	http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -44,6 +44,7 @@ import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
 
 public class LayoutServletUtil {
+
 	private static Log log = LogFactory.getLog(LayoutServletUtil.class);
 
 	public static void processBlock(PageContext pageContext, String blockName) throws IOException, ServletException {
@@ -83,8 +84,7 @@ public class LayoutServletUtil {
 		}
 	}
 
-	private static void processContent(PageContext pageContext, String pageName, String blockName, BlockContent content)
-			throws IOException, ServletException {
+	private static void processContent(PageContext pageContext, String pageName, String blockName, BlockContent content) throws IOException, ServletException {
 
 		if (content instanceof PathContent) {
 			PathContent pathContent = (PathContent) content;
@@ -109,13 +109,12 @@ public class LayoutServletUtil {
 				log.debug(pageName + "." + blockName + " = '" + keyContent.getValue() + "'");
 			}
 
-			includeContent(pageContext, keyContent);			
+			includeContent(pageContext, keyContent);
 		} else if (content instanceof BeanContent) {
 			BeanContent beanContent = (BeanContent) content;
 
 			if (log.isDebugEnabled()) {
-				log.debug(pageName + "." + blockName + " = " + beanContent.getName()
-						+ (beanContent.getProperty() == null ? "" : "." + beanContent.getProperty()));
+				log.debug(pageName + "." + blockName + " = " + beanContent.getName() + (beanContent.getProperty() == null ? "" : "." + beanContent.getProperty()));
 			}
 
 			includeContent(pageContext, beanContent);
@@ -130,8 +129,7 @@ public class LayoutServletUtil {
 		}
 	}
 
-	private static void executeControler(PageContext pageContext, String pageName, String blockName,
-			ControlerContent controlerContent) throws IOException, ServletException {
+	private static void executeControler(PageContext pageContext, String pageName, String blockName, ControlerContent controlerContent) throws IOException, ServletException {
 
 		Controller controler = null;
 
@@ -146,12 +144,10 @@ public class LayoutServletUtil {
 		HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
 		HttpServletResponse response = (HttpServletResponse) pageContext.getResponse();
 
-		processContent(pageContext, pageName, blockName, controler.getBlockContent(pageName, blockName, controlerContent
-				.getParameters(), request, response));
+		processContent(pageContext, pageName, blockName, controler.getBlockContent(pageName, blockName, controlerContent.getParameters(), request, response));
 	}
 
-	private static Controller getControler(PageContext pageContext, ControlerContent controlerContent)
-			throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+	private static Controller getControler(PageContext pageContext, ControlerContent controlerContent) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 		Controller controler = null;
 
 		StringBuffer buffer = new StringBuffer();
@@ -175,21 +171,23 @@ public class LayoutServletUtil {
 	private static void includeContent(PageContext pageContext, StringContent content) throws IOException {
 		pageContext.getOut().print(content.getValue());
 	}
-	
+
 	private static void includeContent(PageContext pageContext, MessageKeyContent content) throws IOException {
 		Layout layout = (Layout) pageContext.getServletContext().getAttribute(Constant.LAYOUT);
 		Locale locale = LocaleUtil.getUserLocate((HttpServletRequest) pageContext.getRequest());
-		
+
 		String msg = MessageUtil.getMessage(layout.getBundleList(), content.getValue(), locale);
-		
+
 		if (msg != null) {
-			msg = HTMLUtil.filter(msg);
+			if (content.isFilter()) {
+				msg = HTMLUtil.filter(msg);
+			}
 		} else {
 			msg = "{".concat(content.getValue()).concat("}");
 		}
-		
+
 		pageContext.getOut().print(msg);
-	}	
+	}
 
 	private static void includeContent(PageContext pageContext, BeanContent content) throws IOException {
 		pageContext.getOut().print(WARContextUtil.getValue(pageContext, content.getName(), content.getProperty()));

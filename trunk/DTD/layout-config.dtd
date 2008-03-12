@@ -26,13 +26,14 @@
 <!ELEMENT bean EMPTY>
 <!ATTLIST bean name CDATA #REQUIRED
                property CDATA #IMPLIED>
-               
+
 <!ELEMENT controler (parameter*)>
-<!ATTLIST controler class-name CDATA #REQUIRED>               
+<!ATTLIST controler class-name CDATA #REQUIRED>
 
 <!ELEMENT parameter EMPTY>
 <!ATTLIST parameter name  CDATA #REQUIRED
 				    value CDATA #REQUIRED>
-				    
+
 <!ELEMENT message-resources EMPTY>
-<!ATTLIST message-resources name CDATA #REQUIRED> 				    
+<!ATTLIST message-resources name CDATA #REQUIRED
+                            filter  (true|false) "true">
