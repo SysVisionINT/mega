@@ -18,7 +18,9 @@
  */
 package net.java.mega.action.model;
 
-public class WorkflowControl {
+import java.io.Serializable;
+
+public class WorkflowControl implements Serializable {
 	private static final long serialVersionUID = 5548851519003266640L;
 	
 	public WorkflowControl() {
