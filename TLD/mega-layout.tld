@@ -59,7 +59,12 @@
 			<name>value</name>
 			<required>true</required>
 			<rtexprvalue>false</rtexprvalue>
-		</attribute>		
+		</attribute>
+		<attribute>
+			<name>filter</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>	
 	</tag>			
 	
 	<tag>
