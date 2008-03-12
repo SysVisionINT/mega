@@ -18,7 +18,8 @@
 <!ATTLIST string value CDATA #REQUIRED>
 
 <!ELEMENT message-key EMPTY>
-<!ATTLIST message-key value CDATA #REQUIRED>
+<!ATTLIST message-key value CDATA #REQUIRED
+                      filter  (true|false) "true">
 
 <!ELEMENT path EMPTY>
 <!ATTLIST path value CDATA #REQUIRED>
@@ -35,5 +36,4 @@
 				    value CDATA #REQUIRED>
 
 <!ELEMENT message-resources EMPTY>
-<!ATTLIST message-resources name CDATA #REQUIRED
-                            filter  (true|false) "true">
+<!ATTLIST message-resources name CDATA #REQUIRED>

@@ -25,6 +25,7 @@ public class MessageKeyBlockTag extends BaseBlockTag {
 	private static final long serialVersionUID = -427852391259046306L;
 	
 	private String value = null;
+	private String filter = "true";
 
 	public String getValue() {
 		return value;
@@ -33,10 +34,21 @@ public class MessageKeyBlockTag extends BaseBlockTag {
 	public void setValue(String value) {
 		this.value = value;
 	}
+	
+	
+	public String getFilter() {
+		return filter;
+	}
+
+	public void setFilter(String filter) {
+		this.filter = filter;
+	}
 
 	public BlockContent getBlockContent() {
 		MessageKeyContent content = new MessageKeyContent();
+		
 		content.setValue(getValue());
+		content.setFilter(getFilter().equals("true"));
 
 		return content;
 	}
