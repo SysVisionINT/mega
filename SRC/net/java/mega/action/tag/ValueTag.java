@@ -1,15 +1,15 @@
 /*  ------------------
  *  MEGA Web Framework
  *  ------------------
- *  
+ *
  *  Copyright 2006 SysVision - Consultadoria e Desenvolvimento em Sistemas de Informática, Lda.
- *  
+ *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
- *  
+ *
  *  	http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -42,6 +42,7 @@ public class ValueTag extends TagSupport {
 	private String name = Constants.CURRENT_ACTION;
 	private String property = null;
 	private String format = null;
+	private boolean filter = true;
 
 	public int doEndTag() throws JspException {
 		try {
@@ -50,19 +51,19 @@ public class ValueTag extends TagSupport {
 			if (scope == null) {
 				pageContext.getOut().print("[");
 				pageContext.getOut().print(name);
-				
+
 				if (property != null) {
 					pageContext.getOut().print(".");
 					pageContext.getOut().print(property);
 				}
-				
+
 				pageContext.getOut().print("]");
 			} else {
 				Object value = WARContextUtil.getValue(pageContext, name, property);
 
 				Locale locale = LocaleUtil.getUserLocate((HttpServletRequest) pageContext.getRequest());
 
-				pageContext.getOut().print(FormatUtil.format(value, format, locale));
+				pageContext.getOut().print(FormatUtil.format(value, format, locale, filter));
 			}
 		} catch (IOException e) {
 			log
@@ -97,5 +98,13 @@ public class ValueTag extends TagSupport {
 
 	public void setProperty(String property) {
 		this.property = property;
+	}
+
+	public boolean isFilter() {
+		return filter;
+	}
+
+	public void setFilter(boolean filter) {
+		this.filter = filter;
 	}
 }
