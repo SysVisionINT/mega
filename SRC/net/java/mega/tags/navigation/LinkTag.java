@@ -78,7 +78,9 @@ public class LinkTag extends BaseBodyTag {
 		for (Iterator i = parameters.iterator(); i.hasNext();) {
 			value = (String) i.next();
 
-			buffer.append("&amp;");
+			if (count > 0 || isUseWorkflowControl()) {
+				buffer.append("&amp;");
+			}
 
 			buffer.append(getArgName(count));
 			buffer.append("=");
