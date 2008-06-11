@@ -46,6 +46,8 @@ public class LinkTag extends BaseBodyTag {
 	private String method = null;
 
 	private List parameters = null;
+	
+	private boolean useWorkflowControl = true;
 
 	public String getAction() {
 		return action;
@@ -76,7 +78,7 @@ public class LinkTag extends BaseBodyTag {
 		for (Iterator i = parameters.iterator(); i.hasNext();) {
 			value = (String) i.next();
 
-			buffer.append("&");
+			buffer.append("&amp;");
 
 			buffer.append(getArgName(count));
 			buffer.append("=");
@@ -120,9 +122,11 @@ public class LinkTag extends BaseBodyTag {
 			if (!parameters.isEmpty()) {
 				pageContext.getOut().print("?");
 				
-				pageContext.getOut().print(WorkflowControlUtil.WORKFLOW_CONTROL_FIELD);
-				pageContext.getOut().print("=");
-				pageContext.getOut().print(WorkflowControlUtil.getCurrentToken(request));
+				if (isUseWorkflowControl()) {  
+					pageContext.getOut().print(WorkflowControlUtil.WORKFLOW_CONTROL_FIELD);
+					pageContext.getOut().print("=");
+					pageContext.getOut().print(WorkflowControlUtil.getCurrentToken(request));
+				}
 				
 				pageContext.getOut().print(getParameters());
 			}
@@ -145,5 +149,15 @@ public class LinkTag extends BaseBodyTag {
 			log.error("Error while writing A TAG", e);
 			throw new JspException(e);
 		}
+	}
+
+	
+	public boolean isUseWorkflowControl() {
+		return useWorkflowControl;
+	}
+
+	
+	public void setUseWorkflowControl(boolean useWorkflowControl) {
+		this.useWorkflowControl = useWorkflowControl;
 	}
 }
