@@ -90,7 +90,7 @@ public class OptionsTag extends BaseBodyTag {
 			pageContext.getOut().print("\"");
 
 			if (select.isSelected(value)) {
-				pageContext.getOut().print("selected=\"selected\"");
+				pageContext.getOut().print(" selected=\"selected\"");
 			}
 
 			writeAttributes();

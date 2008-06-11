@@ -30,61 +30,78 @@ import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
 
 public class FormTag extends BaseBodyTag {
+
 	private static final long serialVersionUID = -5532740559135162767L;
-	
+
 	private static final String FORM_COUNT = "___FORM___COUNT___";
-	
+
 	private static Log log = LogFactory.getLog(FormTag.class);
 
-	public int writeStartTag() throws JspException {		
+	private boolean useWorkflowControl = true;
+
+	public boolean isUseWorkflowControl() {
+		return useWorkflowControl;
+	}
+
+	public void setUseWorkflowControl(boolean useWorkflowControl) {
+		this.useWorkflowControl = useWorkflowControl;
+	}
+
+	public int writeStartTag() throws JspException {
 		HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
 		HttpServletResponse response = (HttpServletResponse) pageContext.getResponse();
 
 		URLUtil url = new URLUtil(request, response);
-		
+
 		try {
 			pageContext.getOut().print("<form action=\"");
 			pageContext.getOut().print(url.getActionURL(null));
-			pageContext.getOut().print("\" method=\"POST\"");
+			pageContext.getOut().print("\" method=\"post\"");
 			writeAttributes();
 			pageContext.getOut().println(">");
 			
+			pageContext.getOut().println("<fieldset>");
+
 			pageContext.getOut().print("<input type=\"hidden\" name=\"");
 			pageContext.getOut().print(getActionField());
-			pageContext.getOut().println("\"/>");			
+			pageContext.getOut().println("\"/>");
+
+			if (isUseWorkflowControl()) {
+				pageContext.getOut().print("<input type=\"hidden\" name=\"");
+				pageContext.getOut().print(WorkflowControlUtil.WORKFLOW_CONTROL_FIELD);
+				pageContext.getOut().print("\" value=\"");
+				pageContext.getOut().print(WorkflowControlUtil.getCurrentToken(request));
+				pageContext.getOut().println("\"/>");
+			}
 			
-			pageContext.getOut().print("<input type=\"hidden\" name=\"");
-			pageContext.getOut().print(WorkflowControlUtil.WORKFLOW_CONTROL_FIELD);
-			pageContext.getOut().print("\" value=\"");
-			pageContext.getOut().print(WorkflowControlUtil.getCurrentToken(request));
-			pageContext.getOut().println("\"/>");				
+			pageContext.getOut().println("</fieldset>");
 		} catch (Exception e) {
 			log.error("Error while writing FORM TAG", e);
 			throw new JspException(e);
 		}
-		
+
 		return INCLUDE_INNER_HTML;
 	}
 
 	private String generateFormID() {
 		StringBuffer buffer = new StringBuffer();
-		
+
 		buffer.append("FORM_");
-		
+
 		Integer formCount = (Integer) pageContext.getRequest().getAttribute(FORM_COUNT);
 		int id = 1;
-		
+
 		if (formCount != null) {
 			id = formCount.intValue() + 1;
 		}
-		
+
 		buffer.append(id);
-		
+
 		pageContext.getRequest().setAttribute(FORM_COUNT, new Integer(id));
-		
+
 		return buffer.toString();
 	}
-	
+
 	public String getActionField() {
 		return Constants.MEGA_FORM_ACTION;
 	}
