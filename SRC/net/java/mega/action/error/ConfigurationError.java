@@ -19,9 +19,14 @@
 package net.java.mega.action.error;
 
 public class ConfigurationError extends ActionException {
+
 	private static final long serialVersionUID = -7398490592924893715L;
 
-	public ConfigurationError (String property) {
+	public ConfigurationError(String property) {
 		super("Configuration property " + property + " not found");
+	}
+
+	public ConfigurationError(String name, String rootPackage) {
+		super(name + " is not a valid action (root package is " + rootPackage + ")");
 	}
 }
