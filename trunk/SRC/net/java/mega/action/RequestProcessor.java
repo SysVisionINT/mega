@@ -56,6 +56,7 @@ import net.java.sjtools.util.BeanUtil;
 import net.java.sjtools.util.TextUtil;
 
 public class RequestProcessor {
+
 	private static Log log = LogFactory.getLog(RequestProcessor.class);
 
 	private HttpServletRequest request = null;
@@ -226,9 +227,7 @@ public class RequestProcessor {
 			}
 		} else {
 			if (log.isDebugEnabled()) {
-				log.debug("Request " + getRequestMetaData().getPath() + " with invalid token "
-						+ getRequestMetaData().getToken() + ", calling workflowError() on action "
-						+ action.getClass().getName());
+				log.debug("Request " + getRequestMetaData().getPath() + " with invalid token " + getRequestMetaData().getToken() + ", calling workflowError() on action " + action.getClass().getName());
 			}
 
 			action.workflowError();
@@ -258,11 +257,9 @@ public class RequestProcessor {
 		getHttpServletRequest().setAttribute(Constants.MESSAGE_CONTAINER, messageContainer);
 
 		if (currentResponse.getAction() instanceof CustomResponseProvider) {
-			currentResponse.setResponseProvider(((CustomResponseProvider) currentResponse.getAction())
-					.getResponseProvider());
+			currentResponse.setResponseProvider(((CustomResponseProvider) currentResponse.getAction()).getResponseProvider());
 		} else {
-			currentResponse.setResponseProvider(ActionManager.getInstance().getResponseProvider(
-					currentResponse.getAction()));
+			currentResponse.setResponseProvider(ActionManager.getInstance().getResponseProvider(currentResponse.getAction()));
 		}
 
 		return currentResponse;
@@ -331,8 +328,7 @@ public class RequestProcessor {
 				ret = new Object[0];
 			} else {
 				if (parameters.length != ((Method) methods.get(0)).getParameterTypes().length) {
-					log.error("Wrong number of arguments for method " + methodName + " of class "
-							+ action.getClass().getName());
+					log.error("Wrong number of arguments for method " + methodName + " of class " + action.getClass().getName());
 					throw new MethodExecuteError(action.getClass().getName(), methodName);
 				}
 
@@ -396,6 +392,11 @@ public class RequestProcessor {
 	private String getContextName(String name) throws ConfigurationError {
 		String rootPackage = ActionManager.getInstance().getRootPackage();
 
+		if (!name.startsWith(rootPackage)) {
+			log.error(name + " is not a valid action (root package is " + rootPackage + ")");
+			throw new ConfigurationError(name, rootPackage);
+		}
+
 		String newName = name.substring(rootPackage.length());
 
 		newName = newName.replace('.', '/');
@@ -419,24 +420,21 @@ public class RequestProcessor {
 				formFile = null;
 			} else {
 				if (log.isDebugEnabled()) {
-					log.debug("setProperty(" + action.getClass().getName() + ", " + name + ", "
-							+ formFile.getFileName() + ")");
+					log.debug("setProperty(" + action.getClass().getName() + ", " + name + ", " + formFile.getFileName() + ")");
 				}
 			}
 
 			try {
 				beanUtil.set(name, formFile);
 			} catch (Exception e) {
-				log.error("Error trying to set property " + name + " with the file " + formFile.getFileName()
-						+ " of class " + action.getClass().getName(), e);
+				log.error("Error trying to set property " + name + " with the file " + formFile.getFileName() + " of class " + action.getClass().getName(), e);
 				throw new PropertySetError(name, formFile.getFileName());
 			}
 		} else {
 			String[] parameterArray = (String[]) parameterValue;
 
 			if (log.isDebugEnabled()) {
-				log.debug("setProperty(" + action.getClass().getName() + ", " + name + ", ["
-						+ TextUtil.toString(parameterArray) + "])");
+				log.debug("setProperty(" + action.getClass().getName() + ", " + name + ", [" + TextUtil.toString(parameterArray) + "])");
 			}
 
 			Object value = parameterValue;
@@ -450,14 +448,12 @@ public class RequestProcessor {
 					try {
 						beanUtil.set(name, value);
 					} catch (Exception e) {
-						log.error("Error trying to set property " + name + " with the value " + value + " of class "
-								+ action.getClass().getName(), e);
+						log.error("Error trying to set property " + name + " with the value " + value + " of class " + action.getClass().getName(), e);
 						throw new PropertySetError(name, value);
 					}
 				} else {
 					// IF the property is a Collection I will use String[]
-					if (!value.getClass().isArray()
-							&& Collection.class.isAssignableFrom(((Method) methods.get(0)).getParameterTypes()[0])) {
+					if (!value.getClass().isArray() && Collection.class.isAssignableFrom(((Method) methods.get(0)).getParameterTypes()[0])) {
 						value = parameterArray;
 					}
 
@@ -472,8 +468,7 @@ public class RequestProcessor {
 						try {
 							beanUtil.set(name, collection);
 						} catch (Exception e) {
-							log.error("Error trying to set property " + name + " with the value " + collection
-									+ " of class " + action.getClass().getName(), e);
+							log.error("Error trying to set property " + name + " with the value " + collection + " of class " + action.getClass().getName(), e);
 							throw new PropertySetError(name, collection);
 						}
 					} else {
@@ -481,8 +476,7 @@ public class RequestProcessor {
 							try {
 								beanUtil.set(name, null);
 							} catch (Exception e) {
-								log.error("Error trying to set property " + name + " with the value NULL of class "
-										+ action.getClass().getName(), e);
+								log.error("Error trying to set property " + name + " with the value NULL of class " + action.getClass().getName(), e);
 								throw new PropertySetError(name, null);
 							}
 						} else {
@@ -492,8 +486,7 @@ public class RequestProcessor {
 							try {
 								beanUtil.set(name, object);
 							} catch (Exception e) {
-								log.error("Error trying to set property " + name + " with the value " + parameterArray
-										+ " of class " + action.getClass().getName(), e);
+								log.error("Error trying to set property " + name + " with the value " + parameterArray + " of class " + action.getClass().getName(), e);
 								throw new PropertySetError(name, parameterArray);
 							}
 						}
@@ -529,8 +522,7 @@ public class RequestProcessor {
 
 	private void execute(Action action, String methodName, Object[] parameters) {
 		if (log.isDebugEnabled()) {
-			log.debug("execute(" + action.getClass().getName() + ", " + methodName + ", ["
-					+ TextUtil.toString(parameters) + "])");
+			log.debug("execute(" + action.getClass().getName() + ", " + methodName + ", [" + TextUtil.toString(parameters) + "])");
 		}
 
 		if (methodName.equals(MethodConstants.ON_LOAD)) {
@@ -541,28 +533,22 @@ public class RequestProcessor {
 			try {
 				beanUtil.invokeMethod(methodName, parameters);
 			} catch (SecurityException e) {
-				log.error("Error trying to execute method " + methodName + " of class " + action.getClass().getName(),
-						e);
+				log.error("Error trying to execute method " + methodName + " of class " + action.getClass().getName(), e);
 				throw new MethodExecuteError(action.getClass().getName(), methodName);
 			} catch (IllegalArgumentException e) {
-				log.error("Error trying to execute method " + methodName + " of class " + action.getClass().getName(),
-						e);
+				log.error("Error trying to execute method " + methodName + " of class " + action.getClass().getName(), e);
 				throw new MethodExecuteError(action.getClass().getName(), methodName);
 			} catch (NoSuchMethodException e) {
-				log.error("Error trying to execute method " + methodName + " of class " + action.getClass().getName(),
-						e);
+				log.error("Error trying to execute method " + methodName + " of class " + action.getClass().getName(), e);
 				throw new MethodExecuteError(action.getClass().getName(), methodName);
 			} catch (IllegalAccessException e) {
-				log.error("Error trying to execute method " + methodName + " of class " + action.getClass().getName(),
-						e);
+				log.error("Error trying to execute method " + methodName + " of class " + action.getClass().getName(), e);
 				throw new MethodExecuteError(action.getClass().getName(), methodName);
 			} catch (InvocationTargetException e) {
-				log.error("Error trying to execute method " + methodName + " of class " + action.getClass().getName(),
-						e);
+				log.error("Error trying to execute method " + methodName + " of class " + action.getClass().getName(), e);
 				throw new MethodExecuteError(action.getClass().getName(), methodName);
 			} catch (Exception e) {
-				log.error("Error trying to execute method " + methodName + " of class " + action.getClass().getName(),
-						e);
+				log.error("Error trying to execute method " + methodName + " of class " + action.getClass().getName(), e);
 				throw new MethodExecuteError(e);
 			}
 		}
