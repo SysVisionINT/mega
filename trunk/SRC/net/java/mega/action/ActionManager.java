@@ -176,7 +176,7 @@ public class ActionManager {
 			path = path.substring(1);
 		}
 
-		buffer.append(path.toLowerCase());
+		buffer.append(path);
 
 		return buffer.toString();
 	}
