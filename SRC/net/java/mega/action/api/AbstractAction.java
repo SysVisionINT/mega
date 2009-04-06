@@ -64,6 +64,7 @@ public abstract class AbstractAction implements Action, Serializable {
 	}
 
 	public void gotoAction(Action action) {
+		action.setRequestProcessor(requestProcessor);
 		requestProcessor.gotoAction(action);
 	}
 	
