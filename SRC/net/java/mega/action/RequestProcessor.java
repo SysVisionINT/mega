@@ -1,15 +1,15 @@
 /*  ------------------
  *  MEGA Web Framework
  *  ------------------
- *  
+ *
  *  Copyright 2006 SysVision - Consultadoria e Desenvolvimento em Sistemas de Informática, Lda.
- *  
+ *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
- *  
+ *
  *  	http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -408,8 +408,18 @@ public class RequestProcessor {
 		return newName;
 	}
 
-	private void setProperty(Action action, String name, Object parameterValue) throws PropertySetError {
-		BeanUtil beanUtil = new BeanUtil(action);
+	private void setProperty(Action action, String fullName, Object parameterValue) throws PropertySetError {
+		BeanUtil beanUtil = null;
+
+		try {
+			beanUtil = BeanUtil.getPropertyBean(new BeanUtil(action), fullName);
+		} catch (Exception e) {
+			log.error("Error trying to set property " + fullName, e);
+			throw new PropertySetError(fullName, null);
+		}
+
+		List nameParts = TextUtil.split(fullName, ".");
+		String name = (String) nameParts.get(nameParts.size() - 1);
 
 		List methods = beanUtil.getMethods(beanUtil.getMethodName("set", name));
 
