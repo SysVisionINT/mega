@@ -177,7 +177,7 @@ public class RequestProcessor {
 
 		if (action == null) {
 			try {
-				action = (Action) getHttpSession().getAttribute(getContextName(clazz.getName()));
+				action = (Action) getHttpSession().getAttribute(getContextName(clazz));
 			} catch (ActionException e) {
 				log.error("Error while looking for session object " + clazz.getName(), e);
 				throw new RuntimeException(e);
@@ -241,7 +241,7 @@ public class RequestProcessor {
 		for (Iterator i = actions.values().iterator(); i.hasNext();) {
 			action = (Action) i.next();
 
-			contextName = getContextName(action);
+			contextName = getContextName(action.getClass());
 
 			if (!currentResponse.isSessionInvalidated() && action instanceof SessionObject) {
 				getHttpSession().setAttribute(contextName, action);
@@ -388,8 +388,8 @@ public class RequestProcessor {
 		}
 	}
 
-	private String getContextName(Object obj) throws ActionAlreadyInUseException, ActionNotFound, ConfigurationError {
-		ActionConfig config = ActionManager.getInstance().getActionConfig(obj.getClass());
+	private String getContextName(Class objClass) throws ActionAlreadyInUseException, ActionNotFound, ConfigurationError {
+		ActionConfig config = ActionManager.getInstance().getActionConfig(objClass);
 		return config.getName();
 	}
 
