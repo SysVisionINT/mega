@@ -273,7 +273,7 @@ public class ActionManager {
 			}
 
 			if (provider == null) {
-				provider = createResponseProvider(action.getClass().getName());
+				provider = createResponseProvider(actionConfig);
 			}
 
 			if (provider != null) {
@@ -302,12 +302,11 @@ public class ActionManager {
 		return workflowControlActive.booleanValue();
 	}
 
-	private ResponseProvider createResponseProvider(String className) throws ConfigurationError {
+	private ResponseProvider createResponseProvider(ActionConfig actionConfig) throws ConfigurationError {
 		if (log.isDebugEnabled()) {
-			log.debug("createResponseProvider(" + className + ")");
+			log.debug("createResponseProvider(" + actionConfig + ")");
 		}
 
-		String rootPackage = getRootPackage();
 		String renderExtention = controllerConfig.getProperty(Constants.DEFAULT_OUTPUT_RENDER_EXTENTION_PROPERTY);
 		String renderRoot = controllerConfig.getProperty(Constants.OUTPUT_RENDER_ROOT_PROPERTY);
 
@@ -327,18 +326,10 @@ public class ActionManager {
 			buffer.append("/");
 		}
 
-		String path = TextUtil.replace(className.substring(rootPackage.length()), ".", "/");
+		String path = actionConfig.getName();
 
-		if (path.startsWith("/") && path.length() > 1) {
+		if (path.startsWith("/")) {
 			path = path.substring(1);
-		}
-
-		int pos = path.lastIndexOf("/");
-
-		if (pos != -1) {
-			buffer.append(path.substring(0, pos + 1));
-
-			path = path.substring(pos + 1);
 		}
 
 		buffer.append(path);
