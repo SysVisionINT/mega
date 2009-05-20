@@ -165,20 +165,22 @@ public class ActionManager {
 
 	private String getPathForClass(Class clazz) throws ConfigurationError {
 		String rootPackage = getRootPackage();
+		String className = clazz.getName();
 
-		StringBuffer buffer = new StringBuffer();
-
-		buffer.append("/");
-
-		String path = TextUtil.replace(clazz.getName().substring(rootPackage.length()), ".", "/");
-
-		if (path.startsWith("/") && path.length() > 1) {
-			path = path.substring(1);
+		if (!className.startsWith(rootPackage)) {
+			log.error(className + " is not a valid action (root package is " + rootPackage + ")");
+			throw new ConfigurationError(className, rootPackage);
 		}
 
-		buffer.append(path);
+		String newName = className.substring(rootPackage.length());
 
-		return buffer.toString();
+		newName = newName.replace('.', '/');
+
+		if (!newName.startsWith("/")) {
+			newName = "/".concat(newName);
+		}
+
+		return newName;
 	}
 
 	private String getMethod(String path) {
