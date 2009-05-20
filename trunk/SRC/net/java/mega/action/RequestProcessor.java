@@ -39,7 +39,9 @@ import net.java.mega.action.api.FormFile;
 import net.java.mega.action.api.Message;
 import net.java.mega.action.api.SessionObject;
 import net.java.mega.action.api.Validator;
+import net.java.mega.action.error.ActionAlreadyInUseException;
 import net.java.mega.action.error.ActionCreationException;
+import net.java.mega.action.error.ActionNotFound;
 import net.java.mega.action.error.ConfigurationError;
 import net.java.mega.action.error.MethodExecuteError;
 import net.java.mega.action.error.PropertySetError;
@@ -385,27 +387,9 @@ public class RequestProcessor {
 		}
 	}
 
-	private String getContextName(Object obj) throws ConfigurationError {
-		return getContextName(obj.getClass().getName());
-	}
-
-	private String getContextName(String name) throws ConfigurationError {
-		String rootPackage = ActionManager.getInstance().getRootPackage();
-
-		if (!name.startsWith(rootPackage)) {
-			log.error(name + " is not a valid action (root package is " + rootPackage + ")");
-			throw new ConfigurationError(name, rootPackage);
-		}
-
-		String newName = name.substring(rootPackage.length());
-
-		newName = newName.replace('.', '/');
-
-		if (!newName.startsWith("/")) {
-			newName = "/".concat(newName);
-		}
-
-		return newName;
+	private String getContextName(Object obj) throws ActionAlreadyInUseException, ActionNotFound, ConfigurationError {
+		ActionConfig config = ActionManager.getInstance().getActionConfig(obj.getClass());
+		return config.getName();
 	}
 
 	private void setProperty(Action action, String fullName, Object parameterValue) throws PropertySetError {
