@@ -41,6 +41,7 @@ import net.java.mega.action.api.SessionObject;
 import net.java.mega.action.api.Validator;
 import net.java.mega.action.error.ActionAlreadyInUseException;
 import net.java.mega.action.error.ActionCreationException;
+import net.java.mega.action.error.ActionException;
 import net.java.mega.action.error.ActionNotFound;
 import net.java.mega.action.error.ConfigurationError;
 import net.java.mega.action.error.MethodExecuteError;
@@ -177,7 +178,7 @@ public class RequestProcessor {
 		if (action == null) {
 			try {
 				action = (Action) getHttpSession().getAttribute(getContextName(clazz.getName()));
-			} catch (ConfigurationError e) {
+			} catch (ActionException e) {
 				log.error("Error while looking for session object " + clazz.getName(), e);
 				throw new RuntimeException(e);
 			}
