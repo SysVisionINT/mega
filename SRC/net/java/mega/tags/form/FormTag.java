@@ -73,8 +73,6 @@ public class FormTag extends BaseBodyTag {
 				pageContext.getOut().print(WorkflowControlUtil.getCurrentToken(request));
 				pageContext.getOut().println("\"/>");
 			}
-			
-			pageContext.getOut().println("</fieldset>");
 		} catch (Exception e) {
 			log.error("Error while writing FORM TAG", e);
 			throw new JspException(e);
@@ -108,6 +106,7 @@ public class FormTag extends BaseBodyTag {
 
 	public void writeEndTag() throws JspException {
 		try {
+			pageContext.getOut().println("</fieldset>");
 			pageContext.getOut().println("</form>");
 		} catch (Exception e) {
 			log.error("Error while writing FORM TAG", e);
