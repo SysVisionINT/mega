@@ -26,11 +26,13 @@ import javax.servlet.jsp.PageContext;
 
 import net.java.mega.common.http.scope.Scope;
 import net.java.mega.common.http.scope.ScopeUtil;
+import net.java.mega.common.util.MegaCache;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
 import net.java.sjtools.util.BeanUtil;
 
 public class WARContextUtil {
+
 	private static Log log = LogFactory.getLog(WARContextUtil.class);
 
 	public static Object getObject(PageContext context, String name) {
@@ -72,7 +74,7 @@ public class WARContextUtil {
 		if (obj != null) {
 			if (propertyName != null) {
 				try {
-					ret = BeanUtil.getPropertyValue(obj, propertyName);
+					ret = BeanUtil.getPropertyValue(MegaCache.getInstance(), obj, propertyName);
 				} catch (Exception e) {
 					log.error("Error while accessing property " + propertyName + " of attribute " + name, e);
 				}
@@ -95,14 +97,24 @@ public class WARContextUtil {
 		if (obj != null) {
 			BeanUtil beanUtil = new BeanUtil(obj);
 
-			List methods = beanUtil.getMethods(beanUtil.getGetMethodName(propertyName));
+			String methodName = beanUtil.getGetMethodName(propertyName);
 
-			if (methods.size() != 1) {
-				log.error("Property " + propertyName + " not found on bean " + beanUtil.getClassName());
-				throw new RuntimeException("Property " + propertyName + " not found on bean " + beanUtil.getClassName());
+			Method method = MegaCache.getInstance().get(obj.getClass(), methodName);
+
+			if (method == null) {
+				List methods = beanUtil.getMethods(methodName);
+
+				if (methods.size() != 1) {
+					log.error("Property " + propertyName + " not found on bean " + beanUtil.getClassName());
+					throw new RuntimeException("Property " + propertyName + " not found on bean " + beanUtil.getClassName());
+				}
+
+				method = (Method) methods.get(0);
+
+				MegaCache.getInstance().add(obj.getClass(), methodName, method);
 			}
 
-			ret = ((Method) methods.get(0)).getReturnType();
+			ret = method.getReturnType();
 		} else {
 			log.error("Object " + name + " not found!");
 			throw new RuntimeException("Object " + name + " not found!");

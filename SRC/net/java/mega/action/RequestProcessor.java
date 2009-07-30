@@ -53,6 +53,7 @@ import net.java.mega.action.util.CheckBoxUtil;
 import net.java.mega.action.util.Constants;
 import net.java.mega.action.util.MethodConstants;
 import net.java.mega.action.util.WorkflowControlUtil;
+import net.java.mega.common.util.MegaCache;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
 import net.java.sjtools.util.BeanUtil;
@@ -397,7 +398,7 @@ public class RequestProcessor {
 		BeanUtil beanUtil = null;
 
 		try {
-			beanUtil = BeanUtil.getPropertyBean(new BeanUtil(action), fullName);
+			beanUtil = BeanUtil.getPropertyBean(new BeanUtil(action, MegaCache.getInstance()), fullName);
 		} catch (Exception e) {
 			log.error("Error trying to set property " + fullName, e);
 			throw new PropertySetError(fullName, null);
@@ -523,7 +524,7 @@ public class RequestProcessor {
 		if (methodName.equals(MethodConstants.ON_LOAD)) {
 			action.onLoad();
 		} else {
-			BeanUtil beanUtil = new BeanUtil(action);
+			BeanUtil beanUtil = new BeanUtil(action, MegaCache.getInstance());
 
 			try {
 				beanUtil.invokeMethod(methodName, parameters);
