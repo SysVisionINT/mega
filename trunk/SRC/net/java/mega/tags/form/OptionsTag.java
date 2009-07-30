@@ -25,6 +25,7 @@ import javax.servlet.jsp.JspException;
 
 import net.java.mega.action.util.Constants;
 import net.java.mega.common.http.WARContextUtil;
+import net.java.mega.common.util.MegaCache;
 import net.java.mega.tags.model.BaseBodyTag;
 import net.java.mega.tags.model.SelectBox;
 import net.java.sjtools.logging.Log;
@@ -74,7 +75,7 @@ public class OptionsTag extends BaseBodyTag {
 	}
 
 	private void write(Object element, SelectBox select) throws JspException {
-		BeanUtil beanUtil = new BeanUtil(element);
+		BeanUtil beanUtil = new BeanUtil(element, MegaCache.getInstance());
 
 		try {
 			String value = null;
