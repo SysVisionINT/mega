@@ -112,6 +112,18 @@ public abstract class AbstractAction implements Action, Serializable {
 		requestProcessor.invalidateSession();
 	}
 	
+	public void removeSessionAction(Class clazz) {
+		requestProcessor.removeSessionAction(clazz);
+	}
+
+	public void removeSessionAction(Action action) {
+		requestProcessor.removeSessionAction(action);
+	}
+	
+	public void removeSessionAction(String path) {
+		requestProcessor.removeSessionAction(path);
+	}	
+	
 	public boolean containsMessage(Locale locale, String key) {
 		return !TextUtil.isEmptyString(ActionMessageUtil.getMessage(key, locale));
 	}

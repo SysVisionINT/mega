@@ -133,6 +133,40 @@ public class RequestProcessor {
 
 		return getHttpSession().getServletContext();
 	}
+	
+	public void removeSessionAction(Class clazz) {
+		if (log.isDebugEnabled()) {
+			log.debug("removeSessionAction(" + clazz.getName() + ".class)");
+		}
+
+		try {
+			getHttpSession().removeAttribute(getContextName(clazz));
+		} catch (Exception e) {
+			log.debug("Error removing action" + clazz.getName() + " from session", e);
+		}
+	}
+
+	public void removeSessionAction(Action action) {
+		if (log.isDebugEnabled()) {
+			log.debug("removeSessionAction(" + action.getClass().getName() + ")");
+		}
+		
+		removeSessionAction(action.getClass());
+	}
+	
+	public void removeSessionAction(String path) {
+		if (log.isDebugEnabled()) {
+			log.debug("removeSessionAction(" + path + ")");
+		}
+
+		try {
+			ActionConfig actionConfig = ActionManager.getInstance().getActionConfig(path);
+			
+			removeSessionAction(actionConfig.getClazz());
+		} catch (Exception e) {
+			log.debug("Configuration of action " + path + " not found!", e);
+		}
+	}	
 
 	public void gotoAction(String path) {
 		if (log.isDebugEnabled()) {
