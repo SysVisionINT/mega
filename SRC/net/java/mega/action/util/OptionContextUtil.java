@@ -35,6 +35,7 @@ public class OptionContextUtil {
 			log.debug("store(..., " + actionPath + ", " + action.getClass().getName() + ")");
 		}
 
+		// Identico ao UPDATE - INICIO
 		OptionContextEntry root = getRootOptionContextEntry(session);
 		List pathParts = getPathParts(actionPath);
 
@@ -74,10 +75,11 @@ public class OptionContextUtil {
 			}
 		}
 
+		old.setNext(null);
+		// Identico ao UPDATE - FIM
+		
 		String actionName = (String) pathParts.get(pathParts.size() - 1);
 		old.put(actionName, action);
-
-		old.setNext(null);
 
 		setRootOptionContextEntry(session, root);
 
@@ -149,5 +151,56 @@ public class OptionContextUtil {
 		} else {
 			session.removeAttribute(Constants.OPTION_CONTEXT_SESSION_OBJECT);
 		}
+	}
+
+	public static void update(HttpSession session, String actionPath) {
+		if (log.isDebugEnabled()) {
+			log.debug("update(..., " + actionPath + ")");
+		}
+		
+		// Identico ao STORE - INICIO
+		OptionContextEntry root = getRootOptionContextEntry(session);
+		List pathParts = getPathParts(actionPath);
+
+		if (pathParts == null || pathParts.size() == 1) {
+			if (root != null) {
+				root.clear();
+				setRootOptionContextEntry(session, null);
+			}
+
+			return;
+		}
+
+		if (root == null) {
+			root = new OptionContextEntry((String) pathParts.get(0));
+		}
+
+		OptionContextEntry old = null;
+		OptionContextEntry temp = root;
+
+		for (int i = 0; i < pathParts.size() - 1; i++) {
+			if (temp == null || !temp.getKey().equals(pathParts.get(i))) {
+				if (temp != null) {
+					temp.clear();
+				}
+
+				temp = new OptionContextEntry((String) pathParts.get(i));
+
+				if (old != null) {
+					old.setNext(temp);
+				}
+
+				old = temp;
+				temp = null;
+			} else {
+				old = temp;
+				temp = old.getNext();
+			}
+		}
+
+		old.setNext(null);
+		// Identico ao STORE - FIM
+
+		setRootOptionContextEntry(session, root);
 	}
 }

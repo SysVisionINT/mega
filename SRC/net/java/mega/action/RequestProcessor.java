@@ -37,7 +37,7 @@ import javax.servlet.http.HttpSession;
 import net.java.mega.action.api.CustomResponseProvider;
 import net.java.mega.action.api.FormFile;
 import net.java.mega.action.api.Message;
-import net.java.mega.action.api.NoOptionContext;
+import net.java.mega.action.api.OptionContextObject;
 import net.java.mega.action.api.SessionObject;
 import net.java.mega.action.api.Validator;
 import net.java.mega.action.error.ActionAlreadyInUseException;
@@ -135,7 +135,7 @@ public class RequestProcessor {
 
 		return getHttpSession().getServletContext();
 	}
-	
+
 	public void removeSessionAction(Class clazz) {
 		if (log.isDebugEnabled()) {
 			log.debug("removeSessionAction(" + clazz.getName() + ".class)");
@@ -152,10 +152,10 @@ public class RequestProcessor {
 		if (log.isDebugEnabled()) {
 			log.debug("removeSessionAction(" + action.getClass().getName() + ")");
 		}
-		
+
 		removeSessionAction(action.getClass());
 	}
-	
+
 	public void removeSessionAction(String path) {
 		if (log.isDebugEnabled()) {
 			log.debug("removeSessionAction(" + path + ")");
@@ -163,12 +163,12 @@ public class RequestProcessor {
 
 		try {
 			ActionConfig actionConfig = ActionManager.getInstance().getActionConfig(path);
-			
+
 			removeSessionAction(actionConfig.getClazz());
 		} catch (Exception e) {
 			log.debug("Configuration of action " + path + " not found!", e);
 		}
-	}	
+	}
 
 	public void gotoAction(String path) {
 		if (log.isDebugEnabled()) {
@@ -215,11 +215,11 @@ public class RequestProcessor {
 		if (action == null) {
 			try {
 				String actionPath = getContextName(clazz);
-				
+
 				action = (Action) getHttpSession().getAttribute(actionPath);
-				
-				if (action == null && ActionManager.getInstance().isOptionContextActive()) {
-					action =  OptionContextUtil.get(getHttpSession(), actionPath);
+
+				if (action == null) {
+					action = OptionContextUtil.get(getHttpSession(), actionPath);
 				}
 			} catch (ActionException e) {
 				log.error("Error while creating actionPath for object " + clazz.getName(), e);
@@ -294,12 +294,17 @@ public class RequestProcessor {
 		}
 
 		if (!currentResponse.isSessionInvalidated()) {
-			getHttpSession().setAttribute(Constants.CURRENT_ACTION, currentResponse.getAction());
-			
-			if (ActionManager.getInstance().isOptionContextActive() && !(currentResponse.getAction() instanceof NoOptionContext)) {
-				contextName = getContextName(currentResponse.getAction().getClass());
+			contextName = getContextName(currentResponse.getAction().getClass());
+
+			if (currentResponse.getAction() instanceof OptionContextObject) {
 				OptionContextUtil.store(getHttpSession(), contextName, currentResponse.getAction());
+			} else {
+				OptionContextUtil.update(getHttpSession(), contextName);
 			}
+		}
+
+		if (!currentResponse.isSessionInvalidated()) {
+			getHttpSession().setAttribute(Constants.CURRENT_ACTION, currentResponse.getAction());
 		} else {
 			getHttpServletRequest().setAttribute(Constants.CURRENT_ACTION, currentResponse.getAction());
 		}
