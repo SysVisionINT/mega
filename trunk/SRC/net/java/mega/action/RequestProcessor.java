@@ -37,6 +37,7 @@ import javax.servlet.http.HttpSession;
 import net.java.mega.action.api.CustomResponseProvider;
 import net.java.mega.action.api.FormFile;
 import net.java.mega.action.api.Message;
+import net.java.mega.action.api.NoOptionContext;
 import net.java.mega.action.api.SessionObject;
 import net.java.mega.action.api.Validator;
 import net.java.mega.action.error.ActionAlreadyInUseException;
@@ -295,7 +296,7 @@ public class RequestProcessor {
 		if (!currentResponse.isSessionInvalidated()) {
 			getHttpSession().setAttribute(Constants.CURRENT_ACTION, currentResponse.getAction());
 			
-			if (ActionManager.getInstance().isOptionContextActive()) {
+			if (ActionManager.getInstance().isOptionContextActive() && !(currentResponse.getAction() instanceof NoOptionContext)) {
 				contextName = getContextName(currentResponse.getAction().getClass());
 				OptionContextUtil.store(getHttpSession(), contextName, currentResponse.getAction());
 			}
