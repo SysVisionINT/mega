@@ -1,15 +1,15 @@
 /*  ------------------
  *  MEGA Web Framework
  *  ------------------
- *  
+ *
  *  Copyright 2006 SysVision - Consultadoria e Desenvolvimento em Sistemas de Informática, Lda.
- *  
+ *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
- *  
+ *
  *  	http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -29,43 +29,43 @@ import net.java.sjtools.util.TextUtil;
 
 public class OptionContextUtil {
 	private static Log log = LogFactory.getLog(OptionContextUtil.class);
-	
+
 	public static void store(HttpSession session, String actionPath, Action action) {
 		if (log.isDebugEnabled()) {
 			log.debug("store(..., " + actionPath + ", " + action.getClass().getName() + ")");
 		}
-		
+
 		OptionContextEntry root = getRootOptionContextEntry(session);
 		List pathParts = getPathParts(actionPath);
-		
+
 		if (pathParts == null || pathParts.size() == 1) {
 			if (root != null) {
 				root.clear();
 				setRootOptionContextEntry(session, null);
 			}
-			
+
 			return;
 		}
-		
+
 		if (root == null) {
 			root = new OptionContextEntry((String) pathParts.get(0));
 		}
-		
+
 		OptionContextEntry old = null;
 		OptionContextEntry temp = root;
-		
+
 		for (int i = 0; i < pathParts.size() - 1; i++) {
 			if (temp == null || !temp.getKey().equals(pathParts.get(i))) {
 				if (temp != null) {
 					temp.clear();
 				}
-				
+
 				temp = new OptionContextEntry((String) pathParts.get(i));
-				
+
 				if (old != null) {
 					old.setNext(temp);
 				}
-				
+
 				old = temp;
 				temp = null;
 			} else {
@@ -73,57 +73,57 @@ public class OptionContextUtil {
 				temp = old.getNext();
 			}
 		}
-		
+
 		String actionName = (String) pathParts.get(pathParts.size() - 1);
 		old.put(actionName, action);
-		
+
 		old.setNext(null);
-		
+
 		setRootOptionContextEntry(session, root);
-		
+
 		if (log.isDebugEnabled()) {
 			log.debug(actionName + " added to " + old.getKey());
 		}
 	}
-	
+
 	public static Action get(HttpSession session, String actionPath) {
 		if (log.isDebugEnabled()) {
 			log.debug("get(..., " + actionPath + ")");
 		}
-		
+
 		OptionContextEntry root = getRootOptionContextEntry(session);
 		List pathParts = getPathParts(actionPath);
-		
+
 		if (root == null || pathParts == null || pathParts.size() == 1) {
 			return null;
 		}
-		
+
 		OptionContextEntry temp = root;
 		OptionContextEntry old = null;
-		
+
 		for (int i = 0; i < pathParts.size() - 1; i++) {
-			if (temp != null && temp.getKey().equals(pathParts.get(1))) {
+			if (temp != null && temp.getKey().equals(pathParts.get(i))) {
 				old = temp;
 				temp = old.getNext();
 			} else {
 				return null;
 			}
 		}
-		
+
 		String actionName = (String) pathParts.get(pathParts.size() - 1);
-		
+
 		Action ret = old.get(actionName);
-		
+
 		if (log.isDebugEnabled()) {
 			log.debug(actionName + "=" + (ret == null? "Not Found!": ret.getClass().getName()));
 		}
-		
+
 		return ret;
 	}
 
 	private static List getPathParts(String actionPath) {
 		String temp = actionPath;
-		
+
 		if (temp != null && temp.startsWith("/")) {
 			if (temp.length() > 1) {
 				temp = temp.substring(1);
@@ -131,7 +131,7 @@ public class OptionContextUtil {
 				temp = null;
 			}
 		}
-		
+
 		if (temp == null) {
 			return null;
 		}
