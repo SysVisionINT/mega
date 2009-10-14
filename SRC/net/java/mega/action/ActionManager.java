@@ -312,8 +312,7 @@ public class ActionManager {
 			String optionContext = controllerConfig.getProperty(Constants.OPTION_CONTEXT_PROPERTY,
 					Constants.DEFAULT_OPTION_CONTEXT_PROPERTY);
 
-			optionContextActive = new Boolean(Constants.DEFAULT_OPTION_CONTEXT_PROPERTY.equals(optionContext
-					.toUpperCase()));
+			optionContextActive = new Boolean(optionContext.toUpperCase().equals("ON"));
 		}
 
 		return optionContextActive.booleanValue();
