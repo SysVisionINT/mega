@@ -18,6 +18,6 @@
  */
 package net.java.mega.action.api;
 
-public interface NoOptionContext {
+public interface OptionContextObject {
 
 }
