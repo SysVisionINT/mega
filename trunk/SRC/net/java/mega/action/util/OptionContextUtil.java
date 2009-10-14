@@ -77,6 +77,8 @@ public class OptionContextUtil {
 		String actionName = (String) pathParts.get(pathParts.size() - 1);
 		old.put(actionName, action);
 		
+		old.setNext(null);
+		
 		setRootOptionContextEntry(session, root);
 	}
 	
