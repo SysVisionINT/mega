@@ -48,6 +48,10 @@ public class OptionContextEntry implements Serializable {
 	}
 
 	public void setNext(OptionContextEntry next) {
+		if (next == null && this.next != null) {
+			this.next.clear();
+		}
+		
 		this.next = next;
 	}
 
