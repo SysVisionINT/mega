@@ -80,6 +80,10 @@ public class OptionContextUtil {
 		old.setNext(null);
 		
 		setRootOptionContextEntry(session, root);
+		
+		if (log.isDebugEnabled()) {
+			log.debug(actionName + " added to " + old.getKey());
+		}
 	}
 	
 	public static Action get(HttpSession session, String actionPath) {
@@ -108,7 +112,13 @@ public class OptionContextUtil {
 		
 		String actionName = (String) pathParts.get(pathParts.size() - 1);
 		
-		return old.get(actionName);
+		Action ret = old.get(actionName);
+		
+		if (log.isDebugEnabled()) {
+			log.debug(actionName + "=" + (ret == null? "Not Found!": ret.getClass().getName()));
+		}
+		
+		return ret;
 	}
 
 	private static List getPathParts(String actionPath) {

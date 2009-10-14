@@ -20,6 +20,7 @@ package net.java.mega.action.util;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import net.java.mega.action.model.Action;
@@ -66,5 +67,42 @@ public class OptionContextEntry implements Serializable {
 			next.clear();
 			next = null;
 		}
+	}
+
+	public String toString() {
+		StringBuffer buffer = new StringBuffer();
+		
+		buffer.append("ENTRY(");
+		buffer.append("key=");
+		buffer.append(key);
+		buffer.append(", objects={");
+		
+		String objKey = null;
+		boolean first = true;
+		
+		for (Iterator i = objectMap.keySet().iterator(); i.hasNext();) {
+			objKey = (String) i.next();
+			
+			if (first) {
+				first = false;
+			} else {
+				buffer.append(", ");
+			}
+			
+			buffer.append(objKey);
+			buffer.append("=");
+			buffer.append(objectMap.get(objKey).getClass().getName());
+		}
+		
+		buffer.append("}");
+		
+		if (next != null) {
+			buffer.append(", nextEntry=");
+			buffer.append(next.toString());
+		}
+		
+		buffer.append(")");
+		
+		return buffer.toString();
 	}
 }
