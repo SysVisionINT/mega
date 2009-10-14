@@ -31,7 +31,7 @@ public class Constants {
 	public static final String DEFAULT_WORKFLOW_CONTROL_PROPERTY_VALUE = "ON";
 	
 	public static final String OPTION_CONTEXT_PROPERTY = "option-context";
-	public static final String DEFAULT_OPTION_CONTEXT_PROPERTY = "ON";
+	public static final String DEFAULT_OPTION_CONTEXT_PROPERTY = "OFF";
 	
 	public static final String DEFAULT_OUTPUT_RENDER_EXTENTION_PROPERTY_VALUE = ".page";
 	public static final String OUTPUT_RENDER_ROOT_PROPERTY_VALUE = "/";
