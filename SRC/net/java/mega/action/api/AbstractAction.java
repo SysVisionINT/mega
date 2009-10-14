@@ -28,7 +28,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import net.java.mega.action.ActionManager;
 import net.java.mega.action.RequestProcessor;
 import net.java.mega.action.error.WorkflowError;
 import net.java.mega.action.model.Action;
@@ -38,6 +37,8 @@ import net.java.mega.common.resource.LocaleUtil;
 import net.java.sjtools.util.TextUtil;
 
 public abstract class AbstractAction implements Action, Serializable {
+	private static final long serialVersionUID = 1502850121248385461L;
+	
 	private transient RequestProcessor requestProcessor = null;
 	private Properties config = null;
 	

@@ -52,6 +52,7 @@ import net.java.mega.action.model.EmptyFormFile;
 import net.java.mega.action.util.CheckBoxUtil;
 import net.java.mega.action.util.Constants;
 import net.java.mega.action.util.MethodConstants;
+import net.java.mega.action.util.OptionContextUtil;
 import net.java.mega.action.util.WorkflowControlUtil;
 import net.java.mega.common.util.MegaCache;
 import net.java.sjtools.logging.Log;
@@ -212,9 +213,15 @@ public class RequestProcessor {
 
 		if (action == null) {
 			try {
-				action = (Action) getHttpSession().getAttribute(getContextName(clazz));
+				String actionPath = getContextName(clazz);
+				
+				action = (Action) getHttpSession().getAttribute(actionPath);
+				
+				if (action == null && ActionManager.getInstance().isOptionContextActive()) {
+					action =  OptionContextUtil.get(getHttpSession(), actionPath);
+				}
 			} catch (ActionException e) {
-				log.error("Error while looking for session object " + clazz.getName(), e);
+				log.error("Error while creating actionPath for object " + clazz.getName(), e);
 				throw new RuntimeException(e);
 			}
 
@@ -287,6 +294,11 @@ public class RequestProcessor {
 
 		if (!currentResponse.isSessionInvalidated()) {
 			getHttpSession().setAttribute(Constants.CURRENT_ACTION, currentResponse.getAction());
+			
+			if (ActionManager.getInstance().isOptionContextActive()) {
+				contextName = getContextName(currentResponse.getAction().getClass());
+				OptionContextUtil.store(getHttpSession(), contextName, currentResponse.getAction());
+			}
 		} else {
 			getHttpServletRequest().setAttribute(Constants.CURRENT_ACTION, currentResponse.getAction());
 		}

@@ -29,8 +29,9 @@ import net.java.mega.action.RequestProcessor;
 import net.java.mega.action.ResponseMetaData;
 import net.java.mega.action.model.ActionWrapper;
 
-
 public abstract class AbstractWrapper implements ActionWrapper {
+	private static final long serialVersionUID = -5569831895550838253L;
+	
 	private ActionWrapper next = null;
 	private Properties config = new Properties();
 

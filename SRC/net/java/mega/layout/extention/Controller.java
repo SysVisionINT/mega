@@ -29,9 +29,9 @@ import net.java.mega.layout.model.BlockContent;
 
 
 public abstract class Controller implements Serializable {
-	public Controller() {
-	}
+	private static final long serialVersionUID = 210679568681809764L;
 
-	public abstract BlockContent getBlockContent(String pageName, String blockName, Map parameters,
-			HttpServletRequest request, HttpServletResponse response) throws ServletException;
+	public Controller() {}
+
+	public abstract BlockContent getBlockContent(String pageName, String blockName, Map parameters, HttpServletRequest request, HttpServletResponse response) throws ServletException;
 }
