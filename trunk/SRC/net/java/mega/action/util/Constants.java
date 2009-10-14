@@ -28,13 +28,17 @@ public class Constants {
 	public static final String OUTPUT_RENDER_ROOT_PROPERTY = "render-root";
 	
 	public static final String WORKFLOW_CONTROL_PROPERTY = "workflow-control";
-	public static final String DEFAULT_WORKFLOW_CONTROL_PROPERTY_VALUE = "ON";	
+	public static final String DEFAULT_WORKFLOW_CONTROL_PROPERTY_VALUE = "ON";
+	
+	public static final String OPTION_CONTEXT_PROPERTY = "option-context";
+	public static final String DEFAULT_OPTION_CONTEXT_PROPERTY = "ON";
 	
 	public static final String DEFAULT_OUTPUT_RENDER_EXTENTION_PROPERTY_VALUE = ".page";
 	public static final String OUTPUT_RENDER_ROOT_PROPERTY_VALUE = "/";
 	
 	public static final String CURRENT_ACTION = "this";
 	public static final String MESSAGE_CONTAINER = "MEGA_ACTION_MESSAGES";
+	public static final String OPTION_CONTEXT_SESSION_OBJECT = "OPTN_CNTXT_SSSN_OBJCT";
 	
 	public static final String CHECK_BOX = "_CHCK_BX_";
 	public static final String GET_ARG = "ARG_";

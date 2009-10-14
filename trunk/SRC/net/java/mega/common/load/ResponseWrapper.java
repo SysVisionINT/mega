@@ -31,12 +31,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
-import net.java.sjtools.logging.Log;
-import net.java.sjtools.logging.LogFactory;
-
 public class ResponseWrapper extends HttpServletResponseWrapper {
-	private static Log log = LogFactory.getLog(ResponseWrapper.class);
-
 	private ServletOutputStreamWrapper output = new ServletOutputStreamWrapper();
 	private PrintWriter pw = new PrintWriter(output);
 	private boolean usedWriter = true;

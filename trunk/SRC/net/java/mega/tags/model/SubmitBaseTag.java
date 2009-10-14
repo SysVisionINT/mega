@@ -31,6 +31,8 @@ import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
 
 public abstract class SubmitBaseTag extends BaseBodyTag {
+	private static final long serialVersionUID = 7377298953679348420L;
+
 	private static final String ONCLICK = "onclick";
 
 	private static Log log = LogFactory.getLog(SubmitBaseTag.class);

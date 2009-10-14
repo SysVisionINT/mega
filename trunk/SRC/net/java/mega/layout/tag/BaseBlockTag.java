@@ -28,6 +28,8 @@ import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
 
 public abstract class BaseBlockTag extends TagSupport {
+	private static final long serialVersionUID = -8369090117118933490L;
+
 	private static Log log = LogFactory.getLog(BaseBlockTag.class);
 
 	private String blockName = null;

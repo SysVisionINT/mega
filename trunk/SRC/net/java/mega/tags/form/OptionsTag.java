@@ -75,13 +75,11 @@ public class OptionsTag extends BaseBodyTag {
 	}
 
 	private void write(Object element, SelectBox select) throws JspException {
-		BeanUtil beanUtil = new BeanUtil(element, MegaCache.getInstance());
-
 		try {
 			String value = null;
 
 			if (getValue() != null) {
-				value = String.valueOf(beanUtil.get(getValue()));
+				value = String.valueOf(BeanUtil.getPropertyValue(MegaCache.getInstance(), element, getValue()));
 			} else {
 				value = String.valueOf(element);
 			}
@@ -99,7 +97,7 @@ public class OptionsTag extends BaseBodyTag {
 			pageContext.getOut().print(">");
 
 			if (getLabel() != null) {
-				pageContext.getOut().print(beanUtil.get(getLabel()));
+				pageContext.getOut().print(BeanUtil.getPropertyValue(MegaCache.getInstance(), element, getLabel()));
 			} else {
 				pageContext.getOut().print(value);
 			}

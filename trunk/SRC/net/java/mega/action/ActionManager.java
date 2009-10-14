@@ -51,6 +51,7 @@ public class ActionManager {
 
 	private ControllerConfig controllerConfig = null;
 	private Boolean workflowControlActive = null;
+	private Boolean optionContextActive = null;
 
 	private Map forwardMap = null;
 
@@ -301,6 +302,22 @@ public class ActionManager {
 
 		return workflowControlActive.booleanValue();
 	}
+	
+	public boolean isOptionContextActive() {
+		if (log.isDebugEnabled()) {
+			log.debug("isOptionContextActive()");
+		}
+
+		if (optionContextActive == null) {
+			String optionContext = controllerConfig.getProperty(Constants.OPTION_CONTEXT_PROPERTY,
+					Constants.DEFAULT_OPTION_CONTEXT_PROPERTY);
+
+			optionContextActive = new Boolean(Constants.DEFAULT_OPTION_CONTEXT_PROPERTY.equals(optionContext
+					.toUpperCase()));
+		}
+
+		return optionContextActive.booleanValue();
+	}	
 
 	private ResponseProvider createResponseProvider(ActionConfig actionConfig) throws ConfigurationError {
 		if (log.isDebugEnabled()) {

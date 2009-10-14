@@ -24,6 +24,8 @@ import net.java.mega.action.util.Constants;
 import net.java.mega.common.http.WARContextUtil;
 
 public abstract class InputBaseTag extends BaseBodyTag {
+	private static final long serialVersionUID = -6219700728769842285L;
+	
 	private String property = null;
 	private String tabIndex = null;
 
