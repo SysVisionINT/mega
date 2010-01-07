@@ -55,7 +55,7 @@ public class FormTag extends BaseBodyTag {
 
 		try {
 			pageContext.getOut().print("<form action=\"");
-			pageContext.getOut().print(url.getActionURL(null));
+			pageContext.getOut().print(url.getMethodURL(null, null));
 			pageContext.getOut().print("\" method=\"post\"");
 			writeAttributes();
 			pageContext.getOut().println(">");
