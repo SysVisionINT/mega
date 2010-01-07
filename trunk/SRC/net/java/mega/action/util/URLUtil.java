@@ -96,6 +96,30 @@ public class URLUtil {
 		return buffer.toString();
 	}
 
+	public String getForwardURL(String actionName) {
+		if (log.isDebugEnabled()) {
+			log.debug("getForwardURL(" + actionName + ")");
+		}
+
+		StringBuffer buffer = new StringBuffer();
+
+		String path = getPath();
+
+		if (path != null) {
+			buffer.append(path);
+		}
+
+		buffer.append(actionName);
+
+		String extention = getExtention();
+
+		if (extention != null) {
+			buffer.append(extention);
+		}
+
+		return response.encodeURL(buffer.toString());
+	}	
+	
 	public String getActionURL(String actionName) throws ActionException {
 		if (log.isDebugEnabled()) {
 			log.debug("getActionURL(" + actionName + ")");
