@@ -48,26 +48,6 @@ public class URLUtil {
 		this.response = response;
 	}
 
-	private String getActionURLPart(String actionName) {
-		if (log.isDebugEnabled()) {
-			log.debug("getActionURLPart(" + actionName + ")");
-		}
-
-		StringBuffer buffer = new StringBuffer();
-
-		buffer.append(getContextPath());
-
-		String path = getPath();
-
-		if (path != null) {
-			buffer.append(path);
-		}
-
-		buffer.append(actionName);
-
-		return buffer.toString();
-	}
-
 	private String getContextPath() {
 		String contextPath = request.getContextPath();
 
@@ -94,48 +74,6 @@ public class URLUtil {
 		buffer.append(fileName);
 
 		return buffer.toString();
-	}
-
-	public String getForwardURL(String actionName) {
-		if (log.isDebugEnabled()) {
-			log.debug("getForwardURL(" + actionName + ")");
-		}
-
-		StringBuffer buffer = new StringBuffer();
-
-		String path = getPath();
-
-		if (path != null) {
-			buffer.append(path);
-		}
-
-		buffer.append(actionName);
-
-		String extention = getExtention();
-
-		if (extention != null) {
-			buffer.append(extention);
-		}
-
-		return response.encodeURL(buffer.toString());
-	}	
-	
-	public String getActionURL(String actionName) throws ActionException {
-		if (log.isDebugEnabled()) {
-			log.debug("getActionURL(" + actionName + ")");
-		}
-
-		StringBuffer buffer = new StringBuffer();
-
-		buffer.append(getActionURLPart(getActionName(actionName)));
-
-		String extention = getExtention();
-
-		if (extention != null) {
-			buffer.append(extention);
-		}
-
-		return response.encodeURL(buffer.toString());
 	}
 
 	private String getExtention() {
@@ -178,29 +116,17 @@ public class URLUtil {
 
 		return servletPath;
 	}
-
-	public String getMethodURL(String actionName, String methodName) throws ActionException {
-		if (log.isDebugEnabled()) {
-			log.debug("getMethodURL(" + actionName + ", " + methodName + ")");
+	
+	private String getActionName(String actionName) throws ActionException {
+		String action = actionName;
+		
+		if (action == null) {
+			Action actionObject = (Action) WARContextUtil.getObject(request, Constants.CURRENT_ACTION);
+			ActionConfig actionConfig = ActionManager.getInstance().getActionConfig(actionObject.getClass());
+			action = actionConfig.getName();
 		}
 		
-		if (methodName == null) {
-			return getActionURL(actionName);
-		}
-
-		StringBuffer buffer = new StringBuffer();
-
-		buffer.append(getActionURLPart(getActionName(actionName)));
-		buffer.append(".");
-		buffer.append(methodName);
-
-		String extention = getExtention();
-
-		if (extention != null) {
-			buffer.append(extention);
-		}
-
-		return response.encodeURL(buffer.toString());
+		return action;
 	}
 	
 	public String getRAWMethodName(String actionName, String methodName) throws ActionException {
@@ -219,16 +145,41 @@ public class URLUtil {
 		
 		return buffer.toString();
 	}
-
-	private String getActionName(String actionName) throws ActionException {
-		String action = actionName;
-		
-		if (action == null) {
-			Action actionObject = (Action) WARContextUtil.getObject(request, Constants.CURRENT_ACTION);
-			ActionConfig actionConfig = ActionManager.getInstance().getActionConfig(actionObject.getClass());
-			action = actionConfig.getName();
+	
+	public String getForwardURL(String actionName, String methodName) throws ActionException {
+		if (log.isDebugEnabled()) {
+			log.debug("getForwardURL(" + actionName + ", " + methodName + ")");
 		}
-		
-		return action;
-	}
+
+		StringBuffer buffer = new StringBuffer();
+
+		String path = getPath();
+
+		if (path != null) {
+			buffer.append(path);
+		}
+
+		buffer.append(getRAWMethodName(actionName, methodName));
+
+		String extention = getExtention();
+
+		if (extention != null) {
+			buffer.append(extention);
+		}
+
+		return response.encodeURL(buffer.toString());
+	}		
+	
+	public String getMethodURL(String actionName, String methodName) throws ActionException {
+		if (log.isDebugEnabled()) {
+			log.debug("getMethodURL(" + actionName + ", " + methodName + ")");
+		}
+
+		StringBuffer buffer = new StringBuffer();
+
+		buffer.append(getContextPath());
+		buffer.append(getForwardURL(actionName, methodName));
+
+		return buffer.toString();
+	}	
 }
