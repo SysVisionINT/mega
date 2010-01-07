@@ -25,6 +25,7 @@ import net.java.mega.action.RequestMetaData;
 import net.java.mega.action.ResponseMetaData;
 import net.java.mega.action.api.AbstractWrapper;
 import net.java.mega.action.output.Forward;
+import net.java.mega.action.util.URLUtil;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
 
@@ -50,7 +51,9 @@ public class SessionValidatorWrapper extends AbstractWrapper {
 			}
 			
 			ResponseMetaData responseMetaData = new ResponseMetaData();
-			responseMetaData.setResponseProvider(new Forward(forwardURL));
+			URLUtil url = new URLUtil(request, response);
+			
+			responseMetaData.setResponseProvider(new Forward(url.getActionURL(forwardURL)));
 			
 			return responseMetaData;
 		}
