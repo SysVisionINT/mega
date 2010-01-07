@@ -53,7 +53,7 @@ public class SessionValidatorWrapper extends AbstractWrapper {
 			ResponseMetaData responseMetaData = new ResponseMetaData();
 			URLUtil url = new URLUtil(request, response);
 			
-			responseMetaData.setResponseProvider(new Forward(url.getMethodURL(forwardURL, null)));
+			responseMetaData.setResponseProvider(new Forward(url.getForwardURL(forwardURL)));
 			
 			return responseMetaData;
 		}
