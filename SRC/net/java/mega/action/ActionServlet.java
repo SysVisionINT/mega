@@ -73,13 +73,14 @@ public class ActionServlet extends HttpServlet {
 			
 			String path = ActionRequestUtil.getAction(request, parameters);
 			boolean sameRequest = WorkflowControlUtil.isTheSameRequest(request);
+			boolean eventRequest = WorkflowControlUtil.isEventRequest(request);
 			
 			ResponseProvider responseProvider = null;
 			RequestMetaData requestMetaData = actionManager.getRequestMetaData(path, doMethod, parameters);
 			
 			ResponseMetaData responseMetaData = null;
 
-			if (!sameRequest) {
+			if (!sameRequest && !eventRequest) {
 				requestMetaData.setToken(WorkflowControlUtil.getCurrentToken(request));
 				WorkflowControlUtil.generateToken(request);
 			}
