@@ -25,16 +25,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
+import net.java.mega.action.util.ActionMessageUtil;
 import net.java.mega.action.util.Constants;
 import net.java.mega.action.util.FormatUtil;
+import net.java.mega.common.http.HTMLUtil;
 import net.java.mega.common.http.WARContextUtil;
 import net.java.mega.common.http.scope.Scope;
 import net.java.mega.common.http.scope.ScopeUtil;
 import net.java.mega.common.resource.LocaleUtil;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
+import net.java.sjtools.util.TextUtil;
 
 public class ValueTag extends TagSupport {
+
 	private static final long serialVersionUID = 1824165782784735482L;
 
 	private static Log log = LogFactory.getLog(ValueTag.class);
@@ -43,37 +47,58 @@ public class ValueTag extends TagSupport {
 	private String property = null;
 	private String format = null;
 	private boolean filter = true;
+	private String defaultValue = null;
 
 	public int doEndTag() throws JspException {
-		try {
+		Locale locale = LocaleUtil.getUserLocate((HttpServletRequest) pageContext.getRequest());
+		
+		try {	
 			Scope scope = ScopeUtil.findAttribute(pageContext, name);
 
 			if (scope == null) {
-				pageContext.getOut().print("[");
-				pageContext.getOut().print(name);
+				if (!TextUtil.isEmptyString(defaultValue)) {
+					pageContext.getOut().print("[");
+					pageContext.getOut().print(name);
 
-				if (property != null) {
-					pageContext.getOut().print(".");
-					pageContext.getOut().print(property);
+					if (property != null) {
+						pageContext.getOut().print(".");
+						pageContext.getOut().print(property);
+					}
+
+					pageContext.getOut().print("]");
+				} else {
+					pageContext.getOut().print(getKeyValue(defaultValue, locale));
 				}
-
-				pageContext.getOut().print("]");
 			} else {
 				Object value = WARContextUtil.getValue(pageContext, name, property);
 
-				Locale locale = LocaleUtil.getUserLocate((HttpServletRequest) pageContext.getRequest());
-
-				pageContext.getOut().print(FormatUtil.format(value, format, locale, filter));
+				if (value == null && !TextUtil.isEmptyString(defaultValue)) {
+					pageContext.getOut().print(getKeyValue(defaultValue, locale));
+				} else {
+					pageContext.getOut().print(FormatUtil.format(value, format, locale, filter));
+				}
 			}
 		} catch (IOException e) {
-			log
-					.error("Error while formating " + name + (property == null ? "." + property : "") + " with "
-							+ format, e);
+			log.error("Error while formating " + name + (property == null ? "." + property : "") + " with " + format, e);
 
 			throw new JspException(e);
 		}
 
 		return EVAL_PAGE;
+	}
+
+	private String getKeyValue(String key, Locale locale) {
+		String message = ActionMessageUtil.getMessage(key, locale);
+
+		if (message != null) {
+			if (filter) {
+				message = HTMLUtil.filter(message);
+			}
+		} else {
+			message = "{".concat(key).concat("}");
+		}
+		
+		return message;
 	}
 
 	public String getName() {
@@ -106,5 +131,13 @@ public class ValueTag extends TagSupport {
 
 	public void setFilter(boolean filter) {
 		this.filter = filter;
+	}
+
+	public String getDefault() {
+		return defaultValue;
+	}
+
+	public void setDefault(String defaultValue) {
+		this.defaultValue = defaultValue;
 	}
 }
