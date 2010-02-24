@@ -51,12 +51,12 @@ public class ValueTag extends TagSupport {
 
 	public int doEndTag() throws JspException {
 		Locale locale = LocaleUtil.getUserLocate((HttpServletRequest) pageContext.getRequest());
-		
-		try {	
+
+		try {
 			Scope scope = ScopeUtil.findAttribute(pageContext, name);
 
 			if (scope == null) {
-				if (!TextUtil.isEmptyString(defaultValue)) {
+				if (TextUtil.isEmptyString(defaultValue)) {
 					pageContext.getOut().print("[");
 					pageContext.getOut().print(name);
 
@@ -97,7 +97,7 @@ public class ValueTag extends TagSupport {
 		} else {
 			message = "{".concat(key).concat("}");
 		}
-		
+
 		return message;
 	}
 
