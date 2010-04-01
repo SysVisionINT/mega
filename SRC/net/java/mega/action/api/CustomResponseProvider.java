@@ -18,6 +18,8 @@
  */
 package net.java.mega.action.api;
 
+import net.java.mega.action.error.ActionException;
+
 public interface CustomResponseProvider {
-	public ResponseProvider getResponseProvider();
+	public ResponseProvider getResponseProvider() throws ActionException;
 }
