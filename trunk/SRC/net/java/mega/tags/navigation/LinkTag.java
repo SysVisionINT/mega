@@ -121,7 +121,7 @@ public class LinkTag extends BaseBodyTag {
 			pageContext.getOut().print("<a href=\"");
 			pageContext.getOut().print(url.getMethodURL(getAction(), getMethod()));
 
-			if (!parameters.isEmpty()) {
+			if (!parameters.isEmpty() || isUseWorkflowControl()) {
 				pageContext.getOut().print("?");
 				
 				if (isUseWorkflowControl()) {  
@@ -130,7 +130,9 @@ public class LinkTag extends BaseBodyTag {
 					pageContext.getOut().print(WorkflowControlUtil.getCurrentToken(request));
 				}
 				
-				pageContext.getOut().print(getParameters());
+				if (!parameters.isEmpty()) {
+					pageContext.getOut().print(getParameters());
+				}
 			}
 
 			pageContext.getOut().print("\"");
