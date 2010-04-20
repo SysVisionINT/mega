@@ -44,6 +44,7 @@ import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
 
 public class ActionServlet extends HttpServlet {
+
 	private static final long serialVersionUID = 5569343447487377887L;
 
 	private static Log log = LogFactory.getLog(ActionServlet.class);
@@ -64,29 +65,26 @@ public class ActionServlet extends HttpServlet {
 		process(request, response, Constants.HTTP_POST);
 	}
 
-	private void process(HttpServletRequest request, HttpServletResponse response, String doMethod) throws IOException,
-			ServletException {
+	private void process(HttpServletRequest request, HttpServletResponse response, String doMethod) throws IOException, ServletException {
 		ActionManager actionManager = ActionManager.getInstance();
 
 		try {
 			RequestParameters parameters = RequestParametersFactory.getRequestParameters(request);
-			
+
 			String path = ActionRequestUtil.getAction(request, parameters);
 			boolean sameRequest = WorkflowControlUtil.isTheSameRequest(request);
-			boolean eventRequest = WorkflowControlUtil.isEventRequest(request);
-			
+
 			ResponseProvider responseProvider = null;
 			RequestMetaData requestMetaData = actionManager.getRequestMetaData(path, doMethod, parameters);
-			
+
 			ResponseMetaData responseMetaData = null;
 
-			if (!sameRequest && !eventRequest) {
+			if (!sameRequest && WorkflowControlUtil.wasParameterSuplied(parameters)) {
 				requestMetaData.setToken(WorkflowControlUtil.getCurrentToken(request));
 				WorkflowControlUtil.generateToken(request);
 			}
 
-			ActionWrapper actionWrapper = actionManager.getActionWrapper(requestMetaData.getActionConfig()
-					.getWrapperChain());
+			ActionWrapper actionWrapper = actionManager.getActionWrapper(requestMetaData.getActionConfig().getWrapperChain());
 
 			try {
 				responseMetaData = actionWrapper.execute(request, response, requestMetaData);
@@ -132,8 +130,7 @@ public class ActionServlet extends HttpServlet {
 
 		if (configFile != null) {
 			try {
-				ControllerConfig controllerConfig = ActionConfigReader.getControllerConfig(wrl
-						.getResourceInputStream(configFile));
+				ControllerConfig controllerConfig = ActionConfigReader.getControllerConfig(wrl.getResourceInputStream(configFile));
 
 				ActionManager.getInstance().setControllerConfig(controllerConfig);
 			} catch (Exception e) {
@@ -146,9 +143,7 @@ public class ActionServlet extends HttpServlet {
 		}
 
 		try {
-			ActionManager.getInstance().setServletConfig(
-					ServletConfigReader.getServletConfig(config.getServletName(), wrl
-							.getResourceInputStream(Constants.WEB_XML)));
+			ActionManager.getInstance().setServletConfig(ServletConfigReader.getServletConfig(config.getServletName(), wrl.getResourceInputStream(Constants.WEB_XML)));
 		} catch (Exception e) {
 			log.error("Error while reading " + Constants.WEB_XML, e);
 			throw new ServletException(e);

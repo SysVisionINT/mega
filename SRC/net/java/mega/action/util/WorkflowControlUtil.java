@@ -27,21 +27,12 @@ import net.java.sjtools.util.TextUtil;
 
 public class WorkflowControlUtil {
 	public static final String WORKFLOW_CONTROL_FIELD = "_WRK_FLW_CNTRL_";
-	public static final String WORKFLOW_EVENT_FIELD = "_WRK_FLW_NVT_CNTRL_";
 	public static final String WORKFLOW_CONTROL = WorkflowControl.class.getName();
 	public static final String WORKFLOW_CONTROL_SAME_REQUEST = "_WRK_FLW_CNTRL_SM_RQST_";
 
 	public static void markAsSameRequest(HttpServletRequest request) {
 		WorkflowControl control = getWorkflowControl(request);
 		request.setAttribute(WORKFLOW_CONTROL_SAME_REQUEST, String.valueOf(control.getCurrentToken()));
-	}
-	
-	public static boolean isEventRequest(HttpServletRequest request) {
-		if (!TextUtil.isEmptyString(request.getParameter(WORKFLOW_EVENT_FIELD))) {
-			return true;
-		} else {
-			return false;
-		}
 	}
 
 	public static boolean isTheSameRequest(HttpServletRequest request) {
@@ -54,6 +45,12 @@ public class WorkflowControlUtil {
 			return String.valueOf(control.getCurrentToken()).equals(rid);
 		}
 	}
+	
+	public static boolean wasParameterSuplied(RequestParameters parameters) {
+		String userToken = getUserToken(parameters);
+
+		return !TextUtil.isEmptyString(userToken);
+	}	
 
 	public static WorkflowControl getWorkflowControl(HttpServletRequest request) {
 		HttpSession session = request.getSession(true);
