@@ -2,7 +2,7 @@
  *  MEGA Web Framework
  *  ------------------
  *
- *  Copyright 2006 SysVision - Consultadoria e Desenvolvimento em Sistemas de Informática, Lda.
+ *  Copyright 2006 SysVision - Consultadoria e Desenvolvimento em Sistemas de Informï¿½tica, Lda.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ public class OptionContextUtil {
 			root = new OptionContextEntry((String) pathParts.get(0));
 		}
 
-		OptionContextEntry old = null;
+		OptionContextEntry last = null;
 		OptionContextEntry temp = root;
 
 		for (int i = 0; i < pathParts.size() - 1; i++) {
@@ -63,28 +63,28 @@ public class OptionContextUtil {
 
 				temp = new OptionContextEntry((String) pathParts.get(i));
 
-				if (old != null) {
-					old.setNext(temp);
+				if (last != null) {
+					last.setNext(temp);
 				}
 
-				old = temp;
+				last = temp;
 				temp = null;
 			} else {
-				old = temp;
-				temp = old.getNext();
+				last = temp;
+				temp = last.getNext();
 			}
 		}
 
-		old.setNext(null);
+		last.setNext(null);
 		// Identico ao UPDATE - FIM
 		
 		String actionName = (String) pathParts.get(pathParts.size() - 1);
-		old.put(actionName, action);
+		last.put(actionName, action);
 
-		setRootOptionContextEntry(session, root);
+		setRootOptionContextEntry(session, last);
 
 		if (log.isDebugEnabled()) {
-			log.debug(actionName + " added to " + old.getKey());
+			log.debug(actionName + " added to " + last.getKey());
 		}
 	}
 
@@ -97,6 +97,18 @@ public class OptionContextUtil {
 		List pathParts = getPathParts(actionPath);
 
 		if (root == null || pathParts == null || pathParts.size() == 1) {
+			if (log.isDebugEnabled()) {
+				if (root == null) {
+					log.debug("root == null");
+				}
+				
+				if (pathParts == null) {
+					log.debug("pathParts == null");
+				} else if(pathParts.size() == 1) {
+					log.debug("pathParts.size() == 1");
+				}
+			}
+			
 			return null;
 		}
 
@@ -108,6 +120,14 @@ public class OptionContextUtil {
 				old = temp;
 				temp = old.getNext();
 			} else {
+				if (log.isDebugEnabled()) {
+					if (temp == null) {
+						log.debug("temp == null");
+					} else if (!temp.getKey().equals(pathParts.get(i))) {
+						log.debug(temp.getKey() + " != " + pathParts.get(i));
+					}
+				}
+				
 				return null;
 			}
 		}
@@ -175,7 +195,7 @@ public class OptionContextUtil {
 			root = new OptionContextEntry((String) pathParts.get(0));
 		}
 
-		OptionContextEntry old = null;
+		OptionContextEntry last = null;
 		OptionContextEntry temp = root;
 
 		for (int i = 0; i < pathParts.size() - 1; i++) {
@@ -186,19 +206,19 @@ public class OptionContextUtil {
 
 				temp = new OptionContextEntry((String) pathParts.get(i));
 
-				if (old != null) {
-					old.setNext(temp);
+				if (last != null) {
+					last.setNext(temp);
 				}
 
-				old = temp;
+				last = temp;
 				temp = null;
 			} else {
-				old = temp;
-				temp = old.getNext();
+				last = temp;
+				temp = last.getNext();
 			}
 		}
 
-		old.setNext(null);
+		last.setNext(null);
 		// Identico ao STORE - FIM
 
 		setRootOptionContextEntry(session, root);
