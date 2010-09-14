@@ -2,7 +2,7 @@
 <taglib>
 
 	<tlib-version>1.0</tlib-version>
-	<jsp-version>1.2</jsp-version>
+	<jsp-version>2.0</jsp-version>
 	<short-name>action</short-name>
 	<uri>http://mega.dev.java.net/tags/action</uri>
 	<display-name>MEGA Action TagLib</display-name>
@@ -15,7 +15,7 @@
 		<attribute>
 			<name>key</name>
 			<required>true</required>
-			<rtexprvalue>false</rtexprvalue>
+			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
 			<name>filter</name>
@@ -31,12 +31,12 @@
 		<attribute>
 			<name>action</name>
 			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
+			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
 			<name>method</name>
 			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
+			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>
 
@@ -47,7 +47,7 @@
 		<attribute>
 			<name>file</name>
 			<required>true</required>
-			<rtexprvalue>false</rtexprvalue>
+			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>
 
@@ -58,17 +58,17 @@
 		<attribute>
 			<name>name</name>
 			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
+			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
 			<name>property</name>
 			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
+			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
 			<name>format</name>
 			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
+			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
 			<name>filter</name>
@@ -78,7 +78,7 @@
 		<attribute>
 			<name>default</name>
 			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
+			<rtexprvalue>true</rtexprvalue>
 		</attribute>		
 	</tag>
 
@@ -89,7 +89,7 @@
 		<attribute>
 			<name>key</name>
 			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
+			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
 			<name>all</name>
@@ -110,7 +110,7 @@
 		<attribute>
 			<name>key</name>
 			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
+			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
 			<name>all</name>

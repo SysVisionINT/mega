@@ -2,7 +2,7 @@
 <taglib>
 
 	<tlib-version>1.0</tlib-version>
-	<jsp-version>1.2</jsp-version>
+	<jsp-version>2.0</jsp-version>
 	<short-name>layout</short-name>
 	<uri>http://mega.dev.java.net/tags/layout</uri>
 	<display-name>MEGA Layout TagLib</display-name>
