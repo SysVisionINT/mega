@@ -2,7 +2,7 @@
 <taglib>
 
 	<tlib-version>1.0</tlib-version>
-	<jsp-version>1.2</jsp-version>
+	<jsp-version>2.0</jsp-version>
 	<short-name>tag</short-name>
 	<uri>http://mega.dev.java.net/tags/tag</uri>
 	<display-name>MEGA Tag TagLib</display-name>
@@ -56,12 +56,12 @@
 		<attribute>
 			<name>action</name>
 			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
+			<rtexprvalue>true</rtexprvalue>
 		</attribute>									
 		<attribute>
 			<name>method</name>
 			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
+			<rtexprvalue>true</rtexprvalue>
 		</attribute>			
 		<attribute>
 			<name>useWorkflowControl</name>
@@ -130,7 +130,7 @@
 		<attribute>
 			<name>property</name>
 			<required>true</required>
-			<rtexprvalue>false</rtexprvalue>
+			<rtexprvalue>true</rtexprvalue>
 		</attribute>													
 	</tag>	
 	
@@ -161,7 +161,7 @@
 		<attribute>
 			<name>property</name>
 			<required>true</required>
-			<rtexprvalue>false</rtexprvalue>
+			<rtexprvalue>true</rtexprvalue>
 		</attribute>	
 		<attribute>
 			<name>size</name>
@@ -187,12 +187,12 @@
 		<attribute>
 			<name>name</name>
 			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
+			<rtexprvalue>true</rtexprvalue>
 		</attribute>									
 		<attribute>
 			<name>property</name>
 			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
+			<rtexprvalue>true</rtexprvalue>
 		</attribute>	
 		<attribute>
 			<name>value</name>
@@ -233,7 +233,7 @@
 		<attribute>
 			<name>property</name>
 			<required>true</required>
-			<rtexprvalue>false</rtexprvalue>
+			<rtexprvalue>true</rtexprvalue>
 		</attribute>	
 		<attribute>
 			<name>size</name>
@@ -274,7 +274,7 @@
 		<attribute>
 			<name>property</name>
 			<required>true</required>
-			<rtexprvalue>false</rtexprvalue>
+			<rtexprvalue>true</rtexprvalue>
 		</attribute>			
 	</tag>		
 	
@@ -305,7 +305,7 @@
 		<attribute>
 			<name>property</name>
 			<required>true</required>
-			<rtexprvalue>false</rtexprvalue>
+			<rtexprvalue>true</rtexprvalue>
 		</attribute>	
 		<attribute>
 			<name>size</name>
@@ -346,7 +346,7 @@
 		<attribute>
 			<name>property</name>
 			<required>true</required>
-			<rtexprvalue>false</rtexprvalue>
+			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>		
 	
@@ -377,7 +377,7 @@
 		<attribute>
 			<name>property</name>
 			<required>true</required>
-			<rtexprvalue>false</rtexprvalue>
+			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
 			<name>size</name>
@@ -413,7 +413,7 @@
 		<attribute>
 			<name>property</name>
 			<required>true</required>
-			<rtexprvalue>false</rtexprvalue>
+			<rtexprvalue>true</rtexprvalue>
 		</attribute>	
 	</tag>		
 	
@@ -444,7 +444,7 @@
 		<attribute>
 			<name>method</name>
 			<required>true</required>
-			<rtexprvalue>false</rtexprvalue>
+			<rtexprvalue>true</rtexprvalue>
 		</attribute>	
 	</tag>			
 	
@@ -470,7 +470,7 @@
 		<attribute>
 			<name>method</name>
 			<required>true</required>
-			<rtexprvalue>false</rtexprvalue>
+			<rtexprvalue>true</rtexprvalue>
 		</attribute>	
 	</tag>		
 	
@@ -501,7 +501,7 @@
 		<attribute>
 			<name>method</name>
 			<required>true</required>
-			<rtexprvalue>false</rtexprvalue>
+			<rtexprvalue>true</rtexprvalue>
 		</attribute>	
 	</tag>							
 	
@@ -532,7 +532,7 @@
 		<attribute>
 			<name>property</name>
 			<required>true</required>
-			<rtexprvalue>false</rtexprvalue>
+			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
 			<name>cols</name>
