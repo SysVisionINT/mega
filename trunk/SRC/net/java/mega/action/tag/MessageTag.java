@@ -28,8 +28,6 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
-import com.ibm.jsse.bu;
-
 import net.java.mega.action.MessageContainer;
 import net.java.mega.action.api.Message;
 import net.java.mega.action.util.ActionMessageUtil;
