@@ -1,15 +1,15 @@
 /*  ------------------
  *  MEGA Web Framework
  *  ------------------
- *  
+ *
  *  Copyright 2006 SysVision - Consultadoria e Desenvolvimento em Sistemas de Informática, Lda.
- *  
+ *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
- *  
+ *
  *  	http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,10 +28,12 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
+import com.ibm.jsse.bu;
+
 import net.java.mega.action.MessageContainer;
 import net.java.mega.action.api.Message;
-import net.java.mega.action.util.Constants;
 import net.java.mega.action.util.ActionMessageUtil;
+import net.java.mega.action.util.Constants;
 import net.java.mega.common.http.HTMLUtil;
 import net.java.mega.common.resource.LocaleUtil;
 import net.java.sjtools.logging.Log;
@@ -49,6 +51,7 @@ public class MessageTag extends TagSupport {
 	private static Log log = LogFactory.getLog(MessageTag.class);
 
 	private String key = null;
+	private String layout = null;
 	private boolean filter = true;
 	private boolean all = false;
 
@@ -57,10 +60,10 @@ public class MessageTag extends TagSupport {
 
 		Locale locale = LocaleUtil.getUserLocate(request);
 
-		String header = ActionMessageUtil.getMessage(HEADER, locale);
-		String prefix = ActionMessageUtil.getMessage(PREFIX, locale);
-		String suffix = ActionMessageUtil.getMessage(SUFFIX, locale);
-		String footer = ActionMessageUtil.getMessage(FOOTER, locale);
+		String header = ActionMessageUtil.getMessage(getProperty(HEADER), locale);
+		String prefix = ActionMessageUtil.getMessage(getProperty(PREFIX), locale);
+		String suffix = ActionMessageUtil.getMessage(getProperty(SUFFIX), locale);
+		String footer = ActionMessageUtil.getMessage(getProperty(FOOTER), locale);
 
 		if (header == null) {
 			header = "";
@@ -133,6 +136,19 @@ public class MessageTag extends TagSupport {
 		return EVAL_PAGE;
 	}
 
+	private String getProperty(String propertyName) {
+		if (getLayout() == null) {
+			return propertyName;
+		}
+
+		StringBuffer buffer = new StringBuffer();
+		buffer.append(getLayout());
+		buffer.append(".");
+		buffer.append(propertyName);
+
+		return buffer.toString();
+	}
+
 	public String getKey() {
 		return key;
 	}
@@ -155,5 +171,13 @@ public class MessageTag extends TagSupport {
 
 	public void setAll(boolean all) {
 		this.all = all;
+	}
+
+	public String getLayout() {
+		return layout;
+	}
+
+	public void setLayout(String layout) {
+		this.layout = layout;
 	}
 }
