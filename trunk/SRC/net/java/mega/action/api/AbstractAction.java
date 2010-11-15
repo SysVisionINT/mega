@@ -1,15 +1,15 @@
 /*  ------------------
  *  MEGA Web Framework
  *  ------------------
- *  
+ *
  *  Copyright 2006 SysVision - Consultadoria e Desenvolvimento em Sistemas de Informática, Lda.
- *  
+ *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
- *  
+ *
  *  	http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -40,10 +40,10 @@ import net.java.sjtools.util.TextUtil;
 
 public abstract class AbstractAction implements Action, Serializable {
 	private static final long serialVersionUID = 1502850121248385461L;
-	
+
 	private transient RequestProcessor requestProcessor = null;
 	private Properties config = null;
-	
+
 	public void workflowError() throws WorkflowError {
 		throw new WorkflowError(this, getRequestToken());
 	}
@@ -63,17 +63,29 @@ public abstract class AbstractAction implements Action, Serializable {
 	public abstract void onLoad();
 
 	public void gotoAction(Class clazz) {
-		requestProcessor.gotoAction(clazz);
+		gotoAction(clazz, null);
+	}
+
+	public void gotoAction(Class clazz, Object obj) {
+		requestProcessor.gotoAction(clazz, obj);
 	}
 
 	public void gotoAction(Action action) {
-		action.setRequestProcessor(requestProcessor);
-		requestProcessor.gotoAction(action);
+		gotoAction(action, null);
 	}
-	
+
+	public void gotoAction(Action action, Object obj) {
+		action.setRequestProcessor(requestProcessor);
+		requestProcessor.gotoAction(action, obj);
+	}
+
 	public void gotoAction(String path) {
-		requestProcessor.gotoAction(path);
-	}	
+		gotoAction(path, null);
+	}
+
+	public void gotoAction(String path, Object obj) {
+		requestProcessor.gotoAction(path, obj);
+	}
 
 	public Action getAction(Class clazz) {
 		return requestProcessor.getActionInstance(clazz);
@@ -110,11 +122,11 @@ public abstract class AbstractAction implements Action, Serializable {
 	public void setLocale(Locale locale) {
 		LocaleUtil.setUserLocate(getHttpServletRequest(), locale);
 	}
-	
+
 	public void invalidateSession() {
 		requestProcessor.invalidateSession();
 	}
-	
+
 	public void removeSessionAction(Class clazz) {
 		requestProcessor.removeSessionAction(clazz);
 	}
@@ -122,23 +134,23 @@ public abstract class AbstractAction implements Action, Serializable {
 	public void removeSessionAction(Action action) {
 		requestProcessor.removeSessionAction(action);
 	}
-	
+
 	public void removeSessionAction(String path) {
 		requestProcessor.removeSessionAction(path);
-	}	
-	
+	}
+
 	public boolean containsMessage(Locale locale, String key) {
 		return !TextUtil.isEmptyString(ActionMessageUtil.getMessage(key, locale));
 	}
-	
+
 	public String getRequestToken() {
 		return WorkflowControlUtil.getUserToken(requestProcessor.getRequestMetaData().getParameters());
 	}
-	
+
 	public String getNextRequestToken() {
 		return WorkflowControlUtil.getCurrentToken(getHttpServletRequest());
 	}
-	
+
 	public ResponseProvider getDefaultResponseProvider() throws ActionException {
 		return ActionManager.getInstance().getResponseProvider(this);
 	}

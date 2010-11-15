@@ -170,9 +170,9 @@ public class RequestProcessor {
 		}
 	}
 
-	public void gotoAction(String path) {
+	public void gotoAction(String path, Object obj) {
 		if (log.isDebugEnabled()) {
-			log.debug("gotoAction(" + path + ")");
+			log.debug("gotoAction(" + path + ", ...)");
 		}
 
 		ActionConfig actionConfig = null;
@@ -184,25 +184,34 @@ public class RequestProcessor {
 			throw new ActionCreationException(path);
 		}
 
-		gotoAction(getActionInstance(actionConfig.getClazz()));
+		gotoAction(getActionInstance(actionConfig.getClazz()), obj);
 	}
 
-	public void gotoAction(Class clazz) {
+	public void gotoAction(Class clazz, Object obj) {
 		if (log.isDebugEnabled()) {
-			log.debug("gotoAction(" + clazz.getName() + ".class)");
+			log.debug("gotoAction(" + clazz.getName() + ".class, ...)");
 		}
 
-		gotoAction(getActionInstance(clazz));
+		gotoAction(getActionInstance(clazz), null);
 	}
 
-	public void gotoAction(Action action) {
+	public void gotoAction(Action action, Object obj) {
 		if (log.isDebugEnabled()) {
-			log.debug("gotoAction(" + action.getClass().getName() + ")");
+			log.debug("gotoAction(" + action.getClass().getName() + ", ...)");
 		}
 
 		currentResponse.setAction(action);
 
-		execute(action, MethodConstants.ON_LOAD, new Object[0]);
+		Object [] args = null;
+
+		if (obj == null) {
+			args = new Object[0];
+		} else {
+			args = new Object[1];
+			args[0] = obj;
+		}
+
+		execute(action, MethodConstants.ON_LOAD, args);
 	}
 
 	public Action getActionInstance(Class clazz) {
@@ -573,7 +582,7 @@ public class RequestProcessor {
 			log.debug("execute(" + action.getClass().getName() + ", " + methodName + ", [" + TextUtil.toString(parameters) + "])");
 		}
 
-		if (methodName.equals(MethodConstants.ON_LOAD)) {
+		if (methodName.equals(MethodConstants.ON_LOAD) && parameters.length == 0) {
 			action.onLoad();
 		} else {
 			BeanUtil beanUtil = new BeanUtil(action, MegaCache.getInstance());
