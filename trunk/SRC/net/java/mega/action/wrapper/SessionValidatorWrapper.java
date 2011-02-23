@@ -21,26 +21,26 @@ package net.java.mega.action.wrapper;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.java.mega.action.ActionManager;
 import net.java.mega.action.RequestMetaData;
 import net.java.mega.action.ResponseMetaData;
 import net.java.mega.action.api.AbstractWrapper;
-import net.java.mega.action.output.Forward;
-import net.java.mega.action.util.URLUtil;
+import net.java.mega.action.util.Constants;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
 
 public class SessionValidatorWrapper extends AbstractWrapper {
+
 	private static final long serialVersionUID = 3799931686999152093L;
-	
+
 	private static Log log = LogFactory.getLog(SessionValidatorWrapper.class);
 
-	public ResponseMetaData execute(HttpServletRequest request, HttpServletResponse response,
-			RequestMetaData requestMetaData) throws Exception {
-		
+	public ResponseMetaData execute(HttpServletRequest request, HttpServletResponse response, RequestMetaData requestMetaData) throws Exception {
+
 		if (log.isDebugEnabled()) {
 			log.debug("execute(" + requestMetaData.getPath() + ")");
 		}
-		
+
 		String forwardURL = getProperty("forward-url");
 
 		if (sessionObjectExists(request) || requestMetaData.getPath().equals(forwardURL)) {
@@ -49,13 +49,10 @@ public class SessionValidatorWrapper extends AbstractWrapper {
 			if (log.isDebugEnabled()) {
 				log.debug(requestMetaData.getPath() + " -> " + forwardURL);
 			}
-			
-			ResponseMetaData responseMetaData = new ResponseMetaData();
-			URLUtil url = new URLUtil(request, response);
-			
-			responseMetaData.setResponseProvider(new Forward(url.getForwardURL(forwardURL, null)));
-			
-			return responseMetaData;
+
+			RequestMetaData forward = ActionManager.getInstance().getRequestMetaData(forwardURL, Constants.HTTP_GET, requestMetaData.getParameters());
+
+			return executeNext(request, response, forward);
 		}
 	}
 
