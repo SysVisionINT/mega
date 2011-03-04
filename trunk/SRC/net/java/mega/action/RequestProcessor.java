@@ -53,6 +53,7 @@ import net.java.mega.action.model.EmptyFormFile;
 import net.java.mega.action.util.CheckBoxUtil;
 import net.java.mega.action.util.Constants;
 import net.java.mega.action.util.MethodConstants;
+import net.java.mega.action.util.MultiCheckBoxUtil;
 import net.java.mega.action.util.OptionContextUtil;
 import net.java.mega.action.util.WorkflowControlUtil;
 import net.java.mega.common.util.MegaCache;
@@ -432,6 +433,18 @@ public class RequestProcessor {
 				if (parameters.get(attributeName) != null) {
 					continue;
 				}
+			}
+
+			if (MultiCheckBoxUtil.isHiddenMultiCheckBox(attributeName)) {
+				attributeName = MultiCheckBoxUtil.getPropertyNameFromHidden(attributeName);
+
+				if (parameters.get(attributeName) == null) {
+					String [] zeroValues = new String [0];
+
+					setProperty(action, attributeName, zeroValues);
+				}
+
+				continue;
 			}
 
 			setProperty(action, attributeName, parameters.get(attributeValue));
