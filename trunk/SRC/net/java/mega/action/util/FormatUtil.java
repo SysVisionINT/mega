@@ -72,7 +72,7 @@ public class FormatUtil {
 				}
 
 				if (formatString != null) {
-					formater = NumberFormat.getNumberInstance();
+					formater = NumberFormat.getNumberInstance(locale);
 
 					((DecimalFormat) formater).applyLocalizedPattern(formatString);
 				}
@@ -88,7 +88,7 @@ public class FormatUtil {
 				}
 
 				if (formatString != null) {
-					formater = new SimpleDateFormat(formatString);
+					formater = new SimpleDateFormat(formatString, locale);
 				}
 			}
 
