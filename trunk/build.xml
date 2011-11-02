@@ -27,7 +27,7 @@
 					<attribute name="Implementation-Title" value="MEGA Web Framework - Layout"/>
 					<attribute name="Implementation-Version" value="${layout.version}"/>
 					<attribute name="Implementation-Vendor" value="SysVision - Consultadoria e Desenvolvimento em Sistemas de Informatica, Lda"/>
-					<attribute name="Implementation-URL" value="https://mega.dev.java.net/"/>
+					<attribute name="Implementation-URL" value="http://java.net/projects/mega"/>
 					<attribute name="Implementation-License" value="Apache Licence, Version 2"/>
 				</section>
 			</manifest>
@@ -47,7 +47,7 @@
 					<attribute name="Implementation-Title" value="MEGA Web Framework - Action"/>
 					<attribute name="Implementation-Version" value="${action.version}"/>
 					<attribute name="Implementation-Vendor" value="SysVision - Consultadoria e Desenvolvimento em Sistemas de Informatica, Lda"/>
-					<attribute name="Implementation-URL" value="https://mega.dev.java.net/"/>
+					<attribute name="Implementation-URL" value="http://java.net/projects/mega"/>
 					<attribute name="Implementation-License" value="Apache Licence, Version 2"/>
 				</section>
 			</manifest>
@@ -67,7 +67,7 @@
 					<attribute name="Implementation-Title" value="MEGA Web Framework - Tags"/>
 					<attribute name="Implementation-Version" value="${tags.version}"/>
 					<attribute name="Implementation-Vendor" value="SysVision - Consultadoria e Desenvolvimento em Sistemas de Informatica, Lda"/>
-					<attribute name="Implementation-URL" value="https://mega.dev.java.net/"/>
+					<attribute name="Implementation-URL" value="http://java.net/projects/mega"/>
 					<attribute name="Implementation-License" value="Apache Licence, Version 2"/>
 				</section>
 			</manifest>
@@ -84,7 +84,7 @@
 					<attribute name="Implementation-Title" value="MEGA Web Framework - Common"/>
 					<attribute name="Implementation-Version" value="${common.version}"/>
 					<attribute name="Implementation-Vendor" value="SysVision - Consultadoria e Desenvolvimento em Sistemas de Informatica, Lda"/>
-					<attribute name="Implementation-URL" value="https://mega.dev.java.net/"/>
+					<attribute name="Implementation-URL" value="http://java.net/projects/mega"/>
 					<attribute name="Implementation-License" value="Apache Licence, Version 2"/>
 				</section>
 			</manifest>
