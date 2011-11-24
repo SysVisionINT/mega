@@ -203,7 +203,7 @@ public class RequestProcessor {
 
 		currentResponse.setAction(action);
 
-		Object [] args = null;
+		Object[] args = null;
 
 		if (obj == null) {
 			args = new Object[0];
@@ -236,15 +236,12 @@ public class RequestProcessor {
 				throw new RuntimeException(e);
 			}
 
-			if (action != null) {
-				action.setRequestProcessor(this);
-			} else {
+			if (action == null) {
 				action = (Action) getHttpSession().getAttribute(Constants.CURRENT_ACTION);
 
 				if (action == null || !action.getClass().equals(clazz)) {
 					try {
 						action = (Action) clazz.newInstance();
-						action.setRequestProcessor(this);
 
 						ActionConfig actionConfig = ActionManager.getInstance().getActionConfig(clazz);
 
@@ -255,8 +252,6 @@ public class RequestProcessor {
 						log.error("Error while creating instance of " + clazz.getName(), e);
 						throw new ActionCreationException(clazz);
 					}
-				} else {
-					action.setRequestProcessor(this);
 				}
 			}
 
@@ -439,7 +434,7 @@ public class RequestProcessor {
 				attributeName = MultiCheckBoxUtil.getPropertyNameFromHidden(attributeName);
 
 				if (parameters.get(attributeName) == null) {
-					String [] zeroValues = new String [0];
+					String[] zeroValues = new String[0];
 
 					setProperty(action, attributeName, zeroValues);
 				}
