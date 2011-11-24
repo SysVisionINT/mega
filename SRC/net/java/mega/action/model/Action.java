@@ -21,12 +21,9 @@ package net.java.mega.action.model;
 import java.io.Serializable;
 import java.util.Properties;
 
-import net.java.mega.action.RequestProcessor;
 import net.java.mega.action.error.WorkflowError;
 
-
 public interface Action extends Serializable {
-	public void setRequestProcessor(RequestProcessor rp);
 	public void setProperties(Properties config);
 	public void workflowError() throws WorkflowError;
 	public void onLoad();

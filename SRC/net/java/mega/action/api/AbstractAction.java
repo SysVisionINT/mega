@@ -34,6 +34,7 @@ import net.java.mega.action.error.ActionException;
 import net.java.mega.action.error.WorkflowError;
 import net.java.mega.action.model.Action;
 import net.java.mega.action.util.ActionMessageUtil;
+import net.java.mega.action.util.RequestProcessorUtil;
 import net.java.mega.action.util.WorkflowControlUtil;
 import net.java.mega.common.resource.LocaleUtil;
 import net.java.sjtools.util.TextUtil;
@@ -41,15 +42,10 @@ import net.java.sjtools.util.TextUtil;
 public abstract class AbstractAction implements Action, Serializable {
 	private static final long serialVersionUID = 1502850121248385461L;
 
-	private transient RequestProcessor requestProcessor = null;
 	private Properties config = null;
 
 	public void workflowError() throws WorkflowError {
 		throw new WorkflowError(this, getRequestToken());
-	}
-
-	public void setRequestProcessor(RequestProcessor rp) {
-		requestProcessor = rp;
 	}
 
 	public void setProperties(Properties config) {
@@ -67,7 +63,7 @@ public abstract class AbstractAction implements Action, Serializable {
 	}
 
 	public void gotoAction(Class clazz, Object obj) {
-		requestProcessor.gotoAction(clazz, obj);
+		getRequestProcessor().gotoAction(clazz, obj);
 	}
 
 	public void gotoAction(Action action) {
@@ -75,8 +71,7 @@ public abstract class AbstractAction implements Action, Serializable {
 	}
 
 	public void gotoAction(Action action, Object obj) {
-		action.setRequestProcessor(requestProcessor);
-		requestProcessor.gotoAction(action, obj);
+		getRequestProcessor().gotoAction(action, obj);
 	}
 
 	public void gotoAction(String path) {
@@ -84,35 +79,35 @@ public abstract class AbstractAction implements Action, Serializable {
 	}
 
 	public void gotoAction(String path, Object obj) {
-		requestProcessor.gotoAction(path, obj);
+		getRequestProcessor().gotoAction(path, obj);
 	}
 
 	public Action getAction(Class clazz) {
-		return requestProcessor.getActionInstance(clazz);
+		return getRequestProcessor().getActionInstance(clazz);
 	}
 
 	public void addMessage(Message message) {
-		requestProcessor.addMessage(message);
+		getRequestProcessor().addMessage(message);
 	}
 
 	public void addMessage(String key, Message message) {
-		requestProcessor.addMessage(key, message);
+		getRequestProcessor().addMessage(key, message);
 	}
 
 	public HttpServletRequest getHttpServletRequest() {
-		return requestProcessor.getHttpServletRequest();
+		return getRequestProcessor().getHttpServletRequest();
 	}
 
 	public HttpServletResponse getHttpServletResponse() {
-		return requestProcessor.getHttpServletResponse();
+		return getRequestProcessor().getHttpServletResponse();
 	}
 
 	public HttpSession getHttpSession() {
-		return requestProcessor.getHttpSession();
+		return getRequestProcessor().getHttpSession();
 	}
 
 	public ServletContext getServletContext() {
-		return requestProcessor.getServletContext();
+		return getRequestProcessor().getServletContext();
 	}
 
 	public Locale getLocale() {
@@ -124,19 +119,19 @@ public abstract class AbstractAction implements Action, Serializable {
 	}
 
 	public void invalidateSession() {
-		requestProcessor.invalidateSession();
+		getRequestProcessor().invalidateSession();
 	}
 
 	public void removeSessionAction(Class clazz) {
-		requestProcessor.removeSessionAction(clazz);
+		getRequestProcessor().removeSessionAction(clazz);
 	}
 
 	public void removeSessionAction(Action action) {
-		requestProcessor.removeSessionAction(action);
+		getRequestProcessor().removeSessionAction(action);
 	}
 
 	public void removeSessionAction(String path) {
-		requestProcessor.removeSessionAction(path);
+		getRequestProcessor().removeSessionAction(path);
 	}
 
 	public boolean containsMessage(Locale locale, String key) {
@@ -144,7 +139,7 @@ public abstract class AbstractAction implements Action, Serializable {
 	}
 
 	public String getRequestToken() {
-		return WorkflowControlUtil.getUserToken(requestProcessor.getRequestMetaData().getParameters());
+		return WorkflowControlUtil.getUserToken(getRequestProcessor().getRequestMetaData().getParameters());
 	}
 
 	public String getNextRequestToken() {
@@ -153,5 +148,9 @@ public abstract class AbstractAction implements Action, Serializable {
 
 	public ResponseProvider getDefaultResponseProvider() throws ActionException {
 		return ActionManager.getInstance().getResponseProvider(this);
+	}
+
+	private RequestProcessor getRequestProcessor() {
+		return RequestProcessorUtil.getCurrentRequestProcessor();
 	}
 }

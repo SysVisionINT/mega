@@ -28,10 +28,12 @@ import net.java.mega.action.RequestMetaData;
 import net.java.mega.action.RequestProcessor;
 import net.java.mega.action.ResponseMetaData;
 import net.java.mega.action.model.ActionWrapper;
+import net.java.mega.action.util.RequestProcessorUtil;
 
 public abstract class AbstractWrapper implements ActionWrapper {
+
 	private static final long serialVersionUID = -5569831895550838253L;
-	
+
 	private ActionWrapper next = null;
 	private Properties config = new Properties();
 
@@ -47,11 +49,9 @@ public abstract class AbstractWrapper implements ActionWrapper {
 		next = actionWrapper;
 	}
 
-	public ResponseMetaData executeNext(HttpServletRequest request, HttpServletResponse response,
-			RequestMetaData requestMetaData) throws Exception {
-
+	public ResponseMetaData executeNext(HttpServletRequest request, HttpServletResponse response, RequestMetaData requestMetaData) throws Exception {
 		if (next == null) {
-			RequestProcessor processor = new RequestProcessor(request, response, requestMetaData);
+			RequestProcessor processor = RequestProcessorUtil.createRequestProcessor(request, response, requestMetaData);
 
 			return processor.process();
 		}
@@ -59,6 +59,5 @@ public abstract class AbstractWrapper implements ActionWrapper {
 		return next.execute(request, response, requestMetaData);
 	}
 
-	public abstract ResponseMetaData execute(HttpServletRequest request, HttpServletResponse response,
-			RequestMetaData requestMetaData) throws Exception;
+	public abstract ResponseMetaData execute(HttpServletRequest request, HttpServletResponse response, RequestMetaData requestMetaData) throws Exception;
 }
