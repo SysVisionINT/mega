@@ -193,7 +193,7 @@ public class RequestProcessor {
 			log.debug("gotoAction(" + clazz.getName() + ".class, ...)");
 		}
 
-		gotoAction(getActionInstance(clazz), null);
+		gotoAction(getActionInstance(clazz), obj);
 	}
 
 	public void gotoAction(Action action, Object obj) {
