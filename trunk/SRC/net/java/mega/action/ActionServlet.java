@@ -94,6 +94,7 @@ public class ActionServlet extends HttpServlet {
 				responseProvider = actionManager.getResponseProvider(e);
 
 				if (responseProvider == null) {
+					WorkflowControlUtil.markAsSameRequest(request);
 					throw e;
 				} else {
 					if (log.isDebugEnabled()) {
