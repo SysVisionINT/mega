@@ -25,6 +25,7 @@ import net.java.mega.action.util.MethodConstants;
 
 public class RequestMetaData {
 	private ActionConfig actionConfig = null;
+	private String eventName = null;
 	private String path = null;
 	private String token = null;
 	private String methodName = MethodConstants.ON_LOAD;
@@ -77,5 +78,17 @@ public class RequestMetaData {
 
 	public void setParameters(RequestParameters parameters) {
 		this.parameters = parameters;
+	}
+	
+	public String getEventName() {
+		return eventName;
+	}
+
+	public void setEventName(String eventName) {
+		this.eventName = eventName;
+	}
+
+	public boolean isEvent() {
+		return getEventName() != null;
 	}
 }

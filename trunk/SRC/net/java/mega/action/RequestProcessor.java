@@ -40,6 +40,8 @@ import net.java.mega.action.api.Message;
 import net.java.mega.action.api.OptionContextObject;
 import net.java.mega.action.api.SessionObject;
 import net.java.mega.action.api.Validator;
+import net.java.mega.action.api.events.EventChangesContainer;
+import net.java.mega.action.api.events.EventSupport;
 import net.java.mega.action.error.ActionAlreadyInUseException;
 import net.java.mega.action.error.ActionCreationException;
 import net.java.mega.action.error.ActionException;
@@ -50,6 +52,7 @@ import net.java.mega.action.error.PropertySetError;
 import net.java.mega.action.model.Action;
 import net.java.mega.action.model.ActionConfig;
 import net.java.mega.action.model.EmptyFormFile;
+import net.java.mega.action.output.EventOutput;
 import net.java.mega.action.util.CheckBoxUtil;
 import net.java.mega.action.util.Constants;
 import net.java.mega.action.util.MethodConstants;
@@ -270,6 +273,18 @@ public class RequestProcessor {
 
 		currentResponse.setAction(action);
 
+		if (getRequestMetaData().isEvent()) {			
+			if (action instanceof EventSupport) {
+				EventChangesContainer container = new EventChangesContainer();
+				
+				((EventSupport)action).processEvent(getRequestMetaData().getEventName(), container, getRequestMetaData().getParameters());
+				
+				currentResponse.setResponseProvider(new EventOutput(container));
+			} else {
+				log.error("Class " + action.getClass().getName() + " doesn't implements EventSupport");
+				throw new MethodExecuteError(action.getClass().getName(), "processEvent");
+			}
+		} else {
 		if (isWorkflowOK(getRequestMetaData())) {
 			if (getRequestMetaData().getDoMethod().equals(Constants.HTTP_POST)) {
 				processPOST(action);
@@ -321,7 +336,7 @@ public class RequestProcessor {
 			currentResponse.setResponseProvider(((CustomResponseProvider) currentResponse.getAction()).getResponseProvider());
 		} else {
 			currentResponse.setResponseProvider(ActionManager.getInstance().getResponseProvider(currentResponse.getAction()));
-		}
+		}}
 
 		return currentResponse;
 	}

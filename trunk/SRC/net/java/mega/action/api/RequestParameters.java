@@ -53,4 +53,8 @@ public class RequestParameters implements Serializable {
 	public String[] getParameterValues(String name) {
 		return (String[]) parameters.get(name);
 	}
+	
+	public void removeParameter(String name) {
+		parameters.remove(name);
+	}
 }

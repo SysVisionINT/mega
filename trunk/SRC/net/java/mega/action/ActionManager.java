@@ -89,6 +89,12 @@ public class ActionManager {
 		requestMetaData.setActionConfig(getActionConfig(getActionPath(path)));
 		requestMetaData.setMethodName(getMethod(path));
 		requestMetaData.setDoMethod(doMethod);
+		
+		if (parameters.getParameter(Constants.MEGA_EVENT_NAME) != null) {
+			requestMetaData.setMethodName(parameters.getParameter(Constants.MEGA_EVENT_NAME));
+			parameters.removeParameter(Constants.MEGA_EVENT_NAME);
+		}
+		
 		requestMetaData.setParameters(parameters);
 
 		return requestMetaData;
