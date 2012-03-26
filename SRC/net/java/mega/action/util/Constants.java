@@ -47,4 +47,6 @@ public class Constants {
 	public static final String WEB_XML = "/WEB-INF/web.xml";
 
 	public static final String MEGA_FORM_ACTION = "_MG_FRM_ACTN_FLD_";
+	
+	public static final String MEGA_EVENT_NAME = "_MG_VNT_NM_";
 }

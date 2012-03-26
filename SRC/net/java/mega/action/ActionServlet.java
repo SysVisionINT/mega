@@ -79,7 +79,7 @@ public class ActionServlet extends HttpServlet {
 
 			ResponseMetaData responseMetaData = null;
 
-			if (!sameRequest && WorkflowControlUtil.wasParameterSuplied(parameters)) {
+			if (!sameRequest && WorkflowControlUtil.wasParameterSuplied(parameters) && !requestMetaData.isEvent()) {
 				requestMetaData.setToken(WorkflowControlUtil.getCurrentToken(request));
 				WorkflowControlUtil.generateToken(request);
 			}
