@@ -1,73 +1,65 @@
-function ajaxGET(path) {	
-	http_request = getXMLHTTPObject();
+function totalEncode(str){
+	var s = escape(trim(str));
+	
+	s = s.replace(/+/g, "+");
+	s = s.replace(/@/g, "@");
+	s = s.replace(///g, "/");
+	s = s.replace(/*/g, "*");
+	
+	return(s);
+}
 
-	if (!http_request) {
-		alert('ERROR: Cannot create an XMLHTTP instance');
-		return false;
+function ajaxPOST(path) {	
+	var params = "";
+	var i = 1;
+	
+	while (i < arguments.length) {
+		if (i > 1) {
+			params += "&";
+		}
+		
+		params += arguments[i] + "=";
+		params += totalEncode(arguments[i + 1]);
+		
+		i += 2;
 	}
-
-	http_request.onreadystatechange = function() {
-		if (http_request.readyState == 4) {
-			if (http_request.status == 200) {
-				processAjaxResponse(http_request.responseText);
-			} else {
-				alert('Server not respond!');
-			}
-		} else {}
+	
+	var xmlhttp = getXMLHTTPObject();
+	
+	http.open("POST", path, true);
+	
+	//Send the proper header information along with the request
+	xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	xmlhttp.setRequestHeader("Content-length", params.length);
+	xmlhttp.setRequestHeader("Connection", "close");
+	
+	xmlhttp.onreadystatechange=function() {
+		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+			processAjaxResponse(xmlhttp.responseXML);
+		}
 	}
-
-	http_request.open('GET', path, true);
-
-	http_request.send(null);
+	
+	xmlhttp.send(params);
 }
 
 function getXMLHTTPObject() {
-	var http_request;
+	var xmlhttp;
 
-	if (window.XMLHttpRequest) { // Mozilla, Safari,...
-		http_request = new XMLHttpRequest();
-		
-		if (http_request.overrideMimeType) {
-			http_request.overrideMimeType('text/xml');
-		}
-	} else if (window.ActiveXObject) { // IE
-		try {
-			http_request = new ActiveXObject("Msxml2.XMLHTTP");
-		} catch (e) {
-			try {
-				http_request = new ActiveXObject("Microsoft.XMLHTTP");
-			} catch (e) {}
-		}	
+	if (window.XMLHttpRequest) {
+	// code for IE7+, Firefox, Chrome, Opera, Safari
+	  xmlhttp = new XMLHttpRequest();
+	} else {
+	// code for IE6, IE5
+	  xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
 	}
 
-	return http_request;
+	return xmlhttp;
 }
 
-function processAjaxResponse( response ) {
-	var text = new String(response);
+function processAjaxResponse(response) {
+	var output = response.getElementsByTagName("EVENT-OUTPUT");
 	
-	var pos = text.indexOf("<mega-events");
-	var posIDIni = 0;
-	var posIDEnd = 0;
-	var posHTMLIni = 0;
-	var posHTMLEnd = 0;	
-	
-	var responseId = "";
-	var responseHTML = "";
-	
-	while (pos >= 0) {
-		posIDIni = text.indexOf("id=\"", pos);
-		posIDEnd = text.indexOf("\"", posIDIni + 4);
-		
-		responseId = text.substring(posIDIni + 4, posIDEnd);
-		
-		posHTMLIni = text.indexOf(">", pos);
-		posHTMLEnd = text.indexOf("</mega-events>", posHTMLIni);
-		
-		responseHTML = text.substring(posHTMLIni + 1, posHTMLEnd);
-		
-		document.getElementById(responseId).innerHTML = responseHTML;
-		
-		pos = text.indexOf("<mega-events", posHTMLEnd);
+	for (i = 0; i < output.length; i++) {
+	  txt=txt + x[i].childNodes[0].nodeValue + "<br />";
 	}
 }
