@@ -16,9 +16,32 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package net.java.mega.tags.model;
+package net.java.mega.tags.events;
 
-public interface AttributeContainer {
-	public void addAttribute(Attribute tag);
-	public String deleteAttribute(String name);
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.BodyTagSupport;
+import javax.servlet.jsp.tagext.Tag;
+
+public class EventArgTag extends BodyTagSupport {
+	private static final long serialVersionUID = -2635263555688921251L;
+	
+	private String name = null;
+	
+	public String getName() {
+		return name;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public int doEndTag() throws JspException {
+		Tag tag = findAncestorWithClass(this, EventTag.class);
+		
+		if (tag != null) {
+			((EventTag)tag).addEventArg(getName(), getBodyContent().getString().trim(), true);
+		}
+
+		return EVAL_PAGE;	
+	}
 }

@@ -1,65 +1,32 @@
-function totalEncode(str){
-	var s = escape(trim(str));
-	
-	s = s.replace(/+/g, "+");
-	s = s.replace(/@/g, "@");
-	s = s.replace(///g, "/");
-	s = s.replace(/*/g, "*");
-	
-	return(s);
+function getValue(input) {
+	return $F(input);
 }
 
-function ajaxPOST(path) {	
-	var params = "";
-	var i = 1;
+function getInputValue(formID, inputName) {
+	var form = $(formID);
+	var input = form[inputName];
 	
-	while (i < arguments.length) {
-		if (i > 1) {
-			params += "&";
-		}
-		
-		params += arguments[i] + "=";
-		params += totalEncode(arguments[i + 1]);
-		
-		i += 2;
-	}
-	
-	var xmlhttp = getXMLHTTPObject();
-	
-	http.open("POST", path, true);
-	
-	//Send the proper header information along with the request
-	xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	xmlhttp.setRequestHeader("Content-length", params.length);
-	xmlhttp.setRequestHeader("Connection", "close");
-	
-	xmlhttp.onreadystatechange=function() {
-		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-			processAjaxResponse(xmlhttp.responseXML);
-		}
-	}
-	
-	xmlhttp.send(params);
+	return getValue(input);
 }
 
-function getXMLHTTPObject() {
-	var xmlhttp;
-
-	if (window.XMLHttpRequest) {
-	// code for IE7+, Firefox, Chrome, Opera, Safari
-	  xmlhttp = new XMLHttpRequest();
-	} else {
-	// code for IE6, IE5
-	  xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-	}
-
-	return xmlhttp;
+function executeEvent(url, obj) {
+	new Ajax.Request(url, {
+		   parameters: obj,
+		   onSuccess: doResponse,
+		   onFailure: doError
+	});
 }
 
-function processAjaxResponse(response) {
-	var output = response.getElementsByTagName("EVENT-OUTPUT");
+function doResponse (transport) {
+	var json = transport.responseText.evalJSON(true);
 	
-	for (i = 0; i < output.length; i++) {
-	  txt=txt + x[i].childNodes[0].nodeValue + "<br />";
-	}
+	alert(json);
 }
+
+function doError (transport) {
+	alert(transport);
+}
+
+function innerHTML (obj) {
+	$(obj.id).update(obj.html);
+} 
