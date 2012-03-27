@@ -18,7 +18,30 @@
  */
 package net.java.mega.tags.model;
 
-public interface AttributeContainer {
-	public void addAttribute(Attribute tag);
-	public String deleteAttribute(String name);
+import java.io.Serializable;
+
+public class EventArg implements Serializable {
+	private static final long serialVersionUID = -2951392082855129886L;
+	
+	private String name = null;
+	private String value = null;
+	private boolean constant = true;
+	
+	public EventArg(String name, String value, boolean constant) {
+		this.name = name;
+		this.value = value;
+		this.constant = constant;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public String getValue() {
+		return value;
+	}
+	
+	public boolean isConstant() {
+		return constant;
+	}
 }
