@@ -81,27 +81,29 @@ public class ActionManager {
 		servletConfig = null;
 	}
 
-	public RequestMetaData getRequestMetaData(String path, String doMethod, RequestParameters parameters) throws ActionNotFound, ConfigurationError,
-			ActionAlreadyInUseException {
+	public RequestMetaData getRequestMetaData(String path, String doMethod, RequestParameters parameters) throws ActionNotFound, ConfigurationError, ActionAlreadyInUseException {
 		RequestMetaData requestMetaData = new RequestMetaData();
 
 		requestMetaData.setPath(path);
 		requestMetaData.setActionConfig(getActionConfig(getActionPath(path)));
 		requestMetaData.setMethodName(getMethod(path));
 		requestMetaData.setDoMethod(doMethod);
-		
+
 		if (parameters.getParameter(Constants.MEGA_EVENT_NAME) != null) {
-			requestMetaData.setMethodName(parameters.getParameter(Constants.MEGA_EVENT_NAME));
+			if (log.isDebugEnabled()) {
+				log.debug("Event name = " + parameters.getParameter(Constants.MEGA_EVENT_NAME));
+			}
+
+			requestMetaData.setEventName(parameters.getParameter(Constants.MEGA_EVENT_NAME));
 			parameters.removeParameter(Constants.MEGA_EVENT_NAME);
 		}
-		
+
 		requestMetaData.setParameters(parameters);
 
 		return requestMetaData;
 	}
 
-	public ActionConfig getActionConfig(String actionPath) throws ActionNotFound, ConfigurationError,
-			ActionAlreadyInUseException {
+	public ActionConfig getActionConfig(String actionPath) throws ActionNotFound, ConfigurationError, ActionAlreadyInUseException {
 		ActionConfig actionConfig = controllerConfig.getAction(actionPath);
 
 		if (actionConfig == null) {
@@ -115,8 +117,7 @@ public class ActionManager {
 		return actionConfig;
 	}
 
-	public ActionConfig getActionConfig(Class clazz) throws ActionAlreadyInUseException, ConfigurationError,
-			ActionNotFound {
+	public ActionConfig getActionConfig(Class clazz) throws ActionAlreadyInUseException, ConfigurationError, ActionNotFound {
 		ActionConfig actionConfig = controllerConfig.getAction(clazz);
 
 		if (actionConfig == null) {
@@ -126,8 +127,7 @@ public class ActionManager {
 		return actionConfig;
 	}
 
-	private ActionConfig createActionConfig(String path, Class clazz) throws ActionNotFound, ConfigurationError,
-			ActionAlreadyInUseException {
+	private ActionConfig createActionConfig(String path, Class clazz) throws ActionNotFound, ConfigurationError, ActionAlreadyInUseException {
 		ActionConfig actionConfig = new ActionConfig();
 
 		actionConfig.setName(path);
@@ -263,8 +263,7 @@ public class ActionManager {
 		return chain.getActionWrapper();
 	}
 
-	public ResponseProvider getResponseProvider(Action action) throws ConfigurationError, ActionNotFound,
-			ActionAlreadyInUseException {
+	public ResponseProvider getResponseProvider(Action action) throws ConfigurationError, ActionNotFound, ActionAlreadyInUseException {
 		ResponseProvider provider = null;
 
 		forwardLock.getReadLock();
@@ -298,11 +297,9 @@ public class ActionManager {
 		}
 
 		if (workflowControlActive == null) {
-			String wfControl = controllerConfig.getProperty(Constants.WORKFLOW_CONTROL_PROPERTY,
-					Constants.DEFAULT_WORKFLOW_CONTROL_PROPERTY_VALUE);
+			String wfControl = controllerConfig.getProperty(Constants.WORKFLOW_CONTROL_PROPERTY, Constants.DEFAULT_WORKFLOW_CONTROL_PROPERTY_VALUE);
 
-			workflowControlActive = new Boolean(Constants.DEFAULT_WORKFLOW_CONTROL_PROPERTY_VALUE.equals(wfControl
-					.toUpperCase()));
+			workflowControlActive = new Boolean(Constants.DEFAULT_WORKFLOW_CONTROL_PROPERTY_VALUE.equals(wfControl.toUpperCase()));
 		}
 
 		return workflowControlActive.booleanValue();
