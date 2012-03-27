@@ -18,9 +18,15 @@ function executeEvent(url, obj) {
 }
 
 function doResponse (transport) {
-	var json = transport.responseText.evalJSON(true);
+	var jArray = transport.responseText.evalJSON(true);
 	
-	alert(json);
+	for (var index = 0, len = jArray.length; index < len; ++index) {
+		var change = jArray[index];
+
+		var finalFunction = new Function("obj", change.functionName + "(obj)");
+		
+		finalFunction(change.data);
+	}
 }
 
 function doError (transport) {
