@@ -37,6 +37,7 @@ import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
 
 public class EventTag extends BodyTagSupport {
+
 	private static final long serialVersionUID = 8690811938831037093L;
 
 	private static Log log = LogFactory.getLog(EventTag.class);
@@ -63,24 +64,22 @@ public class EventTag extends BodyTagSupport {
 	}
 
 	public int doEndTag() throws JspException {
-		if (getBodyContent() != null && getBodyContent().getString() != null) {
-			Tag tag = findAncestorWithClass(this, AttributeContainer.class);
+		Tag tag = findAncestorWithClass(this, AttributeContainer.class);
 
-			if (tag != null) {
-				AttributeContainer attributeContainer = (AttributeContainer) tag;
+		if (tag != null) {
+			AttributeContainer attributeContainer = (AttributeContainer) tag;
 
-				StringBuffer buffer = new StringBuffer();
+			StringBuffer buffer = new StringBuffer();
 
-				String userTrigger = getUserTrigger(attributeContainer, getTrigger());
+			String userTrigger = getUserTrigger(attributeContainer, getTrigger());
 
-				if (userTrigger != null) {
-					buffer.append(userTrigger);
-				}
-
-				buffer.append(getJavascript());
-
-				attributeContainer.addAttribute(new Attribute(getTrigger(), buffer.toString()));
+			if (userTrigger != null) {
+				buffer.append(userTrigger);
 			}
+
+			buffer.append(getJavascript());
+
+			attributeContainer.addAttribute(new Attribute(getTrigger(), buffer.toString()));
 		}
 
 		return EVAL_PAGE;
@@ -117,25 +116,25 @@ public class EventTag extends BodyTagSupport {
 			buffer.append("'");
 			buffer.append(getName());
 			buffer.append("'");
-			
+
 			for (Iterator i = eventArgList.iterator(); i.hasNext();) {
 				EventArg arg = (EventArg) i.next();
-				
+
 				buffer.append(",");
 				buffer.append(arg.getName());
 				buffer.append(":");
-				
+
 				if (arg.isConstant()) {
 					buffer.append("'");
 				}
-				
+
 				buffer.append(arg.getValue());
-				
+
 				if (arg.isConstant()) {
 					buffer.append("'");
 				}
 			}
-			
+
 			buffer.append("})");
 		} catch (Exception e) {
 			log.error("Error while writing EVENT TAG", e);

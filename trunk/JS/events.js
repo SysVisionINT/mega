@@ -62,15 +62,15 @@ function updateOptions (obj) {
 }
 
 function updateChecks (obj) {
-	var elements = document.getElementByName(obj.name);
-	
-	for (var i = 0; i < elements.length; i++) {
-		elements[i].checked = false;
-		
-		for (var j = 0; j < object.values.length; j++) {
-			if (elements[i].value == object.values[j]) {
-				elements[i].checked = true;
-			}
-		}
-	}
+    var elements = document.getElementsByName(obj.name);
+    
+    for (var i = 0; i < elements.length; i++) {
+          elements[i].checked = false;
+          
+          for (var j = 0; j < obj.values.length; j++) {
+                if (elements[i].value == obj.values[j]) {
+                      elements[i].checked = true;
+                }
+          }
+    }
 }
