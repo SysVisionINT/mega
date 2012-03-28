@@ -24,7 +24,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.Tag;
 
-import net.java.mega.action.util.CheckBoxUtil;
 import net.java.mega.action.util.MultiCheckBoxUtil;
 import net.java.mega.tags.model.InputBaseTag;
 import net.java.sjtools.logging.Log;

@@ -1,56 +1,55 @@
 /*  ------------------
  *  MEGA Web Framework
  *  ------------------
- *  
+ *
  *  Copyright 2006 SysVision - Consultadoria e Desenvolvimento em Sistemas de Informática, Lda.
- *  
+ *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
- *  
+ *
  *  	http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package net.java.mega.tags.events;
+package net.java.mega.action.output.events;
 
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.BodyTagSupport;
-import javax.servlet.jsp.tagext.Tag;
+import java.util.Collection;
 
-public class EventArgTag extends BodyTagSupport {
-	private static final long serialVersionUID = -2635263555688921251L;
+import net.java.mega.action.api.events.EventChange;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
+public class UpdateChecks implements EventChange {
+	private static final long serialVersionUID = 1566754360415788898L;
 	
 	private String name = null;
-	private boolean constant = true;
+	private Collection values = null;
 	
-	public String getName() {
-		return name;
-	}
-	
-	public void setName(String name) {
+	public UpdateChecks(String name, Collection values) {
 		this.name = name;
-	}
-	
-	public boolean isConstant() {
-		return constant;
+		this.values = values;
 	}
 
-	public void setConstant(boolean constant) {
-		this.constant = constant;
+	public String getFunctionName() {
+		return "updateChecks";
 	}
 
-	public int doEndTag() throws JspException {
-		Tag tag = findAncestorWithClass(this, EventTag.class);
+	public JSONObject getJSONObject() {
+		JSONObject jsonObject = new JSONObject();
 		
-		if (tag != null) {
-			((EventTag)tag).addEventArg(getName(), getBodyContent().getString().trim(), isConstant());
-		}
-
-		return EVAL_PAGE;	
+		jsonObject.put("name", name);
+		
+		JSONArray jsonArray = new JSONArray();
+		jsonArray.addAll(values);
+		
+		jsonObject.put("values", jsonArray);
+		
+		return jsonObject;
 	}
 }
