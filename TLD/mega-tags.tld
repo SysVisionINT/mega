@@ -104,8 +104,8 @@
 	</tag>	
 	
 	<tag>
-		<name>event-arg</name>
-		<tag-class>net.java.mega.tags.events.EventArgTag</tag-class>
+		<name>event-arg-value</name>
+		<tag-class>net.java.mega.tags.events.EventValueArgTag</tag-class>
 		<body-content>JSP</body-content>
 		<attribute>
 			<name>name</name>
@@ -120,7 +120,7 @@
 	</tag>			
 	
 	<tag>
-		<name>event-input</name>
+		<name>event-arg-input</name>
 		<tag-class>net.java.mega.tags.events.EventInputArgTag</tag-class>
 		<body-content>empty</body-content>
 		<attribute>

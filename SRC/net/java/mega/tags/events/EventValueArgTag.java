@@ -22,7 +22,7 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 import javax.servlet.jsp.tagext.Tag;
 
-public class EventArgTag extends BodyTagSupport {
+public class EventValueArgTag extends BodyTagSupport {
 	private static final long serialVersionUID = -2635263555688921251L;
 	
 	private String name = null;
