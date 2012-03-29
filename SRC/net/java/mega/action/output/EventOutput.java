@@ -43,11 +43,11 @@ public class EventOutput implements ResponseProvider {
 
 		try {
 			response.setContentType("application/json");
-			response.setCharacterEncoding("ISO-8859-1");
+			response.setCharacterEncoding("UTF-8");
 			
 			PrintWriter writer = response.getWriter();
 			
-			writer.println(outputArray);
+			writer.println(outputArray.toJSONString());
 			
 			writer.flush();
 		} catch (Exception e) {

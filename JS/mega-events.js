@@ -35,7 +35,6 @@ function getInputValue(formID, inputName) {
 function executeEvent(url, obj) {
 	new Ajax.Request(url, 
 		{
-		   encoding: 'ISO-8859-1',
 		   parameters: obj,
 		   onSuccess: doResponse
 		}
