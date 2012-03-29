@@ -18,42 +18,16 @@
  */
 package net.java.mega.tags.events;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.BodyTagSupport;
 import javax.servlet.jsp.tagext.Tag;
 
-import net.java.mega.action.util.Constants;
-import net.java.mega.action.util.URLUtil;
 import net.java.mega.tags.model.Attribute;
 import net.java.mega.tags.model.AttributeContainer;
-import net.java.mega.tags.model.EventArg;
-import net.java.sjtools.logging.Log;
-import net.java.sjtools.logging.LogFactory;
 
-public class EventTag extends BodyTagSupport {
-
+public class EventTag extends net.java.mega.action.tag.events.EventTag {
 	private static final long serialVersionUID = 8690811938831037093L;
 
-	private static Log log = LogFactory.getLog(EventTag.class);
-
-	private List eventArgList = new ArrayList();
-
 	private String trigger = null;
-	private String name = null;
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
 
 	public String getTrigger() {
 		return trigger;
@@ -97,54 +71,5 @@ public class EventTag extends BodyTagSupport {
 		}
 
 		return value;
-	}
-
-	private String getJavascript() throws JspException {
-		HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
-		HttpServletResponse response = (HttpServletResponse) pageContext.getResponse();
-
-		URLUtil url = new URLUtil(request, response);
-
-		StringBuffer buffer = new StringBuffer();
-
-		try {
-			buffer.append("executeEvent('");
-			buffer.append(url.getMethodURL(null, null));
-			buffer.append("', {");
-			buffer.append(Constants.MEGA_EVENT_NAME);
-			buffer.append(":");
-			buffer.append("'");
-			buffer.append(getName());
-			buffer.append("'");
-
-			for (Iterator i = eventArgList.iterator(); i.hasNext();) {
-				EventArg arg = (EventArg) i.next();
-
-				buffer.append(",");
-				buffer.append(arg.getName());
-				buffer.append(":");
-
-				if (arg.isConstant()) {
-					buffer.append("'");
-				}
-
-				buffer.append(arg.getValue());
-
-				if (arg.isConstant()) {
-					buffer.append("'");
-				}
-			}
-
-			buffer.append("})");
-		} catch (Exception e) {
-			log.error("Error while writing EVENT TAG", e);
-			throw new JspException(e);
-		}
-
-		return buffer.toString();
-	}
-
-	public void addEventArg(String name, String value, boolean constant) {
-		eventArgList.add(new EventArg(name, value, constant));
 	}
 }

@@ -105,7 +105,7 @@
 	
 	<tag>
 		<name>event-arg-value</name>
-		<tag-class>net.java.mega.tags.events.EventValueArgTag</tag-class>
+		<tag-class>net.java.mega.action.tag.events.EventValueArgTag</tag-class>
 		<body-content>JSP</body-content>
 		<attribute>
 			<name>name</name>

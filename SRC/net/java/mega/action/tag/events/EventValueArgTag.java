@@ -16,32 +16,41 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package net.java.mega.tags.model;
+package net.java.mega.action.tag.events;
 
-import java.io.Serializable;
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.BodyTagSupport;
+import javax.servlet.jsp.tagext.Tag;
 
-public class EventArg implements Serializable {
-	private static final long serialVersionUID = -2951392082855129886L;
+public class EventValueArgTag extends BodyTagSupport {
+	private static final long serialVersionUID = -2635263555688921251L;
 	
 	private String name = null;
-	private String value = null;
 	private boolean constant = true;
-	
-	public EventArg(String name, String value, boolean constant) {
-		this.name = name;
-		this.value = value;
-		this.constant = constant;
-	}
 	
 	public String getName() {
 		return name;
 	}
 	
-	public String getValue() {
-		return value;
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 	public boolean isConstant() {
 		return constant;
+	}
+
+	public void setConstant(boolean constant) {
+		this.constant = constant;
+	}
+
+	public int doEndTag() throws JspException {
+		Tag tag = findAncestorWithClass(this, EventTag.class);
+		
+		if (tag != null) {
+			((EventTag)tag).addEventArg(getName(), getBodyContent().getString().trim(), isConstant());
+		}
+
+		return EVAL_PAGE;	
 	}
 }
