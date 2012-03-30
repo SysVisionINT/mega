@@ -20,11 +20,11 @@
 // Helper functions
 
 function getValue(input) {
-	return $F(input);
+	return $(input).val();
 }
 
 function getInputValue(formID, inputName) {
-	var form = $(formID);
+	var form = document.forms[formID];
 	var input = form[inputName];
 	
 	return getValue(input);
@@ -33,19 +33,19 @@ function getInputValue(formID, inputName) {
 // Ajax processing
 
 function executeEvent(url, obj) {
-	new Ajax.Request(url, 
+	$.ajax(
 		{
-		   parameters: obj,
-		   onSuccess: doResponse
+		  type: 'POST',
+		  url: url,
+		  data: obj,
+		  success: doResponse
 		}
 	);
 }
 
-function doResponse (transport) {
-	var jArray = transport.responseText.evalJSON(true);
-	
-	for (var i = 0; i < jArray.length; i++) {
-		var change = jArray[i];
+function doResponse (data) {
+	for (var i = 0; i < data.length; i++) {
+		var change = data[i];
 
 		var finalFunction = new Function("obj", change.functionName + "(obj)");
 		
@@ -56,11 +56,15 @@ function doResponse (transport) {
 // Event change functions
 
 function innerHTML (obj) {
-	$(obj.id).update(obj.html);
+	var element = document.getElementById(obj.id);
+	
+	element.innerHTML = obj.html;
 } 
 
 function setValue (obj) {
-	$(obj.id).setValue(obj.value);
+	var element = document.getElementById(obj.id);
+	
+	$(element).val(obj.value);
 }
 
 function updateOptions (obj) {
