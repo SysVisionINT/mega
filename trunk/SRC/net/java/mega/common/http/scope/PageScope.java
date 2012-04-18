@@ -43,7 +43,7 @@ public class PageScope implements Scope {
 	}
 
 	public boolean existsAttribute(String name) {
-		Enumeration names = context.getAttributeNamesInScope(PageContext.PAGE_SCOPE);
+		Enumeration<String> names = context.getAttributeNamesInScope(PageContext.PAGE_SCOPE);
 		
 		while (names.hasMoreElements()) {
 			if (name.equals(names.nextElement())) {

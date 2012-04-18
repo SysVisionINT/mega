@@ -92,7 +92,7 @@ public class MultiCheckBoxTag extends InputBaseTag {
 	}
 
 	private String getControlName(String formName, String property) {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 
 		buffer.append(formName);
 		buffer.append("_C_");

@@ -139,7 +139,7 @@ public class MessageTag extends TagSupport {
 			return propertyName;
 		}
 
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		buffer.append(getLayout());
 		buffer.append(".");
 		buffer.append(propertyName);

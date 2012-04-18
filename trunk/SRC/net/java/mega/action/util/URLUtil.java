@@ -63,7 +63,7 @@ public class URLUtil {
 			log.debug("getFileURL(" + fileName + ")");
 		}
 
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 
 		buffer.append(getContextPath());
 
@@ -134,7 +134,7 @@ public class URLUtil {
 			log.debug("getRAWMethodName(" + actionName + ", " + methodName + ")");
 		}
 		
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		
 		buffer.append(getActionName(actionName));
 		
@@ -151,7 +151,7 @@ public class URLUtil {
 			log.debug("getForwardURL(" + actionName + ", " + methodName + ")");
 		}
 
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 
 		String path = getPath();
 
@@ -175,7 +175,7 @@ public class URLUtil {
 			log.debug("getMethodURL(" + actionName + ", " + methodName + ")");
 		}
 
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 
 		buffer.append(getContextPath());
 		buffer.append(getForwardURL(actionName, methodName));

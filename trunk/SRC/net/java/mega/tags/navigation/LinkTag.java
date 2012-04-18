@@ -70,7 +70,7 @@ public class LinkTag extends BaseBodyTag {
 	}
 
 	private String getParameters() throws JspException {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 
 		String value = null;
 		int count = 0;
@@ -99,7 +99,7 @@ public class LinkTag extends BaseBodyTag {
 	}
 
 	private String getArgName(int count) {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 
 		buffer.append(Constants.GET_ARG);
 		buffer.append(TextUtil.format(String.valueOf(count), 3, '0', TextUtil.ALLIGN_RIGHT));
