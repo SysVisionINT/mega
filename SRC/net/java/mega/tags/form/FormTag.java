@@ -82,7 +82,7 @@ public class FormTag extends BaseBodyTag {
 	}
 
 	private String generateFormID() {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 
 		buffer.append("FORM_");
 
