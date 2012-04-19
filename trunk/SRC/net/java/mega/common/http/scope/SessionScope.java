@@ -25,7 +25,7 @@ import javax.servlet.http.HttpSession;
 public class SessionScope implements Scope {
 	private HttpSession context = null;
 	
-	public SessionScope(HttpSession context) {
+	protected SessionScope(HttpSession context) {
 		this.context = context;
 	}
 

@@ -35,7 +35,7 @@ public class ScopeUtil {
 	}
 
 	public static Scope getApplicationScope(HttpServletRequest context) {
-		return getRequestScope(context).getNextScope().getNextScope();
+		return getSessionScope(context).getNextScope();
 	}
 
 	public static Scope findAttribute(PageContext context, String name) {
