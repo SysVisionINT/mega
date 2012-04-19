@@ -1,0 +1,39 @@
+<?xml encoding="ISO-8859-1" ?>
+
+<!ELEMENT layout-config (page*, message-resources?)>
+
+<!ELEMENT page ((layout-path|extends), block*)>
+<!ATTLIST page name CDATA #REQUIRED>
+
+<!ELEMENT layout-path EMPTY>
+<!ATTLIST layout-path value CDATA #REQUIRED>
+
+<!ELEMENT extends EMPTY>
+<!ATTLIST extends page-name CDATA #REQUIRED>
+
+<!ELEMENT block (string|path|bean|controler|message-key)>
+<!ATTLIST block name CDATA #REQUIRED>
+
+<!ELEMENT string EMPTY>
+<!ATTLIST string value CDATA #REQUIRED>
+
+<!ELEMENT message-key EMPTY>
+<!ATTLIST message-key value CDATA #REQUIRED
+                      filter  (true|false) "true">
+
+<!ELEMENT path EMPTY>
+<!ATTLIST path value CDATA #REQUIRED>
+
+<!ELEMENT bean EMPTY>
+<!ATTLIST bean name CDATA #REQUIRED
+               property CDATA #IMPLIED>
+
+<!ELEMENT controler (parameter*)>
+<!ATTLIST controler class-name CDATA #REQUIRED>
+
+<!ELEMENT parameter EMPTY>
+<!ATTLIST parameter name  CDATA #REQUIRED
+				    value CDATA #REQUIRED>
+
+<!ELEMENT message-resources EMPTY>
+<!ATTLIST message-resources name CDATA #REQUIRED>
