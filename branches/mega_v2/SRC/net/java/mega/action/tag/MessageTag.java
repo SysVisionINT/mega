@@ -34,8 +34,7 @@ import net.java.mega.action.util.ActionMessageUtil;
 import net.java.mega.action.util.Constants;
 import net.java.mega.common.http.HTMLUtil;
 import net.java.mega.common.resource.LocaleUtil;
-import net.java.sjtools.logging.Log;
-import net.java.sjtools.logging.LogFactory;
+import net.java.sjtools.logging.plus.RLog;
 import net.java.sjtools.util.TextUtil;
 
 public class MessageTag extends TagSupport {
@@ -45,8 +44,6 @@ public class MessageTag extends TagSupport {
 	private static final String PREFIX = "errors.prefix";
 	private static final String SUFFIX = "errors.suffix";
 	private static final String FOOTER = "errors.footer";
-
-	private static Log log = LogFactory.getLog(MessageTag.class);
 
 	private String key = null;
 	private String layout = null;
@@ -124,7 +121,7 @@ public class MessageTag extends TagSupport {
 
 					writer.print(footer);
 				} catch (IOException e) {
-					log.error("Error while writing messages for key = " + key, e);
+					RLog.error("Error while writing messages for key = " + key, e);
 
 					throw new JspException(e);
 				}

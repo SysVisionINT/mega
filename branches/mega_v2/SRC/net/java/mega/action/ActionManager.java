@@ -39,14 +39,11 @@ import net.java.mega.action.util.Constants;
 import net.java.mega.action.util.MethodConstants;
 import net.java.mega.common.model.ServletConfig;
 import net.java.mega.common.util.ClassLoaderUtil;
-import net.java.sjtools.logging.Log;
-import net.java.sjtools.logging.LogFactory;
+import net.java.sjtools.logging.plus.RLog;
 import net.java.sjtools.thread.Lock;
 import net.java.sjtools.util.TextUtil;
 
 public class ActionManager {
-	private static Log log = LogFactory.getLog(ActionManager.class);
-
 	private static ActionManager mySelf = new ActionManager();
 
 	private ControllerConfig controllerConfig = null;
@@ -90,8 +87,8 @@ public class ActionManager {
 		requestMetaData.setDoMethod(doMethod);
 
 		if (parameters.getParameter(Constants.MEGA_EVENT_NAME) != null) {
-			if (log.isDebugEnabled()) {
-				log.debug("Event name = " + parameters.getParameter(Constants.MEGA_EVENT_NAME));
+			if (RLog.isTraceEnabled()) {
+				RLog.trace("Event name = " + parameters.getParameter(Constants.MEGA_EVENT_NAME));
 			}
 
 			requestMetaData.setEventName(parameters.getParameter(Constants.MEGA_EVENT_NAME));
@@ -138,7 +135,7 @@ public class ActionManager {
 			try {
 				actionConfig.setClazz(ClassLoaderUtil.getClass(className));
 			} catch (ClassNotFoundException e) {
-				log.error("Error loading class " + className, e);
+				RLog.error("Error loading class " + className, e);
 				throw new ActionNotFound(path);
 			}
 		} else {
@@ -148,7 +145,7 @@ public class ActionManager {
 		try {
 			controllerConfig.addAction(actionConfig);
 		} catch (ActionAlreadyInUseException e) {
-			log.error("Class " + actionConfig.getClazz().getName() + " already assign to a other action", e);
+			RLog.error("Class " + actionConfig.getClazz().getName() + " already assign to a other action", e);
 			throw e;
 		}
 
@@ -174,7 +171,7 @@ public class ActionManager {
 		String className = clazz.getName();
 
 		if (!className.startsWith(rootPackage)) {
-			log.error(className + " is not a valid action (root package is " + rootPackage + ")");
+			RLog.error(className + " is not a valid action (root package is " + rootPackage + ")");
 			throw new ConfigurationError(className, rootPackage);
 		}
 
@@ -238,7 +235,7 @@ public class ActionManager {
 		String rootPackage = controllerConfig.getProperty(Constants.ROOT_PACKAGE_PROPERTY);
 
 		if (rootPackage == null) {
-			log.error("Property " + Constants.ROOT_PACKAGE_PROPERTY + " not found");
+			RLog.error("Property " + Constants.ROOT_PACKAGE_PROPERTY + " not found");
 			throw new ConfigurationError(Constants.ROOT_PACKAGE_PROPERTY);
 		}
 
@@ -292,8 +289,8 @@ public class ActionManager {
 	}
 
 	public boolean isWorkflowControlActive() {
-		if (log.isDebugEnabled()) {
-			log.debug("isWorkflowControlActive()");
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("isWorkflowControlActive()");
 		}
 
 		if (workflowControlActive == null) {
@@ -306,8 +303,8 @@ public class ActionManager {
 	}
 
 	private ResponseProvider createResponseProvider(ActionConfig actionConfig) throws ConfigurationError {
-		if (log.isDebugEnabled()) {
-			log.debug("createResponseProvider(" + actionConfig + ")");
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("createResponseProvider(" + actionConfig + ")");
 		}
 
 		String renderExtention = controllerConfig.getProperty(Constants.DEFAULT_OUTPUT_RENDER_EXTENTION_PROPERTY);

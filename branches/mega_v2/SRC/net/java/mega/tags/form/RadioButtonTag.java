@@ -21,13 +21,10 @@ package net.java.mega.tags.form;
 import javax.servlet.jsp.JspException;
 
 import net.java.mega.tags.model.InputBaseTag;
-import net.java.sjtools.logging.Log;
-import net.java.sjtools.logging.LogFactory;
+import net.java.sjtools.logging.plus.RLog;
 
 public class RadioButtonTag extends InputBaseTag {
 	private static final long serialVersionUID = -1717073186853398272L;
-
-	private static Log log = LogFactory.getLog(RadioButtonTag.class);
 
 	public int writeStartTag() throws JspException {		
 		return NOT_INCLUDE_INNER_HTML;
@@ -50,7 +47,7 @@ public class RadioButtonTag extends InputBaseTag {
 			
 			pageContext.getOut().println("/>");
 		} catch (Exception e) {
-			log.error("Error while writing radio TAG", e);
+			RLog.error("Error while writing radio TAG", e);
 			throw new JspException(e);
 		}
 	}

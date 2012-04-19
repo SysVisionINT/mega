@@ -28,13 +28,10 @@ import net.java.mega.layout.model.Page;
 import net.java.mega.layout.model.PageExtend;
 import net.java.mega.layout.util.Constant;
 import net.java.mega.layout.util.LayoutUtil;
-import net.java.sjtools.logging.Log;
-import net.java.sjtools.logging.LogFactory;
+import net.java.sjtools.logging.plus.RLog;
 
 public class InsertTag extends TagSupport {
 	private static final long serialVersionUID = -7691347878853261726L;
-
-	private static Log log = LogFactory.getLog(InsertTag.class);
 	
 	private String pageLayout = null;
 	private Page page = null;
@@ -52,21 +49,21 @@ public class InsertTag extends TagSupport {
 	}
 	
 	public int doEndTag() throws JspException {
-		if (log.isDebugEnabled()) {
-			log.debug("TAG insert = " + pageLayout);
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("TAG insert = " + pageLayout);
 		}
 
 		Layout layout = (Layout) pageContext.getServletContext().getAttribute(Constant.LAYOUT);
 		
 		if (layout == null) {
-			log.error(Constant.LAYOUT + " Not found!");
+			RLog.error(Constant.LAYOUT + " Not found!");
 			throw new JspException(Constant.LAYOUT + " Not found!");
 		}
 		
 		String layoutLocation = LayoutUtil.getLayoutLocation(layout, pageLayout);
 
 		if (layoutLocation == null) {
-			log.error("Page Layout " + pageLayout + " not found");
+			RLog.error("Page Layout " + pageLayout + " not found");
 			throw new JspException("Page Layout " + pageLayout + " not found");			
 		} else {
 			try {
@@ -77,7 +74,7 @@ public class InsertTag extends TagSupport {
 				
 				pageContext.include(layoutLocation);
 			} catch (Exception e) {
-				log.error("Page Layout " + pageLayout + " not found");
+				RLog.error("Page Layout " + pageLayout + " not found");
 				throw new JspException(e);	
 			}
 		}

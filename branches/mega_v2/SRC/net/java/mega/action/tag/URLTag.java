@@ -26,13 +26,10 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import net.java.mega.action.util.URLUtil;
-import net.java.sjtools.logging.Log;
-import net.java.sjtools.logging.LogFactory;
+import net.java.sjtools.logging.plus.RLog;
 
 public class URLTag extends TagSupport {
 	private static final long serialVersionUID = 1824165782784735482L;
-
-	private static Log log = LogFactory.getLog(URLTag.class);
 
 	private String file = null;
 
@@ -43,7 +40,7 @@ public class URLTag extends TagSupport {
 		try {
 			pageContext.getOut().print(url.getFileURL(file));
 		} catch (IOException e) {
-			log.error("Error while writing URL for file = " + file, e);
+			RLog.error("Error while writing URL for file = " + file, e);
 
 			throw new JspException(e);
 		}

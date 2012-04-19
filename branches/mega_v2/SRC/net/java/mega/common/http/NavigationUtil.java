@@ -25,24 +25,21 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.java.sjtools.logging.Log;
-import net.java.sjtools.logging.LogFactory;
+import net.java.sjtools.logging.plus.RLog;
 
 public class NavigationUtil {
-	private static Log log = LogFactory.getLog(NavigationUtil.class);
-
 	public static void forward(HttpServletRequest request, HttpServletResponse response, String url)
 			throws ServletException, IOException {
 		RequestDispatcher dispatcher = request.getRequestDispatcher(url);
 
 		if (dispatcher == null) {
-			log.error("Can't find url '" + url + "'");
+			RLog.error("Can't find url '" + url + "'");
 
 			throw new RuntimeException("Can't find url '" + url + "'");
 		}
 
-		if (log.isDebugEnabled()) {
-			log.debug("Forward to " + url);
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("Forward to " + url);
 		}
 
 		dispatcher.forward(request, response);
@@ -50,8 +47,8 @@ public class NavigationUtil {
 
 	public static void redirect(HttpServletRequest request, HttpServletResponse response, String url)
 			throws IOException {
-		if (log.isDebugEnabled()) {
-			log.debug("Redirect to " + url);
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("Redirect to " + url);
 		}
 
 		response.sendRedirect(url);

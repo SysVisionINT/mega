@@ -28,14 +28,11 @@ import net.java.mega.common.http.WARContextUtil;
 import net.java.mega.common.util.MegaCache;
 import net.java.mega.tags.model.BaseBodyTag;
 import net.java.mega.tags.model.SelectBox;
-import net.java.sjtools.logging.Log;
-import net.java.sjtools.logging.LogFactory;
+import net.java.sjtools.logging.plus.RLog;
 import net.java.sjtools.util.BeanUtil;
 
 public class OptionsTag extends BaseBodyTag {
 	private static final long serialVersionUID = 6019952761717128436L;
-
-	private static Log log = LogFactory.getLog(OptionsTag.class);
 
 	private String name = Constants.CURRENT_ACTION;
 	private String property = null;
@@ -104,7 +101,7 @@ public class OptionsTag extends BaseBodyTag {
 
 			pageContext.getOut().println("</option>");
 		} catch (Exception e) {
-			log.error("Error while writing OPTION TAG", e);
+			RLog.error("Error while writing OPTION TAG", e);
 			throw new JspException(e);
 		}
 	}

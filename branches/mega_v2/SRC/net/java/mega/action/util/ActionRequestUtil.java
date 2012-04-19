@@ -22,16 +22,13 @@ import javax.servlet.http.HttpServletRequest;
 
 import net.java.mega.action.api.RequestParameters;
 import net.java.mega.common.http.RequestUtil;
-import net.java.sjtools.logging.Log;
-import net.java.sjtools.logging.LogFactory;
+import net.java.sjtools.logging.plus.RLog;
 import net.java.sjtools.util.TextUtil;
 
-public class ActionRequestUtil extends RequestUtil {
-	private static Log log = LogFactory.getLog(ActionRequestUtil.class);
-	
+public class ActionRequestUtil extends RequestUtil {	
 	public static String getAction(HttpServletRequest request, RequestParameters parameters) {
-		if (log.isDebugEnabled()) {
-			log.debug("getAction(...)");
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("getAction(...)");
 		}
 
 		if (!WorkflowControlUtil.isTheSameRequest(request)) {

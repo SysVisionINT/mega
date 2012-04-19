@@ -27,12 +27,9 @@ import net.java.mega.action.api.ResponseProvider;
 import net.java.mega.action.error.ActionException;
 import net.java.mega.action.util.WorkflowControlUtil;
 import net.java.mega.common.http.NavigationUtil;
-import net.java.sjtools.logging.Log;
-import net.java.sjtools.logging.LogFactory;
+import net.java.sjtools.logging.plus.RLog;
 
 public class Redirector implements ResponseProvider {
-	private static Log log = LogFactory.getLog(Redirector.class);
-
 	private String location = null;
 
 	public Redirector(String location) {
@@ -47,7 +44,7 @@ public class Redirector implements ResponseProvider {
 		try {
 			NavigationUtil.redirect(request, response, location);
 		} catch (Exception e) {
-			log.error("Error while redirecting to " + location, e);
+			RLog.error("Error while redirecting to " + location, e);
 			throw new ActionException("Error while redirecting to " + location, e);
 		}
 	}

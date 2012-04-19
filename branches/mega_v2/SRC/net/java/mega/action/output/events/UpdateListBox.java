@@ -18,10 +18,10 @@
  */
 package net.java.mega.action.output.events;
 
+import net.java.mega.action.api.events.EventChange;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-
-import net.java.mega.action.api.events.EventChange;
 
 public class UpdateListBox implements EventChange {
 	private static final long serialVersionUID = 2846007885294488906L;

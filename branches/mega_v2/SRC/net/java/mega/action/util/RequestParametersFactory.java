@@ -31,8 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 import net.java.mega.action.api.RequestParameters;
 import net.java.mega.action.model.EmptyFormFile;
 import net.java.mega.action.model.FormFileImpl;
-import net.java.sjtools.logging.Log;
-import net.java.sjtools.logging.LogFactory;
+import net.java.sjtools.logging.plus.RLog;
 import net.java.sjtools.util.TextUtil;
 
 import org.apache.commons.fileupload.FileItem;
@@ -41,18 +40,16 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 public class RequestParametersFactory {
-	private static Log log = LogFactory.getLog(RequestParametersFactory.class);
-
 	public static RequestParameters getRequestParameters(HttpServletRequest request) throws Exception {
-		if (log.isDebugEnabled()) {
-			log.debug("getRequestParameters()");
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("getRequestParameters()");
 		}
 
 		Hashtable parameters = new Hashtable();
 
 		if (ServletFileUpload.isMultipartContent(request)) {
-			if (log.isDebugEnabled()) {
-				log.debug("isMultipartContent...");
+			if (RLog.isTraceEnabled()) {
+				RLog.trace("isMultipartContent...");
 			}
 
 			FileItemFactory factory = new DiskFileItemFactory();
@@ -73,24 +70,24 @@ public class RequestParametersFactory {
 
 				fieldName = item.getFieldName();
 
-				if (log.isDebugEnabled()) {
-					log.debug("fieldName = " + item.getFieldName());
+				if (RLog.isTraceEnabled()) {
+					RLog.trace("fieldName = " + item.getFieldName());
 				}
 
 				if (!item.isFormField()) {
-					if (log.isDebugEnabled()) {
-						log.debug(item.getFieldName() + " NOT isFormField...");
+					if (RLog.isTraceEnabled()) {
+						RLog.trace(item.getFieldName() + " NOT isFormField...");
 					}
 
 					if (TextUtil.isEmptyString(item.getName())) {
-						if (log.isDebugEnabled()) {
-							log.debug(item.getFieldName() + " NO fileName");
+						if (RLog.isTraceEnabled()) {
+							RLog.trace(item.getFieldName() + " NO fileName");
 						}
 						
 						parameters.put(fieldName, new EmptyFormFile());
 					} else {
-						if (log.isDebugEnabled()) {
-							log.debug(item.getFieldName() + " = File(" + item.getName() + ")");
+						if (RLog.isTraceEnabled()) {
+							RLog.trace(item.getFieldName() + " = File(" + item.getName() + ")");
 						}
 						
 						FormFileImpl file = new FormFileImpl();
@@ -102,8 +99,8 @@ public class RequestParametersFactory {
 						parameters.put(fieldName, file);
 					}
 				} else {
-					if (log.isDebugEnabled()) {
-						log.debug(item.getFieldName() + " isFormField...");
+					if (RLog.isTraceEnabled()) {
+						RLog.trace(item.getFieldName() + " isFormField...");
 					}
 
 					String value = null;
@@ -133,8 +130,8 @@ public class RequestParametersFactory {
 				parameters.put(name, values.toArray(new String[values.size()]));
 			}
 		} else {
-			if (log.isDebugEnabled()) {
-				log.debug("NOT isMultipartContent...");
+			if (RLog.isTraceEnabled()) {
+				RLog.trace("NOT isMultipartContent...");
 			}
 
 			parameters.putAll(request.getParameterMap());

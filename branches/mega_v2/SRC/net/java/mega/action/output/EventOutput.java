@@ -12,15 +12,12 @@ import net.java.mega.action.api.ResponseProvider;
 import net.java.mega.action.api.events.EventChange;
 import net.java.mega.action.api.events.EventChangesContainer;
 import net.java.mega.action.error.ActionException;
-import net.java.sjtools.logging.Log;
-import net.java.sjtools.logging.LogFactory;
+import net.java.sjtools.logging.plus.RLog;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-public class EventOutput implements ResponseProvider {
-	private static Log log = LogFactory.getLog(EventOutput.class);
-	
+public class EventOutput implements ResponseProvider {	
 	private EventChangesContainer container = null;
 	
 	public EventOutput(EventChangesContainer container) {
@@ -51,7 +48,7 @@ public class EventOutput implements ResponseProvider {
 			
 			writer.flush();
 		} catch (Exception e) {
-			log.error("Error while generating JSON Array for event " + requestMetaData.getEventName() + " on path " + requestMetaData.getPath(), e);
+			RLog.error("Error while generating JSON Array for event " + requestMetaData.getEventName() + " on path " + requestMetaData.getPath(), e);
 			throw new ActionException("Error while generating JSON Array for event " + requestMetaData.getEventName() + " on path " + requestMetaData.getPath(), e);
 		}
 	}

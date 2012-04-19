@@ -27,17 +27,14 @@ import javax.servlet.jsp.PageContext;
 import net.java.mega.common.http.scope.Scope;
 import net.java.mega.common.http.scope.ScopeUtil;
 import net.java.mega.common.util.MegaCache;
-import net.java.sjtools.logging.Log;
-import net.java.sjtools.logging.LogFactory;
+import net.java.sjtools.logging.plus.RLog;
 import net.java.sjtools.util.BeanUtil;
 
 public class WARContextUtil {
 
-	private static Log log = LogFactory.getLog(WARContextUtil.class);
-
 	public static Object getObject(Scope scope, String name) {
-		if (log.isDebugEnabled()) {
-			log.debug("getObject(Scope, " + name + ")");
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("getObject(Scope, " + name + ")");
 		}
 
 		if (scope == null) {
@@ -48,8 +45,8 @@ public class WARContextUtil {
 	}
 
 	public static Object getObject(HttpServletRequest request, String name) {
-		if (log.isDebugEnabled()) {
-			log.debug("getObject(HttpServletRequest, " + name + ")");
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("getObject(HttpServletRequest, " + name + ")");
 		}
 
 		Scope scope = ScopeUtil.findAttribute(request, name);
@@ -58,8 +55,8 @@ public class WARContextUtil {
 	}
 
 	public static Object getValue(Scope scope, String name, String propertyName) {
-		if (log.isDebugEnabled()) {
-			log.debug("getValue(Scope, " + name + ", " + propertyName + ")");
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("getValue(Scope, " + name + ", " + propertyName + ")");
 		}
 
 		Object ret = null;
@@ -70,7 +67,7 @@ public class WARContextUtil {
 				try {
 					ret = BeanUtil.getPropertyValue(MegaCache.getInstance(), obj, propertyName);
 				} catch (Exception e) {
-					log.error("Error while accessing property " + propertyName + " of attribute " + name, e);
+					RLog.error("Error while accessing property " + propertyName + " of attribute " + name, e);
 				}
 			} else {
 				ret = obj;
@@ -81,8 +78,8 @@ public class WARContextUtil {
 	}
 	
 	public static Object getValue(PageContext context, String name, String propertyName) {
-		if (log.isDebugEnabled()) {
-			log.debug("getValue(PageContext, " + name + ", " + propertyName + ")");
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("getValue(PageContext, " + name + ", " + propertyName + ")");
 		}
 
 		Scope scope = ScopeUtil.findAttribute(context, name);
@@ -95,8 +92,8 @@ public class WARContextUtil {
 	}
 
 	public static Class getPropertyType(PageContext context, String name, String propertyName) {
-		if (log.isDebugEnabled()) {
-			log.debug("getPropertyType(PageContext, " + name + ", " + propertyName + ")");
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("getPropertyType(PageContext, " + name + ", " + propertyName + ")");
 		}
 
 		Scope scope = ScopeUtil.findAttribute(context, name);
@@ -115,7 +112,7 @@ public class WARContextUtil {
 				List methods = beanUtil.getMethods(methodName);
 
 				if (methods.size() != 1) {
-					log.error("Property " + propertyName + " not found on bean " + beanUtil.getClassName());
+					RLog.error("Property " + propertyName + " not found on bean " + beanUtil.getClassName());
 					throw new RuntimeException("Property " + propertyName + " not found on bean " + beanUtil.getClassName());
 				}
 
@@ -126,7 +123,7 @@ public class WARContextUtil {
 
 			ret = method.getReturnType();
 		} else {
-			log.error("Object " + name + " not found!");
+			RLog.error("Object " + name + " not found!");
 			throw new RuntimeException("Object " + name + " not found!");
 		}
 

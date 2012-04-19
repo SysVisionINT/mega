@@ -23,16 +23,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import net.java.sjtools.logging.Log;
-import net.java.sjtools.logging.LogFactory;
+import net.java.sjtools.logging.plus.RLog;
 import net.java.sjtools.util.TextUtil;
 
 public class MessageUtil {
-	private static Log log = LogFactory.getLog(MessageUtil.class);
-
 	public static String getMessage(List bundleList, String messageKey, Locale locale) {
-		if (log.isDebugEnabled()) {
-			log.debug("getMessage([" +TextUtil.toString(bundleList) + "], "+  messageKey + ", " + locale + ")");
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("getMessage([" +TextUtil.toString(bundleList) + "], "+  messageKey + ", " + locale + ")");
 		}
 
 		String message = null;
@@ -42,8 +39,8 @@ public class MessageUtil {
 		for (Iterator i = bundleList.iterator(); i.hasNext();) {
 			bundleName = (String) i.next();
 
-			if (log.isDebugEnabled()) {
-				log.debug("bundleName = " + bundleName);
+			if (RLog.isTraceEnabled()) {
+				RLog.trace("bundleName = " + bundleName);
 			}
 
 			bundle = ResourceBundle.getBundle(bundleName, locale, Thread.currentThread().getContextClassLoader());

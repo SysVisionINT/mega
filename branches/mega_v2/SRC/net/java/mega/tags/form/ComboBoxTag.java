@@ -22,13 +22,10 @@ import javax.servlet.jsp.JspException;
 
 import net.java.mega.tags.model.InputBaseTag;
 import net.java.mega.tags.model.SelectBox;
-import net.java.sjtools.logging.Log;
-import net.java.sjtools.logging.LogFactory;
+import net.java.sjtools.logging.plus.RLog;
 
 public class ComboBoxTag extends InputBaseTag implements SelectBox {
 	private static final long serialVersionUID = 1891172739255099324L;
-
-	private static Log log = LogFactory.getLog(ComboBoxTag.class);
 
 	public int writeStartTag() throws JspException {
 		try {
@@ -38,7 +35,7 @@ public class ComboBoxTag extends InputBaseTag implements SelectBox {
 			writeAttributes();
 			pageContext.getOut().println(">");
 		} catch (Exception e) {
-			log.error("Error while writing SELECT (comboBox) TAG", e);
+			RLog.error("Error while writing SELECT (comboBox) TAG", e);
 			throw new JspException(e);
 		}
 		
@@ -49,7 +46,7 @@ public class ComboBoxTag extends InputBaseTag implements SelectBox {
 		try {
 			pageContext.getOut().println("</select>");
 		} catch (Exception e) {
-			log.error("Error while writing SELECT (comboBox) TAG", e);
+			RLog.error("Error while writing SELECT (comboBox) TAG", e);
 			throw new JspException(e);
 		}
 	}

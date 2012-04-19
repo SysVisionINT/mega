@@ -29,12 +29,9 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.java.sjtools.logging.Log;
-import net.java.sjtools.logging.LogFactory;
+import net.java.sjtools.logging.plus.RLog;
 
 public class LoadControlFilter implements Filter {	
-	private static Log log = LogFactory.getLog(LoadControlFilter.class);
-
 	public void destroy() {
 	}
 
@@ -61,8 +58,8 @@ public class LoadControlFilter implements Filter {
 		try {
 			synchronized (control) {
 				if (control.isLock()) {
-					if (log.isDebugEnabled()) {
-						log.debug("Duplicated request!");
+					if (RLog.isTraceEnabled()) {
+						RLog.trace("Duplicated request!");
 					}
 					
 					control.setResponse((HttpServletResponse) response);
@@ -70,7 +67,7 @@ public class LoadControlFilter implements Filter {
 					try {
 						control.wait();
 					} catch (InterruptedException e) {
-						log.error("Runtime error", e);
+						RLog.error("Runtime error", e);
 					}
 
 					return;
@@ -83,8 +80,8 @@ public class LoadControlFilter implements Filter {
 
 			chain.doFilter(request, responseWrapper);
 			
-			if (log.isDebugEnabled()) {
-				log.debug("Request executed!");
+			if (RLog.isTraceEnabled()) {
+				RLog.trace("Request executed!");
 			}
 
 			control = LoadControlUtil.getLoadControl((HttpServletRequest) request);
@@ -93,8 +90,8 @@ public class LoadControlFilter implements Filter {
 				HttpServletResponse lastResponse = control.getResponse();
 
 				if (lastResponse == null) {
-					if (log.isDebugEnabled()) {
-						log.debug("No response in LoadControl!");
+					if (RLog.isTraceEnabled()) {
+						RLog.trace("No response in LoadControl!");
 					}
 					
 					lastResponse = (HttpServletResponse) response;
@@ -105,7 +102,7 @@ public class LoadControlFilter implements Filter {
 				control.setResponse(null);
 			}
 		} catch (Throwable e) {
-			log.error("Runtime error", e);
+			RLog.error("Runtime error", e);
 		} finally {
 			control = LoadControlUtil.getLoadControl((HttpServletRequest) request);
 

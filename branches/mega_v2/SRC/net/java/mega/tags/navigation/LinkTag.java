@@ -32,14 +32,11 @@ import net.java.mega.action.util.Constants;
 import net.java.mega.action.util.URLUtil;
 import net.java.mega.action.util.WorkflowControlUtil;
 import net.java.mega.tags.model.BaseBodyTag;
-import net.java.sjtools.logging.Log;
-import net.java.sjtools.logging.LogFactory;
+import net.java.sjtools.logging.plus.RLog;
 import net.java.sjtools.util.TextUtil;
 
 public class LinkTag extends BaseBodyTag {
 	private static final long serialVersionUID = -3738161366330292080L;
-
-	private static Log log = LogFactory.getLog(LinkTag.class);
 
 	private String action = null;
 
@@ -88,7 +85,7 @@ public class LinkTag extends BaseBodyTag {
 			try {
 				buffer.append(URLEncoder.encode(value, "UTF-8"));
 			} catch (UnsupportedEncodingException e) {
-				log.error("Error while writing A TAG", e);
+				RLog.error("Error while writing A TAG", e);
 				throw new JspException(e);
 			}
 
@@ -139,7 +136,7 @@ public class LinkTag extends BaseBodyTag {
 			writeAttributes();
 			pageContext.getOut().print(">");
 		} catch (Exception e) {
-			log.error("Error while writing A TAG", e);
+			RLog.error("Error while writing A TAG", e);
 			throw new JspException(e);
 		}
 
@@ -150,7 +147,7 @@ public class LinkTag extends BaseBodyTag {
 		try {
 			pageContext.getOut().println("</a>");
 		} catch (Exception e) {
-			log.error("Error while writing A TAG", e);
+			RLog.error("Error while writing A TAG", e);
 			throw new JspException(e);
 		}
 	}

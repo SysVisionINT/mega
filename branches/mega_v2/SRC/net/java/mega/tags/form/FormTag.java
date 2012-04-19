@@ -26,16 +26,13 @@ import net.java.mega.action.util.Constants;
 import net.java.mega.action.util.URLUtil;
 import net.java.mega.action.util.WorkflowControlUtil;
 import net.java.mega.tags.model.BaseBodyTag;
-import net.java.sjtools.logging.Log;
-import net.java.sjtools.logging.LogFactory;
+import net.java.sjtools.logging.plus.RLog;
 
 public class FormTag extends BaseBodyTag {
 
 	private static final long serialVersionUID = -5532740559135162767L;
 
 	private static final String FORM_COUNT = "___FORM___COUNT___";
-
-	private static Log log = LogFactory.getLog(FormTag.class);
 
 	private boolean useWorkflowControl = true;
 
@@ -74,7 +71,7 @@ public class FormTag extends BaseBodyTag {
 				pageContext.getOut().println("\"/>");
 			}
 		} catch (Exception e) {
-			log.error("Error while writing FORM TAG", e);
+			RLog.error("Error while writing FORM TAG", e);
 			throw new JspException(e);
 		}
 
@@ -109,7 +106,7 @@ public class FormTag extends BaseBodyTag {
 			pageContext.getOut().println("</fieldset>");
 			pageContext.getOut().println("</form>");
 		} catch (Exception e) {
-			log.error("Error while writing FORM TAG", e);
+			RLog.error("Error while writing FORM TAG", e);
 			throw new JspException(e);
 		}
 	}

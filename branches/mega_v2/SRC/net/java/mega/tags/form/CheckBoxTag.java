@@ -22,13 +22,10 @@ import javax.servlet.jsp.JspException;
 
 import net.java.mega.action.util.CheckBoxUtil;
 import net.java.mega.tags.model.InputBaseTag;
-import net.java.sjtools.logging.Log;
-import net.java.sjtools.logging.LogFactory;
+import net.java.sjtools.logging.plus.RLog;
 
 public class CheckBoxTag extends InputBaseTag {
 	private static final long serialVersionUID = 4288262712585202635L;
-	
-	private static Log log = LogFactory.getLog(CheckBoxTag.class);
 
 	public int writeStartTag() throws JspException {
 		return NOT_INCLUDE_INNER_HTML;
@@ -56,7 +53,7 @@ public class CheckBoxTag extends InputBaseTag {
 			pageContext.getOut().print(CheckBoxUtil.getHiddenName(getProperty()));
 			pageContext.getOut().println("\" value=\"false\"/>");
 		} catch (Exception e) {
-			log.error("Error while writing INPUT checkbox TAG", e);
+			RLog.error("Error while writing INPUT checkbox TAG", e);
 			throw new JspException(e);
 		}
 	}

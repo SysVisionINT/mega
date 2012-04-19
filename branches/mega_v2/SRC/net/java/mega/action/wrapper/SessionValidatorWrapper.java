@@ -26,19 +26,15 @@ import net.java.mega.action.RequestMetaData;
 import net.java.mega.action.ResponseMetaData;
 import net.java.mega.action.api.AbstractWrapper;
 import net.java.mega.action.util.Constants;
-import net.java.sjtools.logging.Log;
-import net.java.sjtools.logging.LogFactory;
+import net.java.sjtools.logging.plus.RLog;
 
 public class SessionValidatorWrapper extends AbstractWrapper {
-
 	private static final long serialVersionUID = 3799931686999152093L;
-
-	private static Log log = LogFactory.getLog(SessionValidatorWrapper.class);
 
 	public ResponseMetaData execute(HttpServletRequest request, HttpServletResponse response, RequestMetaData requestMetaData) throws Exception {
 
-		if (log.isDebugEnabled()) {
-			log.debug("execute(" + requestMetaData.getPath() + ")");
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("execute(" + requestMetaData.getPath() + ")");
 		}
 
 		String forwardURL = getProperty("forward-url");
@@ -46,8 +42,8 @@ public class SessionValidatorWrapper extends AbstractWrapper {
 		if (sessionObjectExists(request) || requestMetaData.getPath().equals(forwardURL)) {
 			return executeNext(request, response, requestMetaData);
 		} else {
-			if (log.isDebugEnabled()) {
-				log.debug(requestMetaData.getPath() + " -> " + forwardURL);
+			if (RLog.isTraceEnabled()) {
+				RLog.trace(requestMetaData.getPath() + " -> " + forwardURL);
 			}
 
 			RequestMetaData forward = ActionManager.getInstance().getRequestMetaData(forwardURL, Constants.HTTP_GET, requestMetaData.getParameters());

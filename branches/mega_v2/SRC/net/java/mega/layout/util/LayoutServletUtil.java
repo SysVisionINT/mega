@@ -40,23 +40,20 @@ import net.java.mega.layout.model.MessageKeyContent;
 import net.java.mega.layout.model.Page;
 import net.java.mega.layout.model.PathContent;
 import net.java.mega.layout.model.StringContent;
-import net.java.sjtools.logging.Log;
-import net.java.sjtools.logging.LogFactory;
+import net.java.sjtools.logging.plus.RLog;
 
 public class LayoutServletUtil {
 
-	private static Log log = LogFactory.getLog(LayoutServletUtil.class);
-
 	public static void processBlock(PageContext pageContext, String blockName) throws IOException, ServletException {
-		if (log.isDebugEnabled()) {
-			log.debug("processBlock(..., " + blockName + ")");
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("processBlock(..., " + blockName + ")");
 		}
 
 		String pageName = (String) pageContext.getRequest().getAttribute(Constant.PAGE_NAME);
 		Layout layout = (Layout) pageContext.getServletContext().getAttribute(Constant.LAYOUT);
 
 		if (pageName == null || layout == null) {
-			log.error("System not initialize");
+			RLog.error("System not initialize");
 
 			return;
 		}
@@ -77,10 +74,10 @@ public class LayoutServletUtil {
 
 				processContent(pageContext, pageName, blockName, content);
 			} else {
-				log.error("No definition for block " + blockName + " on page " + pageName);
+				RLog.error("No definition for block " + blockName + " on page " + pageName);
 			}
 		} else {
-			log.error("Page " + pageName + " not found");
+			RLog.error("Page " + pageName + " not found");
 		}
 	}
 
@@ -89,40 +86,40 @@ public class LayoutServletUtil {
 		if (content instanceof PathContent) {
 			PathContent pathContent = (PathContent) content;
 
-			if (log.isDebugEnabled()) {
-				log.debug(pageName + "." + blockName + " = " + pathContent.getValue());
+			if (RLog.isTraceEnabled()) {
+				RLog.trace(pageName + "." + blockName + " = " + pathContent.getValue());
 			}
 
 			includeContent(pageContext, pathContent);
 		} else if (content instanceof StringContent) {
 			StringContent stringContent = (StringContent) content;
 
-			if (log.isDebugEnabled()) {
-				log.debug(pageName + "." + blockName + " = '" + stringContent.getValue() + "'");
+			if (RLog.isTraceEnabled()) {
+				RLog.trace(pageName + "." + blockName + " = '" + stringContent.getValue() + "'");
 			}
 
 			includeContent(pageContext, stringContent);
 		} else if (content instanceof MessageKeyContent) {
 			MessageKeyContent keyContent = (MessageKeyContent) content;
 
-			if (log.isDebugEnabled()) {
-				log.debug(pageName + "." + blockName + " = '" + keyContent.getValue() + "'");
+			if (RLog.isTraceEnabled()) {
+				RLog.trace(pageName + "." + blockName + " = '" + keyContent.getValue() + "'");
 			}
 
 			includeContent(pageContext, keyContent);
 		} else if (content instanceof BeanContent) {
 			BeanContent beanContent = (BeanContent) content;
 
-			if (log.isDebugEnabled()) {
-				log.debug(pageName + "." + blockName + " = " + beanContent.getName() + (beanContent.getProperty() == null ? "" : "." + beanContent.getProperty()));
+			if (RLog.isTraceEnabled()) {
+				RLog.trace(pageName + "." + blockName + " = " + beanContent.getName() + (beanContent.getProperty() == null ? "" : "." + beanContent.getProperty()));
 			}
 
 			includeContent(pageContext, beanContent);
 		} else if (content instanceof ControlerContent) {
 			ControlerContent controlerContent = (ControlerContent) content;
 
-			if (log.isDebugEnabled()) {
-				log.debug(pageName + "." + blockName + " -> " + controlerContent.getClassName());
+			if (RLog.isTraceEnabled()) {
+				RLog.trace(pageName + "." + blockName + " -> " + controlerContent.getClassName());
 			}
 
 			executeControler(pageContext, pageName, blockName, controlerContent);
@@ -136,7 +133,7 @@ public class LayoutServletUtil {
 		try {
 			controler = getControler(pageContext, controlerContent);
 		} catch (Exception e) {
-			log.error("Unable to create instance of " + controlerContent.getClassName(), e);
+			RLog.error("Unable to create instance of " + controlerContent.getClassName(), e);
 
 			throw new ServletException("Unable to create instance of " + controlerContent.getClassName(), e);
 		}

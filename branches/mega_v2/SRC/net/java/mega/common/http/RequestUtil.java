@@ -21,15 +21,12 @@ package net.java.mega.common.http;
 import javax.servlet.http.HttpServletRequest;
 
 import net.java.mega.common.util.CommonConstants;
-import net.java.sjtools.logging.Log;
-import net.java.sjtools.logging.LogFactory;
+import net.java.sjtools.logging.plus.RLog;
 
 public class RequestUtil {
-	private static Log log = LogFactory.getLog(RequestUtil.class);
-
 	public static String getPath(HttpServletRequest request) {
-		if (log.isDebugEnabled()) {
-			log.debug("getPath(...)");
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("getPath(...)");
 		}
 
 		String path = (String) request.getAttribute(CommonConstants.PATH_INFO);

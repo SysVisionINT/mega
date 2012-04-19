@@ -33,27 +33,24 @@ import net.java.mega.layout.model.Layout;
 import net.java.mega.layout.util.Constant;
 import net.java.mega.layout.util.LayoutUtil;
 import net.java.mega.layout.xml.LayoutConfigReader;
-import net.java.sjtools.logging.Log;
-import net.java.sjtools.logging.LogFactory;
+import net.java.sjtools.logging.plus.RLog;
 
 public class LayoutServlet extends HttpServlet {
 	private static final long serialVersionUID = 5569343447487377887L;
 
-	private static Log log = LogFactory.getLog(LayoutServlet.class);
-
 	private Layout layout = null;
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		if (log.isDebugEnabled()) {
-			log.debug("GET from user " + request.getRemoteUser() + " on " + request.getRemoteAddr());
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("GET from user " + request.getRemoteUser() + " on " + request.getRemoteAddr());
 		}
 
 		process(request, response);
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		if (log.isDebugEnabled()) {
-			log.debug("POST from user " + request.getRemoteUser() + " on " + request.getRemoteAddr());
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("POST from user " + request.getRemoteUser() + " on " + request.getRemoteAddr());
 		}
 
 		process(request, response);
@@ -65,7 +62,7 @@ public class LayoutServlet extends HttpServlet {
 		String layoutLocation = LayoutUtil.getLayoutLocation(layout, pageName);
 
 		if (layoutLocation == null) {
-			log.error("Page " + pageName + " not found");
+			RLog.error("Page " + pageName + " not found");
 
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);
 		} else {
@@ -74,7 +71,7 @@ public class LayoutServlet extends HttpServlet {
 			RequestDispatcher dispatcher = request.getRequestDispatcher(layoutLocation);
 
 			if (dispatcher == null) {
-				log.error("LayoutServlet can't find url '" + layoutLocation + "'");
+				RLog.error("LayoutServlet can't find url '" + layoutLocation + "'");
 
 				throw new ServletException("LayoutServlet can't find url '" + layoutLocation + "'.");
 			}
@@ -84,18 +81,18 @@ public class LayoutServlet extends HttpServlet {
 	}
 
 	public void init(ServletConfig config) throws ServletException {
-		if (log.isDebugEnabled()) {
-			log.debug("init(...)");
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("init(...)");
 		}
 
 		String configFileName = config.getInitParameter(Constant.CONFIG_FILE);
 
 		if (configFileName == null) {
-			log.fatal("Parameter " + Constant.CONFIG_FILE + " not found");
+			RLog.fatal("Parameter " + Constant.CONFIG_FILE + " not found");
 			new ServletException("Parameter " + Constant.CONFIG_FILE + " not found");
 		} else {
-			if (log.isDebugEnabled()) {
-				log.debug(Constant.CONFIG_FILE + " = " + configFileName);
+			if (RLog.isTraceEnabled()) {
+				RLog.trace(Constant.CONFIG_FILE + " = " + configFileName);
 			}
 		}
 
@@ -103,7 +100,7 @@ public class LayoutServlet extends HttpServlet {
 			layout = LayoutConfigReader.getLayoutConfig(ServletContextUtil.getResourceInputStream(config
 					.getServletContext(), configFileName));
 		} catch (Exception e) {
-			log.fatal("Error reading " + configFileName, e);
+			RLog.fatal("Error reading " + configFileName, e);
 			new ServletException("Error reading " + configFileName, e);
 		}
 
@@ -111,8 +108,8 @@ public class LayoutServlet extends HttpServlet {
 	}
 
 	public void destroy() {
-		if (log.isDebugEnabled()) {
-			log.debug("destroy()");
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("destroy()");
 		}
 
 		layout = null;

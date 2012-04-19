@@ -22,13 +22,10 @@ import javax.servlet.jsp.JspException;
 
 import net.java.mega.tags.model.Attribute;
 import net.java.mega.tags.model.InputBaseTag;
-import net.java.sjtools.logging.Log;
-import net.java.sjtools.logging.LogFactory;
+import net.java.sjtools.logging.plus.RLog;
 
 public class InputTextTag extends InputBaseTag {
 	private static final long serialVersionUID = 6592419051534858377L;
-
-	private static Log log = LogFactory.getLog(InputTextTag.class);
 
 	private String size = null;
 	private String maxLength = null;
@@ -81,7 +78,7 @@ public class InputTextTag extends InputBaseTag {
 
 			pageContext.getOut().println("/>");
 		} catch (Exception e) {
-			log.error("Error while writing INPUT " + getType() + " TAG", e);
+			RLog.error("Error while writing INPUT " + getType() + " TAG", e);
 			throw new JspException(e);
 		}
 	}

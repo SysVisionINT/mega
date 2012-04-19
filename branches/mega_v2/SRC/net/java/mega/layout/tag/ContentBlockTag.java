@@ -24,19 +24,16 @@ import javax.servlet.jsp.tagext.Tag;
 
 import net.java.mega.layout.model.Block;
 import net.java.mega.layout.model.StringContent;
-import net.java.sjtools.logging.Log;
-import net.java.sjtools.logging.LogFactory;
+import net.java.sjtools.logging.plus.RLog;
 
 public class ContentBlockTag extends BodyTagSupport {
 	private static final long serialVersionUID = 621813511670825489L;
 
-	private static Log log = LogFactory.getLog(ContentBlockTag.class);
-
 	private String blockName = null;
 
 	public int doEndTag() throws JspException {
-		if (log.isDebugEnabled()) {
-			log.debug("TAG content = " + blockName);
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("TAG content = " + blockName);
 		}
 
 		Tag tag = findAncestorWithClass(this, InsertTag.class);

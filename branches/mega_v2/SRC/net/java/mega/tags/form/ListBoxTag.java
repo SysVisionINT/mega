@@ -26,13 +26,10 @@ import net.java.mega.action.util.Constants;
 import net.java.mega.common.http.WARContextUtil;
 import net.java.mega.tags.model.InputBaseTag;
 import net.java.mega.tags.model.SelectBox;
-import net.java.sjtools.logging.Log;
-import net.java.sjtools.logging.LogFactory;
+import net.java.sjtools.logging.plus.RLog;
 
 public class ListBoxTag extends InputBaseTag implements SelectBox {
 	private static final long serialVersionUID = 9074354870725252355L;
-
-	private static Log log = LogFactory.getLog(ListBoxTag.class);
 
 	private String size = null;
 
@@ -59,7 +56,7 @@ public class ListBoxTag extends InputBaseTag implements SelectBox {
 
 			pageContext.getOut().println(">");
 		} catch (Exception e) {
-			log.error("Error while writing SELECT (listBox) TAG", e);
+			RLog.error("Error while writing SELECT (listBox) TAG", e);
 			throw new JspException(e);
 		}
 
@@ -75,7 +72,7 @@ public class ListBoxTag extends InputBaseTag implements SelectBox {
 		try {
 			pageContext.getOut().println("</select>");
 		} catch (Exception e) {
-			log.error("Error while writing SELECT (listBox) TAG", e);
+			RLog.error("Error while writing SELECT (listBox) TAG", e);
 			throw new JspException(e);
 		}
 	}

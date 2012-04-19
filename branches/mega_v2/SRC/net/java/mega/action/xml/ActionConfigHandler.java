@@ -27,8 +27,7 @@ import net.java.mega.action.model.WrapperChain;
 import net.java.mega.action.output.Forward;
 import net.java.mega.action.util.Constants;
 import net.java.mega.common.util.ClassLoaderUtil;
-import net.java.sjtools.logging.Log;
-import net.java.sjtools.logging.LogFactory;
+import net.java.sjtools.logging.plus.RLog;
 import net.java.sjtools.util.TextUtil;
 import net.java.sjtools.xml.SimpleHandler;
 
@@ -38,8 +37,6 @@ import org.xml.sax.SAXParseException;
 
 
 public class ActionConfigHandler extends SimpleHandler {
-
-	private static Log log = LogFactory.getLog(ActionConfigHandler.class);
 
 	public Object proccessElement(String elementType, Object currentObject, Attributes attributes) throws SAXException {
 		if (elementType.equals("action-config")) {
@@ -66,8 +63,8 @@ public class ActionConfigHandler extends SimpleHandler {
 				obj.addProperty(name, value);
 			}
 
-			if (log.isDebugEnabled()) {
-				log.debug(" - property " + name + " = " + value);
+			if (RLog.isTraceEnabled()) {
+				RLog.trace(" - property " + name + " = " + value);
 			}
 
 			return null;
@@ -80,8 +77,8 @@ public class ActionConfigHandler extends SimpleHandler {
 
 			config.addWrapperChain(ret);
 
-			if (log.isDebugEnabled()) {
-				log.debug(" - Wrapper chain " + ret.getName());
+			if (RLog.isTraceEnabled()) {
+				RLog.trace(" - Wrapper chain " + ret.getName());
 			}
 
 			return ret;
@@ -92,8 +89,8 @@ public class ActionConfigHandler extends SimpleHandler {
 
 			config.addWrapperChain(ret);
 
-			if (log.isDebugEnabled()) {
-				log.debug(" - Default wrapper chain");
+			if (RLog.isTraceEnabled()) {
+				RLog.trace(" - Default wrapper chain");
 			}
 
 			return ret;
@@ -105,7 +102,7 @@ public class ActionConfigHandler extends SimpleHandler {
 			try {
 				ret = (ActionWrapper) ClassLoaderUtil.createInstance(className);
 			} catch (Exception e) {
-				log.error("Error creating instance of " + className, e);
+				RLog.error("Error creating instance of " + className, e);
 				throw new SAXException("Error creating instance of " + className, e);
 			}
 
@@ -119,8 +116,8 @@ public class ActionConfigHandler extends SimpleHandler {
 				father.setNext(ret);
 			}
 
-			if (log.isDebugEnabled()) {
-				log.debug(" - ActionWrapper(" + className + ")");
+			if (RLog.isTraceEnabled()) {
+				RLog.trace(" - ActionWrapper(" + className + ")");
 			}
 
 			return ret;
@@ -135,7 +132,7 @@ public class ActionConfigHandler extends SimpleHandler {
 			try {
 				ret.setClazz(ClassLoaderUtil.getClass(className));
 			} catch (ClassNotFoundException e) {
-				log.error("Error loading class " + className, e);
+				RLog.error("Error loading class " + className, e);
 				throw new SAXException("Error loading class " + className, e);
 			}
 
@@ -152,12 +149,12 @@ public class ActionConfigHandler extends SimpleHandler {
 			try {
 				config.addAction(ret);
 			} catch (ActionAlreadyInUseException e) {
-				log.error("Class " + className + " already assign to a other action", e);
+				RLog.error("Class " + className + " already assign to a other action", e);
 				throw new SAXException("Class " + className + " already assign to a other action", e);
 			}
 
-			if (log.isDebugEnabled()) {
-				log.debug(" - Action " + ret.getName() + " (" + className + ")");
+			if (RLog.isTraceEnabled()) {
+				RLog.trace(" - Action " + ret.getName() + " (" + className + ")");
 			}
 
 			return ret;
@@ -174,8 +171,8 @@ public class ActionConfigHandler extends SimpleHandler {
 
 			config.addException(ret);
 
-			if (log.isDebugEnabled()) {
-				log.debug(" - Exception " + ret.getClassName() + " (" + forward + ")");
+			if (RLog.isTraceEnabled()) {
+				RLog.trace(" - Exception " + ret.getClassName() + " (" + forward + ")");
 			}
 
 			return ret;
@@ -186,8 +183,8 @@ public class ActionConfigHandler extends SimpleHandler {
 
 			config.addBundle(bundle);
 
-			if (log.isDebugEnabled()) {
-				log.debug(" - Resource " + bundle + ")");
+			if (RLog.isTraceEnabled()) {
+				RLog.trace(" - Resource " + bundle + ")");
 			}
 
 			return null;
@@ -206,8 +203,8 @@ public class ActionConfigHandler extends SimpleHandler {
 
 	public void processPCDATA(String elementType, Object currentObject, String value) {		
 		if (elementType.equals("url-pattern")) {
-			if (log.isDebugEnabled()) {
-				log.debug("      (" + value + ")");
+			if (RLog.isTraceEnabled()) {
+				RLog.trace("      (" + value + ")");
 			}
 			
 			((WrapperChain)currentObject).addPattern(value);
@@ -215,7 +212,7 @@ public class ActionConfigHandler extends SimpleHandler {
 	}
 
 	public void error(SAXParseException error) throws SAXException {
-		log.error("SAX Error", error);
+		RLog.error("SAX Error", error);
 		
 		throw new SAXException(error);
 	}

@@ -27,12 +27,9 @@ import net.java.mega.action.model.Action;
 import net.java.mega.action.model.ActionConfig;
 import net.java.mega.common.http.WARContextUtil;
 import net.java.mega.common.model.ServletMapping;
-import net.java.sjtools.logging.Log;
-import net.java.sjtools.logging.LogFactory;
+import net.java.sjtools.logging.plus.RLog;
 
 public class URLUtil {
-	private static Log log = LogFactory.getLog(URLUtil.class);
-
 	private HttpServletRequest request = null;
 	private HttpServletResponse response = null;
 	private ServletMapping servletMapping = null;
@@ -40,8 +37,8 @@ public class URLUtil {
 	private String servletExtention = null;
 
 	public URLUtil(HttpServletRequest request, HttpServletResponse response) {
-		if (log.isDebugEnabled()) {
-			log.debug("new URLUtil(...)");
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("new URLUtil(...)");
 		}
 
 		this.request = request;
@@ -59,8 +56,8 @@ public class URLUtil {
 	}
 
 	public String getFileURL(String fileName) {
-		if (log.isDebugEnabled()) {
-			log.debug("getFileURL(" + fileName + ")");
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("getFileURL(" + fileName + ")");
 		}
 
 		StringBuilder buffer = new StringBuilder();
@@ -77,8 +74,8 @@ public class URLUtil {
 	}
 
 	private String getExtention() {
-		if (log.isDebugEnabled()) {
-			log.debug("getExtention()");
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("getExtention()");
 		}
 
 		if (servletExtention == null && servletMapping == null) {
@@ -106,8 +103,8 @@ public class URLUtil {
 	}
 
 	private String getPath() {
-		if (log.isDebugEnabled()) {
-			log.debug("getPath()");
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("getPath()");
 		}
 
 		if (servletPath == null && servletMapping == null) {
@@ -130,8 +127,8 @@ public class URLUtil {
 	}
 	
 	public String getRAWMethodName(String actionName, String methodName) throws ActionException {
-		if (log.isDebugEnabled()) {
-			log.debug("getRAWMethodName(" + actionName + ", " + methodName + ")");
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("getRAWMethodName(" + actionName + ", " + methodName + ")");
 		}
 		
 		StringBuilder buffer = new StringBuilder();
@@ -147,8 +144,8 @@ public class URLUtil {
 	}
 	
 	public String getForwardURL(String actionName, String methodName) throws ActionException {
-		if (log.isDebugEnabled()) {
-			log.debug("getForwardURL(" + actionName + ", " + methodName + ")");
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("getForwardURL(" + actionName + ", " + methodName + ")");
 		}
 
 		StringBuilder buffer = new StringBuilder();
@@ -171,8 +168,8 @@ public class URLUtil {
 	}		
 	
 	public String getMethodURL(String actionName, String methodName) throws ActionException {
-		if (log.isDebugEnabled()) {
-			log.debug("getMethodURL(" + actionName + ", " + methodName + ")");
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("getMethodURL(" + actionName + ", " + methodName + ")");
 		}
 
 		StringBuilder buffer = new StringBuilder();

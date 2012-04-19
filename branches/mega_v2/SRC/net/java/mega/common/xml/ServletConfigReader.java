@@ -22,16 +22,13 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 import net.java.mega.common.model.ServletConfig;
-import net.java.sjtools.logging.Log;
-import net.java.sjtools.logging.LogFactory;
+import net.java.sjtools.logging.plus.RLog;
 import net.java.sjtools.xml.SimpleParser;
 
 public class ServletConfigReader {
-	private static Log log = LogFactory.getLog(ServletConfigReader.class);
-
 	public static ServletConfig getServletConfig(String servletName, InputStream inputStream) throws Exception {
-		if (log.isDebugEnabled()) {
-			log.debug("getServletConfig(" + servletName + ", ...)");
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("getServletConfig(" + servletName + ", ...)");
 		}
 
 		WebXMLHandler handler = new WebXMLHandler();

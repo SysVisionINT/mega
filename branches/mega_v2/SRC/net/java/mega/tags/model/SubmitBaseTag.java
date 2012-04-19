@@ -27,15 +27,12 @@ import javax.servlet.jsp.tagext.Tag;
 import net.java.mega.action.error.ActionException;
 import net.java.mega.action.util.URLUtil;
 import net.java.mega.tags.form.FormTag;
-import net.java.sjtools.logging.Log;
-import net.java.sjtools.logging.LogFactory;
+import net.java.sjtools.logging.plus.RLog;
 
 public abstract class SubmitBaseTag extends BaseBodyTag {
 	private static final long serialVersionUID = 7377298953679348420L;
 
 	private static final String ONCLICK = "onclick";
-
-	private static Log log = LogFactory.getLog(SubmitBaseTag.class);
 	
 	private String method = null;
 	private String tabIndex = null;
@@ -95,7 +92,7 @@ public abstract class SubmitBaseTag extends BaseBodyTag {
 			try {
 				buffer.append(url.getRAWMethodName(null, getMethod()));
 			} catch (ActionException e) {
-				log.error("Error while trying to generate URL for method " + getMethod(), e);
+				RLog.error("Error while trying to generate URL for method " + getMethod(), e);
 				throw new IOException(e.getMessage());
 			}
 			

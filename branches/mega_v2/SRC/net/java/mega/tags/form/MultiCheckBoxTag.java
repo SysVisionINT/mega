@@ -26,13 +26,10 @@ import javax.servlet.jsp.tagext.Tag;
 
 import net.java.mega.action.util.MultiCheckBoxUtil;
 import net.java.mega.tags.model.InputBaseTag;
-import net.java.sjtools.logging.Log;
-import net.java.sjtools.logging.LogFactory;
+import net.java.sjtools.logging.plus.RLog;
 
 public class MultiCheckBoxTag extends InputBaseTag {
 	private static final long serialVersionUID = 4288262712585202635L;
-
-	private static Log log = LogFactory.getLog(MultiCheckBoxTag.class);
 
 	public int writeStartTag() throws JspException {
 		return NOT_INCLUDE_INNER_HTML;
@@ -64,7 +61,7 @@ public class MultiCheckBoxTag extends InputBaseTag {
 
 			pageContext.getOut().println("/>");
 		} catch (Exception e) {
-			log.error("Error while writing INPUT (multi)checkbox TAG", e);
+			RLog.error("Error while writing INPUT (multi)checkbox TAG", e);
 			throw new JspException(e);
 		}
 	}

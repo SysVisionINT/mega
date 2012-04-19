@@ -26,16 +26,13 @@ import java.util.List;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
-import net.java.sjtools.logging.Log;
-import net.java.sjtools.logging.LogFactory;
+import net.java.sjtools.logging.plus.RLog;
 
 public abstract class BaseBodyTag extends BodyTagSupport implements AttributeContainer {
 	private static final long serialVersionUID = 2098390912252264943L;
 
 	public static int INCLUDE_INNER_HTML = 1;
 	public static int NOT_INCLUDE_INNER_HTML = 2;
-
-	private static Log log = LogFactory.getLog(BaseBodyTag.class);
 
 	private String style = null;
 	private String className = null;
@@ -80,7 +77,7 @@ public abstract class BaseBodyTag extends BodyTagSupport implements AttributeCon
 					pageContext.getOut().print(getInnerHtml());
 				}
 			} catch (IOException e) {
-				log.error("Error while writing the body content", e);
+				RLog.error("Error while writing the body content", e);
 
 				throw new JspException(e);
 			}

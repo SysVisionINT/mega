@@ -24,13 +24,10 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import net.java.mega.common.http.NavigationUtil;
-import net.java.sjtools.logging.Log;
-import net.java.sjtools.logging.LogFactory;
+import net.java.sjtools.logging.plus.RLog;
 
 public class NavigationTag extends TagSupport {
 	private static final long serialVersionUID = 41436596675023117L;
-
-	private static Log log = LogFactory.getLog(NavigationTag.class);
 
 	private String forward = null;
 	private String redirect = null;
@@ -52,7 +49,7 @@ public class NavigationTag extends TagSupport {
 				return SKIP_PAGE;
 			}
 		} catch (Exception e) {
-			log.error("Error while doing a " + (forward == null ? "redirect" : "forward") + " to "
+			RLog.error("Error while doing a " + (forward == null ? "redirect" : "forward") + " to "
 					+ (forward == null ? redirect : forward), e);
 			throw new JspException(e);
 		}

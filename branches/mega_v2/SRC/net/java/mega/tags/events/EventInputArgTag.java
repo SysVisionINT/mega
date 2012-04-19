@@ -22,13 +22,10 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.Tag;
 
 import net.java.mega.tags.form.FormTag;
-import net.java.sjtools.logging.Log;
-import net.java.sjtools.logging.LogFactory;
+import net.java.sjtools.logging.plus.RLog;
 
 public class EventInputArgTag extends net.java.mega.action.tag.events.EventInputArgTag {
 	private static final long serialVersionUID = -2635263555688921251L;
-	
-	private static Log log = LogFactory.getLog(EventInputArgTag.class);
 
 	public int doEndTag() throws JspException {
 		String form = getFormId();
@@ -44,7 +41,7 @@ public class EventInputArgTag extends net.java.mega.action.tag.events.EventInput
 				if (formTag != null) {
 					form = ((FormTag) formTag).getId();
 				} else {
-					log.error("No FORM TAG for INPUT TAG " + getInputName());
+					RLog.error("No FORM TAG for INPUT TAG " + getInputName());
 					throw new JspException("No FORM TAG for INPUT TAG " + getInputName());
 				}
 			}

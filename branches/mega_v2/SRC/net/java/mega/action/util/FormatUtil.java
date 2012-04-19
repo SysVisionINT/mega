@@ -25,16 +25,13 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import net.java.mega.common.http.HTMLUtil;
-import net.java.sjtools.logging.Log;
-import net.java.sjtools.logging.LogFactory;
+import net.java.sjtools.logging.plus.RLog;
 
 public class FormatUtil {
 
-	private static Log log = LogFactory.getLog(FormatUtil.class);
-
 	public static String format(Object obj, Locale locale) {
-		if (log.isDebugEnabled()) {
-			log.debug("format(" + obj + ")");
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("format(" + obj + ")");
 		}
 
 		return format(obj, null, locale);
@@ -45,8 +42,8 @@ public class FormatUtil {
 	}
 
 	public static String format(Object obj, String format, Locale locale, boolean filter) {
-		if (log.isDebugEnabled()) {
-			log.debug("format(" + obj + "," + format + ")");
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("format(" + obj + "," + format + ")");
 		}
 
 		if (obj == null) {
@@ -66,8 +63,8 @@ public class FormatUtil {
 				if (format == null) {
 					formatString = retrieveFormatString(obj.getClass(), locale);
 
-					if (log.isDebugEnabled()) {
-						log.debug(obj.getClass().getName() + "  -> formatString = " + formatString);
+					if (RLog.isTraceEnabled()) {
+						RLog.trace(obj.getClass().getName() + "  -> formatString = " + formatString);
 					}
 				}
 
@@ -82,8 +79,8 @@ public class FormatUtil {
 				if (format == null) {
 					formatString = retrieveFormatString(obj.getClass(), locale);
 
-					if (log.isDebugEnabled()) {
-						log.debug(obj.getClass().getName() + "  -> formatString = " + formatString);
+					if (RLog.isTraceEnabled()) {
+						RLog.trace(obj.getClass().getName() + "  -> formatString = " + formatString);
 					}
 				}
 

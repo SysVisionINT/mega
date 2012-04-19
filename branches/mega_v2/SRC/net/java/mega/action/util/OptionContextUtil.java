@@ -23,16 +23,13 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import net.java.mega.action.model.Action;
-import net.java.sjtools.logging.Log;
-import net.java.sjtools.logging.LogFactory;
+import net.java.sjtools.logging.plus.RLog;
 import net.java.sjtools.util.TextUtil;
 
 public class OptionContextUtil {
-	private static Log log = LogFactory.getLog(OptionContextUtil.class);
-
 	public static void store(HttpSession session, String actionPath, Action action) {
-		if (log.isDebugEnabled()) {
-			log.debug("store(..., " + actionPath + ", " + action.getClass().getName() + ")");
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("store(..., " + actionPath + ", " + action.getClass().getName() + ")");
 		}
 
 		// Identico ao UPDATE - INICIO
@@ -83,29 +80,29 @@ public class OptionContextUtil {
 
 		setRootOptionContextEntry(session, last);
 
-		if (log.isDebugEnabled()) {
-			log.debug(actionName + " added to " + last.getKey());
+		if (RLog.isTraceEnabled()) {
+			RLog.trace(actionName + " added to " + last.getKey());
 		}
 	}
 
 	public static Action get(HttpSession session, String actionPath) {
-		if (log.isDebugEnabled()) {
-			log.debug("get(..., " + actionPath + ")");
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("get(..., " + actionPath + ")");
 		}
 
 		OptionContextEntry root = getRootOptionContextEntry(session);
 		List pathParts = getPathParts(actionPath);
 
 		if (root == null || pathParts == null || pathParts.size() == 1) {
-			if (log.isDebugEnabled()) {
+			if (RLog.isTraceEnabled()) {
 				if (root == null) {
-					log.debug("root == null");
+					RLog.trace("root == null");
 				}
 				
 				if (pathParts == null) {
-					log.debug("pathParts == null");
+					RLog.trace("pathParts == null");
 				} else if(pathParts.size() == 1) {
-					log.debug("pathParts.size() == 1");
+					RLog.trace("pathParts.size() == 1");
 				}
 			}
 			
@@ -120,11 +117,11 @@ public class OptionContextUtil {
 				old = temp;
 				temp = old.getNext();
 			} else {
-				if (log.isDebugEnabled()) {
+				if (RLog.isTraceEnabled()) {
 					if (temp == null) {
-						log.debug("temp == null");
+						RLog.trace("temp == null");
 					} else if (!temp.getKey().equals(pathParts.get(i))) {
-						log.debug(temp.getKey() + " != " + pathParts.get(i));
+						RLog.trace(temp.getKey() + " != " + pathParts.get(i));
 					}
 				}
 				
@@ -136,8 +133,8 @@ public class OptionContextUtil {
 
 		Action ret = old.get(actionName);
 
-		if (log.isDebugEnabled()) {
-			log.debug(actionName + "=" + (ret == null? "Not Found!": ret.getClass().getName()));
+		if (RLog.isTraceEnabled()) {
+			RLog.trace(actionName + "=" + (ret == null? "Not Found!": ret.getClass().getName()));
 		}
 
 		return ret;
@@ -174,8 +171,8 @@ public class OptionContextUtil {
 	}
 
 	public static void update(HttpSession session, String actionPath) {
-		if (log.isDebugEnabled()) {
-			log.debug("update(..., " + actionPath + ")");
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("update(..., " + actionPath + ")");
 		}
 		
 		// Identico ao STORE - INICIO

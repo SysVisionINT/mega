@@ -22,13 +22,10 @@ import javax.servlet.jsp.JspException;
 
 import net.java.mega.tags.model.Attribute;
 import net.java.mega.tags.model.InputBaseTag;
-import net.java.sjtools.logging.Log;
-import net.java.sjtools.logging.LogFactory;
+import net.java.sjtools.logging.plus.RLog;
 
 public class TextAreaTag extends InputBaseTag {
 	private static final long serialVersionUID = 6220131178083682726L;
-
-	private static Log log = LogFactory.getLog(TextAreaTag.class);
 
 	private String cols = null;
 	private String rows = null;
@@ -79,7 +76,7 @@ public class TextAreaTag extends InputBaseTag {
 
 			pageContext.getOut().println("</textarea>");
 		} catch (Exception e) {
-			log.error("Error while writing INPUT textarea TAG", e);
+			RLog.error("Error while writing INPUT textarea TAG", e);
 			throw new JspException(e);
 		}
 	}

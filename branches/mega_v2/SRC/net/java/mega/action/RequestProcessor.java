@@ -60,15 +60,11 @@ import net.java.mega.action.util.MultiCheckBoxUtil;
 import net.java.mega.action.util.OptionContextUtil;
 import net.java.mega.action.util.WorkflowControlUtil;
 import net.java.mega.common.util.MegaCache;
-import net.java.sjtools.logging.Log;
-import net.java.sjtools.logging.LogFactory;
+import net.java.sjtools.logging.plus.RLog;
 import net.java.sjtools.util.BeanUtil;
 import net.java.sjtools.util.TextUtil;
 
 public class RequestProcessor {
-
-	private static Log log = LogFactory.getLog(RequestProcessor.class);
-
 	private HttpServletRequest request = null;
 	private HttpServletResponse response = null;
 	private RequestMetaData requestMetaData = null;
@@ -79,8 +75,8 @@ public class RequestProcessor {
 	private MessageContainer messageContainer = new MessageContainer();
 
 	public RequestProcessor(HttpServletRequest request, HttpServletResponse response, RequestMetaData requestMetaData) {
-		if (log.isDebugEnabled()) {
-			log.debug("new RequestProcessor(...)");
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("new RequestProcessor(...)");
 		}
 
 		this.request = request;
@@ -101,68 +97,68 @@ public class RequestProcessor {
 	}
 
 	public RequestMetaData getRequestMetaData() {
-		if (log.isDebugEnabled()) {
-			log.debug("getRequestMetaData()");
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("getRequestMetaData()");
 		}
 
 		return requestMetaData;
 	}
 
 	public HttpServletRequest getHttpServletRequest() {
-		if (log.isDebugEnabled()) {
-			log.debug("getHttpServletRequest()");
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("getHttpServletRequest()");
 		}
 
 		return (HttpServletRequest) request;
 	}
 
 	public HttpSession getHttpSession() {
-		if (log.isDebugEnabled()) {
-			log.debug("getHttpSession()");
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("getHttpSession()");
 		}
 
 		return (HttpSession) getHttpServletRequest().getSession(true);
 	}
 
 	public HttpServletResponse getHttpServletResponse() {
-		if (log.isDebugEnabled()) {
-			log.debug("getHttpServletResponse()");
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("getHttpServletResponse()");
 		}
 
 		return response;
 	}
 
 	public ServletContext getServletContext() {
-		if (log.isDebugEnabled()) {
-			log.debug("getServletContext()");
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("getServletContext()");
 		}
 
 		return getHttpSession().getServletContext();
 	}
 
 	public void removeSessionAction(Class clazz) {
-		if (log.isDebugEnabled()) {
-			log.debug("removeSessionAction(" + clazz.getName() + ".class)");
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("removeSessionAction(" + clazz.getName() + ".class)");
 		}
 
 		try {
 			getHttpSession().removeAttribute(getContextName(clazz));
 		} catch (Exception e) {
-			log.debug("Error removing action" + clazz.getName() + " from session", e);
+			RLog.trace("Error removing action" + clazz.getName() + " from session", e);
 		}
 	}
 
 	public void removeSessionAction(Action action) {
-		if (log.isDebugEnabled()) {
-			log.debug("removeSessionAction(" + action.getClass().getName() + ")");
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("removeSessionAction(" + action.getClass().getName() + ")");
 		}
 
 		removeSessionAction(action.getClass());
 	}
 
 	public void removeSessionAction(String path) {
-		if (log.isDebugEnabled()) {
-			log.debug("removeSessionAction(" + path + ")");
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("removeSessionAction(" + path + ")");
 		}
 
 		try {
@@ -170,13 +166,13 @@ public class RequestProcessor {
 
 			removeSessionAction(actionConfig.getClazz());
 		} catch (Exception e) {
-			log.debug("Configuration of action " + path + " not found!", e);
+			RLog.trace("Configuration of action " + path + " not found!", e);
 		}
 	}
 
 	public void gotoAction(String path, Object obj) {
-		if (log.isDebugEnabled()) {
-			log.debug("gotoAction(" + path + ", ...)");
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("gotoAction(" + path + ", ...)");
 		}
 
 		ActionConfig actionConfig = null;
@@ -184,7 +180,7 @@ public class RequestProcessor {
 		try {
 			actionConfig = ActionManager.getInstance().getActionConfig(path);
 		} catch (Exception e) {
-			log.error("Configuration of action " + path + " not found!", e);
+			RLog.error("Configuration of action " + path + " not found!", e);
 			throw new ActionCreationException(path);
 		}
 
@@ -192,16 +188,16 @@ public class RequestProcessor {
 	}
 
 	public void gotoAction(Class clazz, Object obj) {
-		if (log.isDebugEnabled()) {
-			log.debug("gotoAction(" + clazz.getName() + ".class, ...)");
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("gotoAction(" + clazz.getName() + ".class, ...)");
 		}
 
 		gotoAction(getActionInstance(clazz), obj);
 	}
 
 	public void gotoAction(Action action, Object obj) {
-		if (log.isDebugEnabled()) {
-			log.debug("gotoAction(" + action.getClass().getName() + ", ...)");
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("gotoAction(" + action.getClass().getName() + ", ...)");
 		}
 
 		currentResponse.setAction(action);
@@ -219,8 +215,8 @@ public class RequestProcessor {
 	}
 
 	public Action getActionInstance(Class clazz) {
-		if (log.isDebugEnabled()) {
-			log.debug("getActionInstance(" + clazz.getName() + ".class)");
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("getActionInstance(" + clazz.getName() + ".class)");
 		}
 
 		Action action = (Action) actions.get(clazz.getName());
@@ -235,7 +231,7 @@ public class RequestProcessor {
 					action = OptionContextUtil.get(getHttpSession(), actionPath);
 				}
 			} catch (ActionException e) {
-				log.error("Error while creating actionPath for object " + clazz.getName(), e);
+				RLog.error("Error while creating actionPath for object " + clazz.getName(), e);
 				throw new RuntimeException(e);
 			}
 
@@ -252,7 +248,7 @@ public class RequestProcessor {
 							action.setProperties(actionConfig.getProperties());
 						}
 					} catch (Exception e) {
-						log.error("Error while creating instance of " + clazz.getName(), e);
+						RLog.error("Error while creating instance of " + clazz.getName(), e);
 						throw new ActionCreationException(clazz);
 					}
 				}
@@ -265,8 +261,8 @@ public class RequestProcessor {
 	}
 
 	public ResponseMetaData process() throws Exception {
-		if (log.isDebugEnabled()) {
-			log.debug("process()");
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("process()");
 		}
 
 		Action action = getActionInstance(getRequestMetaData().getActionConfig().getClazz());
@@ -281,7 +277,7 @@ public class RequestProcessor {
 				
 				currentResponse.setResponseProvider(new EventOutput(container));
 			} else {
-				log.error("Class " + action.getClass().getName() + " doesn't implements EventSupport");
+				RLog.error("Class " + action.getClass().getName() + " doesn't implements EventSupport");
 				throw new MethodExecuteError(action.getClass().getName(), "processEvent");
 			}
 		} else {
@@ -292,8 +288,8 @@ public class RequestProcessor {
 				processGET(action);
 			}
 		} else {
-			if (log.isDebugEnabled()) {
-				log.debug("Request " + getRequestMetaData().getPath() + " with invalid token " + getRequestMetaData().getToken() + ", calling workflowError() on action " + action.getClass().getName());
+			if (RLog.isTraceEnabled()) {
+				RLog.trace("Request " + getRequestMetaData().getPath() + " with invalid token " + getRequestMetaData().getToken() + ", calling workflowError() on action " + action.getClass().getName());
 			}
 
 			action.workflowError();
@@ -360,8 +356,8 @@ public class RequestProcessor {
 	}
 
 	private void processGET(Action action) {
-		if (log.isDebugEnabled()) {
-			log.debug("processGET(...)");
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("processGET(...)");
 		}
 
 		List attributeList = new ArrayList();
@@ -404,7 +400,7 @@ public class RequestProcessor {
 				ret = new Object[0];
 			} else {
 				if (parameters.length != ((Method) methods.get(0)).getParameterTypes().length) {
-					log.error("Wrong number of arguments for method " + methodName + " of class " + action.getClass().getName());
+					RLog.error("Wrong number of arguments for method " + methodName + " of class " + action.getClass().getName());
 					throw new MethodExecuteError(action.getClass().getName(), methodName);
 				}
 
@@ -424,8 +420,8 @@ public class RequestProcessor {
 	}
 
 	private void processPOST(Action action) throws Exception {
-		if (log.isDebugEnabled()) {
-			log.debug("processPOST(...)");
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("processPOST(...)");
 		}
 
 		String attributeName = null;
@@ -484,7 +480,7 @@ public class RequestProcessor {
 		try {
 			beanUtil = BeanUtil.getPropertyBean(new BeanUtil(action, MegaCache.getInstance()), fullName);
 		} catch (Exception e) {
-			log.error("Error trying to set property " + fullName, e);
+			RLog.error("Error trying to set property " + fullName, e);
 			throw new PropertySetError(fullName, null);
 		}
 
@@ -499,22 +495,22 @@ public class RequestProcessor {
 			if (formFile instanceof EmptyFormFile) {
 				formFile = null;
 			} else {
-				if (log.isDebugEnabled()) {
-					log.debug("setProperty(" + action.getClass().getName() + ", " + name + ", " + formFile.getFileName() + ")");
+				if (RLog.isTraceEnabled()) {
+					RLog.trace("setProperty(" + action.getClass().getName() + ", " + name + ", " + formFile.getFileName() + ")");
 				}
 			}
 
 			try {
 				beanUtil.set(name, formFile);
 			} catch (Exception e) {
-				log.error("Error trying to set property " + name + " with the file " + formFile.getFileName() + " of class " + action.getClass().getName(), e);
+				RLog.error("Error trying to set property " + name + " with the file " + formFile.getFileName() + " of class " + action.getClass().getName(), e);
 				throw new PropertySetError(name, formFile.getFileName());
 			}
 		} else {
 			String[] parameterArray = (String[]) parameterValue;
 
-			if (log.isDebugEnabled()) {
-				log.debug("setProperty(" + action.getClass().getName() + ", " + name + ", [" + TextUtil.toString(parameterArray) + "])");
+			if (RLog.isTraceEnabled()) {
+				RLog.trace("setProperty(" + action.getClass().getName() + ", " + name + ", [" + TextUtil.toString(parameterArray) + "])");
 			}
 
 			Object value = parameterValue;
@@ -528,7 +524,7 @@ public class RequestProcessor {
 					try {
 						beanUtil.set(name, value);
 					} catch (Exception e) {
-						log.error("Error trying to set property " + name + " with the value " + value + " of class " + action.getClass().getName(), e);
+						RLog.error("Error trying to set property " + name + " with the value " + value + " of class " + action.getClass().getName(), e);
 						throw new PropertySetError(name, value);
 					}
 				} else {
@@ -548,7 +544,7 @@ public class RequestProcessor {
 						try {
 							beanUtil.set(name, collection);
 						} catch (Exception e) {
-							log.error("Error trying to set property " + name + " with the value " + collection + " of class " + action.getClass().getName(), e);
+							RLog.error("Error trying to set property " + name + " with the value " + collection + " of class " + action.getClass().getName(), e);
 							throw new PropertySetError(name, collection);
 						}
 					} else {
@@ -556,7 +552,7 @@ public class RequestProcessor {
 							try {
 								beanUtil.set(name, null);
 							} catch (Exception e) {
-								log.error("Error trying to set property " + name + " with the value NULL of class " + action.getClass().getName(), e);
+								RLog.error("Error trying to set property " + name + " with the value NULL of class " + action.getClass().getName(), e);
 								throw new PropertySetError(name, null);
 							}
 						} else {
@@ -566,7 +562,7 @@ public class RequestProcessor {
 							try {
 								beanUtil.set(name, object);
 							} catch (Exception e) {
-								log.error("Error trying to set property " + name + " with the value " + parameterArray + " of class " + action.getClass().getName(), e);
+								RLog.error("Error trying to set property " + name + " with the value " + parameterArray + " of class " + action.getClass().getName(), e);
 								throw new PropertySetError(name, parameterArray);
 							}
 						}
@@ -601,8 +597,8 @@ public class RequestProcessor {
 	}
 
 	private void execute(Action action, String methodName, Object[] parameters) {
-		if (log.isDebugEnabled()) {
-			log.debug("execute(" + action.getClass().getName() + ", " + methodName + ", [" + TextUtil.toString(parameters) + "])");
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("execute(" + action.getClass().getName() + ", " + methodName + ", [" + TextUtil.toString(parameters) + "])");
 		}
 
 		if (methodName.equals(MethodConstants.ON_LOAD) && parameters.length == 0) {
@@ -613,22 +609,22 @@ public class RequestProcessor {
 			try {
 				beanUtil.invokeMethod(methodName, parameters);
 			} catch (SecurityException e) {
-				log.error("Error trying to execute method " + methodName + " of class " + action.getClass().getName(), e);
+				RLog.error("Error trying to execute method " + methodName + " of class " + action.getClass().getName(), e);
 				throw new MethodExecuteError(action.getClass().getName(), methodName);
 			} catch (IllegalArgumentException e) {
-				log.error("Error trying to execute method " + methodName + " of class " + action.getClass().getName(), e);
+				RLog.error("Error trying to execute method " + methodName + " of class " + action.getClass().getName(), e);
 				throw new MethodExecuteError(action.getClass().getName(), methodName);
 			} catch (NoSuchMethodException e) {
-				log.error("Error trying to execute method " + methodName + " of class " + action.getClass().getName(), e);
+				RLog.error("Error trying to execute method " + methodName + " of class " + action.getClass().getName(), e);
 				throw new MethodExecuteError(action.getClass().getName(), methodName);
 			} catch (IllegalAccessException e) {
-				log.error("Error trying to execute method " + methodName + " of class " + action.getClass().getName(), e);
+				RLog.error("Error trying to execute method " + methodName + " of class " + action.getClass().getName(), e);
 				throw new MethodExecuteError(action.getClass().getName(), methodName);
 			} catch (InvocationTargetException e) {
-				log.error("Error trying to execute method " + methodName + " of class " + action.getClass().getName(), e);
+				RLog.error("Error trying to execute method " + methodName + " of class " + action.getClass().getName(), e);
 				throw new MethodExecuteError(action.getClass().getName(), methodName);
 			} catch (Exception e) {
-				log.error("Error trying to execute method " + methodName + " of class " + action.getClass().getName(), e);
+				RLog.error("Error trying to execute method " + methodName + " of class " + action.getClass().getName(), e);
 				throw new MethodExecuteError(e);
 			}
 		}

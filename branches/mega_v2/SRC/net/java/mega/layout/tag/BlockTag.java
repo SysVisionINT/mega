@@ -22,25 +22,22 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import net.java.mega.layout.util.LayoutServletUtil;
-import net.java.sjtools.logging.Log;
-import net.java.sjtools.logging.LogFactory;
+import net.java.sjtools.logging.plus.RLog;
 
 public class BlockTag extends TagSupport {
 	private static final long serialVersionUID = 1824165782784735482L;
 
-	private static Log log = LogFactory.getLog(BlockTag.class);
-
 	private String blockName = null;
 
 	public int doEndTag() throws JspException {
-		if (log.isDebugEnabled()) {
-			log.debug("TAG block = " + blockName);
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("TAG block = " + blockName);
 		}
 
 		try {
 			LayoutServletUtil.processBlock(pageContext, blockName);
 		} catch (Exception e) {
-			log.error("Error writing block " + getName() + " content", e);
+			RLog.error("Error writing block " + getName() + " content", e);
 			throw new JspException(e);
 		}
 

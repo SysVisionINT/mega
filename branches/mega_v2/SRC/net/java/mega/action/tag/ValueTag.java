@@ -33,15 +33,11 @@ import net.java.mega.common.http.WARContextUtil;
 import net.java.mega.common.http.scope.Scope;
 import net.java.mega.common.http.scope.ScopeUtil;
 import net.java.mega.common.resource.LocaleUtil;
-import net.java.sjtools.logging.Log;
-import net.java.sjtools.logging.LogFactory;
+import net.java.sjtools.logging.plus.RLog;
 import net.java.sjtools.util.TextUtil;
 
 public class ValueTag extends TagSupport {
-
 	private static final long serialVersionUID = 1824165782784735482L;
-
-	private static Log log = LogFactory.getLog(ValueTag.class);
 
 	private String name = Constants.CURRENT_ACTION;
 	private String property = null;
@@ -79,7 +75,7 @@ public class ValueTag extends TagSupport {
 				}
 			}
 		} catch (IOException e) {
-			log.error("Error while formating " + name + (property == null ? "." + property : "") + " with " + format, e);
+			RLog.error("Error while formating " + name + (property == null ? "." + property : "") + " with " + format, e);
 
 			throw new JspException(e);
 		}

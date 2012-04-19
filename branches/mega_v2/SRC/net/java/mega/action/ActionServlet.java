@@ -34,32 +34,28 @@ import net.java.mega.action.error.WorkflowError;
 import net.java.mega.action.model.ActionWrapper;
 import net.java.mega.action.model.ControllerConfig;
 import net.java.mega.action.util.ActionRequestUtil;
-import net.java.mega.action.util.RequestParametersFactory;
 import net.java.mega.action.util.Constants;
+import net.java.mega.action.util.RequestParametersFactory;
 import net.java.mega.action.util.WorkflowControlUtil;
 import net.java.mega.action.xml.ActionConfigReader;
 import net.java.mega.common.http.ServletContextUtil;
 import net.java.mega.common.xml.ServletConfigReader;
-import net.java.sjtools.logging.Log;
-import net.java.sjtools.logging.LogFactory;
+import net.java.sjtools.logging.plus.RLog;
 
 public class ActionServlet extends HttpServlet {
-
 	private static final long serialVersionUID = 5569343447487377887L;
 
-	private static Log log = LogFactory.getLog(ActionServlet.class);
-
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		if (log.isDebugEnabled()) {
-			log.debug("GET from user " + request.getRemoteUser() + " on " + request.getRemoteAddr());
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("GET from user " + request.getRemoteUser() + " on " + request.getRemoteAddr());
 		}
 
 		process(request, response, Constants.HTTP_GET);
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		if (log.isDebugEnabled()) {
-			log.debug("POST from user " + request.getRemoteUser() + " on " + request.getRemoteAddr());
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("POST from user " + request.getRemoteUser() + " on " + request.getRemoteAddr());
 		}
 
 		process(request, response, Constants.HTTP_POST);
@@ -97,8 +93,8 @@ public class ActionServlet extends HttpServlet {
 					WorkflowControlUtil.markAsSameRequest(request);
 					throw e;
 				} else {
-					if (log.isDebugEnabled()) {
-						log.debug("The ResponseProvider for the Throwable " + e.getClass().getName() + " was found");
+					if (RLog.isTraceEnabled()) {
+						RLog.trace("The ResponseProvider for the Throwable " + e.getClass().getName() + " was found");
 					}
 				}
 			}
@@ -115,14 +111,14 @@ public class ActionServlet extends HttpServlet {
 		} catch (ActionException e) {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		} catch (Throwable e) {
-			log.error("Runtime error", e);
+			RLog.error("Runtime error", e);
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	public void init(ServletConfig config) throws ServletException {
-		if (log.isDebugEnabled()) {
-			log.debug("init(...)");
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("init(...)");
 		}
 
 		ServletContextUtil wrl = new ServletContextUtil(config.getServletContext());
@@ -135,25 +131,25 @@ public class ActionServlet extends HttpServlet {
 
 				ActionManager.getInstance().setControllerConfig(controllerConfig);
 			} catch (Exception e) {
-				log.error("Error while reading " + configFile, e);
+				RLog.error("Error while reading " + configFile, e);
 				throw new ServletException(e);
 			}
 		} else {
-			log.error("InitParameter " + Constants.ACTION_CONFIG_PARAMETER + " not defined!");
+			RLog.error("InitParameter " + Constants.ACTION_CONFIG_PARAMETER + " not defined!");
 			throw new ServletException("InitParameter " + Constants.ACTION_CONFIG_PARAMETER + " not defined!");
 		}
 
 		try {
 			ActionManager.getInstance().setServletConfig(ServletConfigReader.getServletConfig(config.getServletName(), wrl.getResourceInputStream(Constants.WEB_XML)));
 		} catch (Exception e) {
-			log.error("Error while reading " + Constants.WEB_XML, e);
+			RLog.error("Error while reading " + Constants.WEB_XML, e);
 			throw new ServletException(e);
 		}
 	}
 
 	public void destroy() {
-		if (log.isDebugEnabled()) {
-			log.debug("destroy()");
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("destroy()");
 		}
 
 		ActionManager.getInstance().clean();

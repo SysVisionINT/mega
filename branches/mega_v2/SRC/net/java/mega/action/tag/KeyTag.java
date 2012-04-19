@@ -28,13 +28,10 @@ import javax.servlet.jsp.tagext.TagSupport;
 import net.java.mega.action.util.ActionMessageUtil;
 import net.java.mega.common.http.HTMLUtil;
 import net.java.mega.common.resource.LocaleUtil;
-import net.java.sjtools.logging.Log;
-import net.java.sjtools.logging.LogFactory;
+import net.java.sjtools.logging.plus.RLog;
 
 public class KeyTag extends TagSupport {
 	private static final long serialVersionUID = 1824165782784735482L;
-
-	private static Log log = LogFactory.getLog(KeyTag.class);
 
 	private String key = null;
 	private boolean filter = true;
@@ -55,7 +52,7 @@ public class KeyTag extends TagSupport {
 		try {
 			pageContext.getOut().print(message);
 		} catch (IOException e) {
-			log.error("Error while writing message for key = " + key, e);
+			RLog.error("Error while writing message for key = " + key, e);
 
 			throw new JspException(e);
 		}

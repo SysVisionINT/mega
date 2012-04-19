@@ -24,13 +24,10 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import net.java.mega.action.util.URLUtil;
-import net.java.sjtools.logging.Log;
-import net.java.sjtools.logging.LogFactory;
+import net.java.sjtools.logging.plus.RLog;
 
 public class ActionTag extends TagSupport {
 	private static final long serialVersionUID = 7442575625580880429L;
-
-	private static Log log = LogFactory.getLog(ActionTag.class);
 
 	private String action = null;
 
@@ -45,7 +42,7 @@ public class ActionTag extends TagSupport {
 		try {
 			pageContext.getOut().print(url.getMethodURL(action, method));
 		} catch (Exception e) {
-			log.error("Error while writing URL for (action = " + action + (method == null ? "" : " method = " + method)
+			RLog.error("Error while writing URL for (action = " + action + (method == null ? "" : " method = " + method)
 					+ ")", e);
 
 			throw new JspException(e);

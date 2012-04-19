@@ -31,13 +31,10 @@ import javax.servlet.jsp.tagext.BodyTagSupport;
 import net.java.mega.action.model.EventArg;
 import net.java.mega.action.util.Constants;
 import net.java.mega.action.util.URLUtil;
-import net.java.sjtools.logging.Log;
-import net.java.sjtools.logging.LogFactory;
+import net.java.sjtools.logging.plus.RLog;
 
 public class EventTag extends BodyTagSupport {
 	private static final long serialVersionUID = -3132410083638333240L;
-
-	private static Log log = LogFactory.getLog(EventTag.class);
 
 	private List eventArgList = new ArrayList();
 
@@ -59,7 +56,7 @@ public class EventTag extends BodyTagSupport {
 		try {
 			pageContext.getOut().print(buffer.toString());
 		} catch (IOException e) {
-			log.error("Error while writing Javascript for EVENT " + getName(), e);
+			RLog.error("Error while writing Javascript for EVENT " + getName(), e);
 			throw new JspException(e);
 		}
 
@@ -104,7 +101,7 @@ public class EventTag extends BodyTagSupport {
 
 			buffer.append("});");
 		} catch (Exception e) {
-			log.error("Error while writing EVENT TAG", e);
+			RLog.error("Error while writing EVENT TAG", e);
 			throw new JspException(e);
 		}
 

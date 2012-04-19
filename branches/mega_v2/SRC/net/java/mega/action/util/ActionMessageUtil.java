@@ -23,15 +23,12 @@ import java.util.Locale;
 
 import net.java.mega.action.ActionManager;
 import net.java.mega.common.resource.MessageUtil;
-import net.java.sjtools.logging.Log;
-import net.java.sjtools.logging.LogFactory;
+import net.java.sjtools.logging.plus.RLog;
 
 public class ActionMessageUtil {
-	private static Log log = LogFactory.getLog(ActionMessageUtil.class);
-
 	public static String getMessage(String messageKey, Locale locale) {
-		if (log.isDebugEnabled()) {
-			log.debug("getMessage(" + messageKey + ", " + locale + ")");
+		if (RLog.isTraceEnabled()) {
+			RLog.trace("getMessage(" + messageKey + ", " + locale + ")");
 		}
 
 		List bundleList = ActionManager.getInstance().getBundleList();

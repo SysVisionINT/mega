@@ -23,14 +23,11 @@ import javax.servlet.jsp.tagext.Tag;
 
 import net.java.mega.tags.model.Attribute;
 import net.java.mega.tags.model.InputBaseTag;
-import net.java.sjtools.logging.Log;
-import net.java.sjtools.logging.LogFactory;
+import net.java.sjtools.logging.plus.RLog;
 import net.java.sjtools.util.TextUtil;
 
 public class FileTag extends InputBaseTag {
 	private static final long serialVersionUID = 4288262712585202635L;
-
-	private static Log log = LogFactory.getLog(FileTag.class);
 
 	private String size = null;
 
@@ -62,7 +59,7 @@ public class FileTag extends InputBaseTag {
 
 			pageContext.getOut().println("/>");
 		} catch (Exception e) {
-			log.error("Error while writing INPUT file TAG", e);
+			RLog.error("Error while writing INPUT file TAG", e);
 			throw new JspException(e);
 		}
 	}

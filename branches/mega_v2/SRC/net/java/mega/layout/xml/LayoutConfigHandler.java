@@ -18,9 +18,17 @@
  */
 package net.java.mega.layout.xml;
 
-import net.java.mega.layout.model.*;
-import net.java.sjtools.logging.Log;
-import net.java.sjtools.logging.LogFactory;
+import net.java.mega.layout.model.BeanContent;
+import net.java.mega.layout.model.Block;
+import net.java.mega.layout.model.ControlerContent;
+import net.java.mega.layout.model.Layout;
+import net.java.mega.layout.model.LayoutPath;
+import net.java.mega.layout.model.MessageKeyContent;
+import net.java.mega.layout.model.Page;
+import net.java.mega.layout.model.PageExtend;
+import net.java.mega.layout.model.PathContent;
+import net.java.mega.layout.model.StringContent;
+import net.java.sjtools.logging.plus.RLog;
 import net.java.sjtools.util.TextUtil;
 import net.java.sjtools.xml.SimpleHandler;
 
@@ -29,8 +37,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 public class LayoutConfigHandler extends SimpleHandler {
-
-	private static Log log = LogFactory.getLog(LayoutConfigHandler.class);
 
 	public Object proccessElement(String elementType, Object currentObject, Attributes attributes) {
 		if (elementType.equals("layout-config")) {
@@ -44,8 +50,8 @@ public class LayoutConfigHandler extends SimpleHandler {
 
 			layout.addPage(ret);
 
-			if (log.isDebugEnabled()) {
-				log.debug("new Page = " + ret.getPageName());
+			if (RLog.isTraceEnabled()) {
+				RLog.trace("new Page = " + ret.getPageName());
 			}
 
 			return ret;
@@ -56,8 +62,8 @@ public class LayoutConfigHandler extends SimpleHandler {
 
 			layout.addBundle(bundleName);
 
-			if (log.isDebugEnabled()) {
-				log.debug("bundle = " + bundleName);
+			if (RLog.isTraceEnabled()) {
+				RLog.trace("bundle = " + bundleName);
 			}
 		} else if (elementType.equals("layout-path")) {
 			Page page = (Page) currentObject;
@@ -68,8 +74,8 @@ public class LayoutConfigHandler extends SimpleHandler {
 
 			page.setPageBase(ret);
 
-			if (log.isDebugEnabled()) {
-				log.debug(" - Page(" + page.getPageName() + ") -> layout-path = " + ret.getPath());
+			if (RLog.isTraceEnabled()) {
+				RLog.trace(" - Page(" + page.getPageName() + ") -> layout-path = " + ret.getPath());
 			}
 
 			return ret;
@@ -82,8 +88,8 @@ public class LayoutConfigHandler extends SimpleHandler {
 
 			page.setPageBase(ret);
 
-			if (log.isDebugEnabled()) {
-				log.debug(" - Page(" + page.getPageName() + ") -> extends = " + ret.getPageName());
+			if (RLog.isTraceEnabled()) {
+				RLog.trace(" - Page(" + page.getPageName() + ") -> extends = " + ret.getPageName());
 			}
 
 			return ret;
@@ -96,8 +102,8 @@ public class LayoutConfigHandler extends SimpleHandler {
 
 			page.addBlock(ret);
 
-			if (log.isDebugEnabled()) {
-				log.debug(" - Page(" + page.getPageName() + ") -> add(new Block(" + ret.getBlockName() + "))");
+			if (RLog.isTraceEnabled()) {
+				RLog.trace(" - Page(" + page.getPageName() + ") -> add(new Block(" + ret.getBlockName() + "))");
 			}
 
 			return ret;
@@ -110,8 +116,8 @@ public class LayoutConfigHandler extends SimpleHandler {
 
 			block.setContent(ret);
 
-			if (log.isDebugEnabled()) {
-				log.debug(" -- Block(" + block.getBlockName() + ") -> string = '" + ret.getValue() + "'");
+			if (RLog.isTraceEnabled()) {
+				RLog.trace(" -- Block(" + block.getBlockName() + ") -> string = '" + ret.getValue() + "'");
 			}
 
 			return ret;
@@ -130,8 +136,8 @@ public class LayoutConfigHandler extends SimpleHandler {
 
 			block.setContent(ret);
 
-			if (log.isDebugEnabled()) {
-				log.debug(" -- Block(" + block.getBlockName() + ") -> key = '" + ret.getValue() + "'");
+			if (RLog.isTraceEnabled()) {
+				RLog.trace(" -- Block(" + block.getBlockName() + ") -> key = '" + ret.getValue() + "'");
 			}
 
 			return ret;
@@ -144,8 +150,8 @@ public class LayoutConfigHandler extends SimpleHandler {
 
 			block.setContent(ret);
 
-			if (log.isDebugEnabled()) {
-				log.debug(" -- Block(" + block.getBlockName() + ") -> path = " + ret.getValue());
+			if (RLog.isTraceEnabled()) {
+				RLog.trace(" -- Block(" + block.getBlockName() + ") -> path = " + ret.getValue());
 			}
 
 			return ret;
@@ -162,8 +168,8 @@ public class LayoutConfigHandler extends SimpleHandler {
 
 			block.setContent(ret);
 
-			if (log.isDebugEnabled()) {
-				log.debug(" -- Block(" + block.getBlockName() + ") -> bean = " + ret.getName()
+			if (RLog.isTraceEnabled()) {
+				RLog.trace(" -- Block(" + block.getBlockName() + ") -> bean = " + ret.getName()
 						+ (ret.getProperty() == null ? "" : "." + ret.getProperty()));
 			}
 
@@ -177,8 +183,8 @@ public class LayoutConfigHandler extends SimpleHandler {
 
 			block.setContent(ret);
 
-			if (log.isDebugEnabled()) {
-				log.debug(" -- Block(" + block.getBlockName() + ") -> controler = " + ret.getClassName());
+			if (RLog.isTraceEnabled()) {
+				RLog.trace(" -- Block(" + block.getBlockName() + ") -> controler = " + ret.getClassName());
 			}
 
 			return ret;
@@ -190,8 +196,8 @@ public class LayoutConfigHandler extends SimpleHandler {
 
 			controlerContent.addParameter(name, value);
 
-			if (log.isDebugEnabled()) {
-				log.debug(" --- Controler(" + controlerContent.getClassName() + ") -> addParameter(" + name + ", "
+			if (RLog.isTraceEnabled()) {
+				RLog.trace(" --- Controler(" + controlerContent.getClassName() + ") -> addParameter(" + name + ", "
 						+ value + ")");
 			}
 
@@ -205,7 +211,7 @@ public class LayoutConfigHandler extends SimpleHandler {
 	}
 
 	public void error(SAXParseException error) throws SAXException {
-		log.error("SAX Error", error);
+		RLog.error("SAX Error", error);
 
 		throw new SAXException(error);
 	}

@@ -18,9 +18,9 @@
  */
 package net.java.mega.action.output.events;
 
-import org.json.simple.JSONObject;
-
 import net.java.mega.action.api.events.EventChange;
+
+import org.json.simple.JSONObject;
 
 public class InnerHtml implements EventChange {
 	private static final long serialVersionUID = 2319380720974714766L;
