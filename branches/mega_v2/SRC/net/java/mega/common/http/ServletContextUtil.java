@@ -27,8 +27,12 @@ import javax.servlet.ServletContext;
 public class ServletContextUtil {	
 	private ServletContext servletContext = null;
 
-	public ServletContextUtil(ServletContext context) {
+	private ServletContextUtil(ServletContext context) {
 		servletContext = context;
+	}
+	
+	public static ServletContextUtil getInstance(ServletContext context) {
+		return new ServletContextUtil(context);
 	}
 
 	public URL getResourceURL(String path) throws MalformedURLException {

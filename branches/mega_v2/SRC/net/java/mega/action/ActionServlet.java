@@ -121,7 +121,7 @@ public class ActionServlet extends HttpServlet {
 			RLog.trace("init(...)");
 		}
 
-		ServletContextUtil wrl = new ServletContextUtil(config.getServletContext());
+		ServletContextUtil wrl = ServletContextUtil.getInstance(config.getServletContext());
 
 		String configFile = config.getInitParameter(Constants.ACTION_CONFIG_PARAMETER);
 

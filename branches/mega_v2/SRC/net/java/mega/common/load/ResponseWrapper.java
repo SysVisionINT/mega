@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
 public class ResponseWrapper extends HttpServletResponseWrapper {
+
 	private ServletOutputStreamWrapper output = new ServletOutputStreamWrapper();
 	private PrintWriter pw = new PrintWriter(output);
 	private boolean usedWriter = true;
@@ -41,8 +41,8 @@ public class ResponseWrapper extends HttpServletResponseWrapper {
 	private String errorMsg = null;
 	private String characterEncoding = null;
 	private String contentType = null;
-	private List cookieList = new ArrayList();
-	private Map headerMap = new HashMap();
+	private List<Cookie> cookieList = new ArrayList<Cookie>();
+	private Map<String, Object> headerMap = new HashMap<String, Object>();
 	private String redirect = null;
 
 	public ResponseWrapper(HttpServletResponse response) {
@@ -143,15 +143,13 @@ public class ResponseWrapper extends HttpServletResponseWrapper {
 			return;
 		}
 
-		for (Iterator i = cookieList.iterator(); i.hasNext();) {
-			response.addCookie((Cookie) i.next());
+		for (Cookie cookie : cookieList) {
+			response.addCookie(cookie);
 		}
 
-		String name = null;
 		Object value = null;
 
-		for (Iterator i = headerMap.keySet().iterator(); i.hasNext();) {
-			name = (String) i.next();
+		for (String name : headerMap.keySet()) {
 			value = headerMap.get(name);
 
 			if (value instanceof String) {
@@ -207,11 +205,11 @@ public class ResponseWrapper extends HttpServletResponseWrapper {
 		return contentType;
 	}
 
-	public List getCookieList() {
+	public List<Cookie> getCookieList() {
 		return cookieList;
 	}
 
-	public Map getHeaderMap() {
+	public Map<String, Object> getHeaderMap() {
 		return headerMap;
 	}
 
