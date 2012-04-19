@@ -70,7 +70,7 @@ public class ValueTag extends TagSupport {
 					pageContext.getOut().print(getKeyValue(defaultValue, locale));
 				}
 			} else {
-				Object value = WARContextUtil.getValue(pageContext, name, property);
+				Object value = WARContextUtil.getValue(scope, name, property);
 
 				if (value == null && !TextUtil.isEmptyString(defaultValue)) {
 					pageContext.getOut().print(getKeyValue(defaultValue, locale));

@@ -91,7 +91,7 @@ public class URLUtil {
 	private synchronized void processServletMapping() {
 		servletMapping = (ServletMapping) ActionManager.getInstance().getServletConfig().getMapping().get(0);
 
-		String url = servletMapping.getUrl();
+		String url = servletMapping.firstUrl();
 		int posDot = url.lastIndexOf(".");
 		int posRoot = url.lastIndexOf("/");
 		int posMask = url.lastIndexOf("*");

@@ -26,7 +26,7 @@ import javax.servlet.jsp.PageContext;
 public class PageScope implements Scope {
 	private PageContext context = null;
 	
-	public PageScope(PageContext context) {
+	protected PageScope(PageContext context) {
 		this.context = context;
 	}
 
