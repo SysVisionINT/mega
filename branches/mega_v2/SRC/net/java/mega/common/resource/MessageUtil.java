@@ -18,7 +18,6 @@
  */
 package net.java.mega.common.resource;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -27,18 +26,15 @@ import net.java.sjtools.logging.plus.RLog;
 import net.java.sjtools.util.TextUtil;
 
 public class MessageUtil {
-	public static String getMessage(List bundleList, String messageKey, Locale locale) {
+	public static String getMessage(List<String> bundleList, String messageKey, Locale locale) {
 		if (RLog.isTraceEnabled()) {
-			RLog.trace("getMessage([" +TextUtil.toString(bundleList) + "], "+  messageKey + ", " + locale + ")");
+			RLog.trace("getMessage([" + TextUtil.toString(bundleList) + "], "+  messageKey + ", " + locale + ")");
 		}
 
 		String message = null;
-		String bundleName = null;
 		ResourceBundle bundle = null;
 
-		for (Iterator i = bundleList.iterator(); i.hasNext();) {
-			bundleName = (String) i.next();
-
+		for (String bundleName : bundleList) {
 			if (RLog.isTraceEnabled()) {
 				RLog.trace("bundleName = " + bundleName);
 			}

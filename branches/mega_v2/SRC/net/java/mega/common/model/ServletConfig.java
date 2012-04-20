@@ -19,13 +19,12 @@
 package net.java.mega.common.model;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class ServletConfig {
-	private List mapping = new ArrayList();
+	private List<ServletMapping> mapping = new ArrayList<ServletMapping>();
 
-	public List getMapping() {
+	public List<ServletMapping> getMapping() {
 		return mapping;
 	}
 
@@ -34,20 +33,16 @@ public class ServletConfig {
 	}
 
 	public void prune(String servletName) {
-		List deleteList = new ArrayList();
+		List<ServletMapping> deleteList = new ArrayList<ServletMapping>();
 
-		ServletMapping servletMapping = null;
-
-		for (Iterator i = mapping.iterator(); i.hasNext();) {
-			servletMapping = (ServletMapping) i.next();
-			
+		for (ServletMapping servletMapping : mapping) {
 			if (!servletMapping.getName().equals(servletName)) {
 				deleteList.add(servletMapping);
 			}
 		}
 		
-		for (Iterator i = deleteList.iterator(); i.hasNext();) {
-			mapping.remove(i.next());
+		for (ServletMapping servletMapping : deleteList) {
+			mapping.remove(servletMapping);
 		}
 	}
 }
