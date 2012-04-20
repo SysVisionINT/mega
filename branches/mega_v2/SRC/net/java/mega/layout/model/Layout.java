@@ -28,28 +28,28 @@ import java.util.Set;
 public class Layout implements Serializable {
 	private static final long serialVersionUID = -7728406004762204001L;
 	
-	private Map pageMap = new HashMap();
-	private List bundleList = new ArrayList();
+	private Map<String, Page> pageMap = new HashMap<String, Page>();
+	private List<String> bundleList = new ArrayList<String>();
 	
 	public void addPage(Page page) {
 		pageMap.put(page.getPageName(), page);
 	}
 	
 	public Page getPage(String pageName) {
-		return (Page) pageMap.get(pageName);
+		return pageMap.get(pageName);
 	}
 	
 	public String[] getPageNames() {
-		Set set = pageMap.keySet();
+		Set<String> set = pageMap.keySet();
 		
-		return (String[]) set.toArray(new String[set.size()]);
+		return set.toArray(new String[set.size()]);
 	}
 	
 	public void addBundle(String bundleName) {
 		bundleList.add(bundleName);
 	}
 	
-	public List getBundleList() {
+	public List<String> getBundleList() {
 		return bundleList;
 	}
 }

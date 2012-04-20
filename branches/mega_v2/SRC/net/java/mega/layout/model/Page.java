@@ -27,7 +27,7 @@ public class Page implements Serializable {
 	
 	private String pageName = null;
 	private PageBase pageBase = null;
-	private Map blockMap = new HashMap();
+	private Map<String, Block> blockMap = new HashMap<String, Block>();
 
 	public String getPageName() {
 		return pageName;
@@ -50,6 +50,6 @@ public class Page implements Serializable {
 	}
 	
 	public Block getBlock(String bockName) {
-		return (Block) blockMap.get(bockName);
+		return blockMap.get(bockName);
 	}
 }

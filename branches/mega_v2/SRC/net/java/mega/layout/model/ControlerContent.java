@@ -26,7 +26,7 @@ public class ControlerContent implements BlockContent, Serializable {
 	private static final long serialVersionUID = -9192639204012137362L;
 	
 	private String className = null;
-	private Map parameters = new HashMap();
+	private Map<String, String> parameters = new HashMap<String, String>();
 
 	public String getClassName() {
 		return className;
@@ -36,7 +36,7 @@ public class ControlerContent implements BlockContent, Serializable {
 		this.className = className;
 	}
 
-	public Map getParameters() {
+	public Map<String, String> getParameters() {
 		return parameters;
 	}
 	

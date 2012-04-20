@@ -30,6 +30,7 @@ import net.java.mega.common.http.HTMLUtil;
 import net.java.mega.common.http.WARContextUtil;
 import net.java.mega.common.resource.LocaleUtil;
 import net.java.mega.common.resource.MessageUtil;
+import net.java.mega.common.util.ClassLoaderUtil;
 import net.java.mega.layout.extention.Controller;
 import net.java.mega.layout.model.BeanContent;
 import net.java.mega.layout.model.Block;
@@ -156,8 +157,7 @@ public class LayoutServletUtil {
 		controler = (Controller) pageContext.getServletContext().getAttribute(key);
 
 		if (controler == null) {
-			ClassLoader cl = Thread.currentThread().getContextClassLoader();
-			controler = (Controller) cl.loadClass(controlerContent.getClassName()).newInstance();
+			controler = (Controller) ClassLoaderUtil.createInstance(controlerContent.getClassName());
 
 			pageContext.getServletContext().setAttribute(key, controler);
 		}

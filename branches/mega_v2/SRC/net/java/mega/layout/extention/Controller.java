@@ -33,5 +33,5 @@ public abstract class Controller implements Serializable {
 
 	public Controller() {}
 
-	public abstract BlockContent getBlockContent(String pageName, String blockName, Map parameters, HttpServletRequest request, HttpServletResponse response) throws ServletException;
+	public abstract BlockContent getBlockContent(String pageName, String blockName, Map<String, String> parameters, HttpServletRequest request, HttpServletResponse response) throws ServletException;
 }
