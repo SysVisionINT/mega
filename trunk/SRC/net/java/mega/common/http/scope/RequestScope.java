@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 public class RequestScope implements Scope {
 	private HttpServletRequest context = null;
 	
-	protected RequestScope(HttpServletRequest context) {
+	public RequestScope(HttpServletRequest context) {
 		this.context = context;
 	}
 

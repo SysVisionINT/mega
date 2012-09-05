@@ -63,7 +63,7 @@ public class URLUtil {
 			log.debug("getFileURL(" + fileName + ")");
 		}
 
-		StringBuilder buffer = new StringBuilder();
+		StringBuffer buffer = new StringBuffer();
 
 		buffer.append(getContextPath());
 
@@ -91,7 +91,7 @@ public class URLUtil {
 	private synchronized void processServletMapping() {
 		servletMapping = (ServletMapping) ActionManager.getInstance().getServletConfig().getMapping().get(0);
 
-		String url = servletMapping.firstUrl();
+		String url = servletMapping.getUrl();
 		int posDot = url.lastIndexOf(".");
 		int posRoot = url.lastIndexOf("/");
 		int posMask = url.lastIndexOf("*");
@@ -134,7 +134,7 @@ public class URLUtil {
 			log.debug("getRAWMethodName(" + actionName + ", " + methodName + ")");
 		}
 		
-		StringBuilder buffer = new StringBuilder();
+		StringBuffer buffer = new StringBuffer();
 		
 		buffer.append(getActionName(actionName));
 		
@@ -151,7 +151,7 @@ public class URLUtil {
 			log.debug("getForwardURL(" + actionName + ", " + methodName + ")");
 		}
 
-		StringBuilder buffer = new StringBuilder();
+		StringBuffer buffer = new StringBuffer();
 
 		String path = getPath();
 
@@ -175,7 +175,7 @@ public class URLUtil {
 			log.debug("getMethodURL(" + actionName + ", " + methodName + ")");
 		}
 
-		StringBuilder buffer = new StringBuilder();
+		StringBuffer buffer = new StringBuffer();
 
 		buffer.append(getContextPath());
 		buffer.append(getForwardURL(actionName, methodName));

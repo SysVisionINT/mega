@@ -202,7 +202,7 @@ public class ActionManager {
 	private String getClassName(String path) throws ConfigurationError {
 		String rootPackage = getRootPackage();
 
-		StringBuilder buffer = new StringBuilder();
+		StringBuffer buffer = new StringBuffer();
 
 		buffer.append(rootPackage);
 
@@ -317,7 +317,7 @@ public class ActionManager {
 			renderRoot = Constants.OUTPUT_RENDER_ROOT_PROPERTY_VALUE;
 		}
 
-		StringBuilder buffer = new StringBuilder();
+		StringBuffer buffer = new StringBuffer();
 
 		if (!renderRoot.startsWith("/")) {
 			buffer.append("/");

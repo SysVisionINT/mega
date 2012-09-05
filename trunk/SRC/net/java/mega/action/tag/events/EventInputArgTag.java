@@ -63,7 +63,7 @@ public class EventInputArgTag extends TagSupport {
 		Tag tag = findAncestorWithClass(this, EventTag.class);
 		
 		if (tag != null) {			
-			StringBuilder buffer = new StringBuilder();
+			StringBuffer buffer = new StringBuffer();
 			
 			if (form == null) {
 				buffer.append("getValue(");

@@ -70,7 +70,7 @@ public class OptionContextEntry implements Serializable {
 	}
 
 	public String toString() {
-		StringBuilder buffer = new StringBuilder();
+		StringBuffer buffer = new StringBuffer();
 		
 		buffer.append("ENTRY(");
 		buffer.append("key=");
