@@ -99,7 +99,7 @@ public class LinkTag extends BaseBodyTag {
 	}
 
 	private String getArgName(int count) {
-		StringBuilder buffer = new StringBuilder();
+		StringBuffer buffer = new StringBuffer();
 
 		buffer.append(Constants.GET_ARG);
 		buffer.append(TextUtil.format(String.valueOf(count), 3, '0', TextUtil.ALLIGN_RIGHT));
