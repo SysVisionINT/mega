@@ -18,12 +18,9 @@
  */
 package net.java.mega.common.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class ServletMapping {
 	private String name = null;
-	private List<String> url = new ArrayList<String>();
+	private String url = null;
 	
 	public String getName() {
 		return name;
@@ -33,12 +30,12 @@ public class ServletMapping {
 		this.name = name;
 	}
 	
-	public List<String> getUrlList() {
+	public String getUrl() {
 		return url;
 	}
 	
-	public void addUrl(String url) {
-		this.url.add(url);
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
 	public boolean equals(Object obj) {
@@ -54,8 +51,6 @@ public class ServletMapping {
 		
 		return getName().equals(other.getName());
 	}
-
-	public String firstUrl() {
-		return url.isEmpty() ? null : getUrlList().get(0);
-	}
+	
+	
 }

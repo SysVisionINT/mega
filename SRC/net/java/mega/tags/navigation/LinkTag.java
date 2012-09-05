@@ -70,7 +70,7 @@ public class LinkTag extends BaseBodyTag {
 	}
 
 	private String getParameters() throws JspException {
-		StringBuilder buffer = new StringBuilder();
+		StringBuffer buffer = new StringBuffer();
 
 		String value = null;
 		int count = 0;
