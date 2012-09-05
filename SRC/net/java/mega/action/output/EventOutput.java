@@ -1,6 +1,6 @@
 package net.java.mega.action.output;
 
-import java.io.PrintWriter;
+import java.io.PrintStream;
 import java.util.Iterator;
 
 import javax.servlet.http.HttpServletRequest;
@@ -42,10 +42,9 @@ public class EventOutput implements ResponseProvider {
 		}
 
 		try {
-			response.setContentType("application/json");
-			response.setCharacterEncoding("UTF-8");
+			response.setContentType("application/json;charset=UTF-8");
 			
-			PrintWriter writer = response.getWriter();
+			PrintStream writer = new PrintStream(response.getOutputStream(), false, "UTF-8");
 			
 			writer.println(outputArray.toJSONString());
 			

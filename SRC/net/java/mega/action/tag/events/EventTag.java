@@ -52,7 +52,7 @@ public class EventTag extends BodyTagSupport {
 	}
 
 	public int doEndTag() throws JspException {
-		StringBuilder buffer = new StringBuilder();
+		StringBuffer buffer = new StringBuffer();
 		buffer.append(getJavascript());
 		buffer.append("return false;");
 		
@@ -72,7 +72,7 @@ public class EventTag extends BodyTagSupport {
 
 		URLUtil url = new URLUtil(request, response);
 
-		StringBuilder buffer = new StringBuilder();
+		StringBuffer buffer = new StringBuffer();
 
 		try {
 			buffer.append("executeEvent('");

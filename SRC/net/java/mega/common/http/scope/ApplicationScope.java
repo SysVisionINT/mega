@@ -25,7 +25,7 @@ import javax.servlet.ServletContext;
 public class ApplicationScope implements Scope {
 	private ServletContext context = null;
 	
-	protected ApplicationScope(ServletContext context) {
+	public ApplicationScope(ServletContext context) {
 		this.context = context;
 	}
 

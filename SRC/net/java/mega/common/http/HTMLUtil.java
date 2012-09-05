@@ -31,7 +31,7 @@ public class HTMLUtil {
 			return "";
 		}
 
-		StringBuilder buffer = new StringBuilder();
+		StringBuffer buffer = new StringBuffer();
 
 		char c = '\0';
 		int pos = 0;

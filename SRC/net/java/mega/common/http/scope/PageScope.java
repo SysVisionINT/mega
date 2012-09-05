@@ -26,7 +26,7 @@ import javax.servlet.jsp.PageContext;
 public class PageScope implements Scope {
 	private PageContext context = null;
 	
-	protected PageScope(PageContext context) {
+	public PageScope(PageContext context) {
 		this.context = context;
 	}
 
@@ -43,7 +43,7 @@ public class PageScope implements Scope {
 	}
 
 	public boolean existsAttribute(String name) {
-		Enumeration<String> names = context.getAttributeNamesInScope(PageContext.PAGE_SCOPE);
+		Enumeration names = context.getAttributeNamesInScope(PageContext.PAGE_SCOPE);
 		
 		while (names.hasMoreElements()) {
 			if (name.equals(names.nextElement())) {

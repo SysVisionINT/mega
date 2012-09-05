@@ -35,10 +35,12 @@ public class WARContextUtil {
 
 	private static Log log = LogFactory.getLog(WARContextUtil.class);
 
-	public static Object getObject(Scope scope, String name) {
+	public static Object getObject(PageContext context, String name) {
 		if (log.isDebugEnabled()) {
-			log.debug("getObject(Scope, " + name + ")");
+			log.debug("getObject(PageContext, " + name + ")");
 		}
+
+		Scope scope = ScopeUtil.findAttribute(context, name);
 
 		if (scope == null) {
 			return null;
@@ -54,16 +56,20 @@ public class WARContextUtil {
 
 		Scope scope = ScopeUtil.findAttribute(request, name);
 
-		return getObject(scope, name);
+		if (scope == null) {
+			return null;
+		} else {
+			return scope.getAttribute(name);
+		}
 	}
 
-	public static Object getValue(Scope scope, String name, String propertyName) {
+	public static Object getValue(PageContext context, String name, String propertyName) {
 		if (log.isDebugEnabled()) {
-			log.debug("getValue(Scope, " + name + ", " + propertyName + ")");
+			log.debug("getValue(PageContext, " + name + ", " + propertyName + ")");
 		}
 
 		Object ret = null;
-		Object obj = scope.getAttribute(name);
+		Object obj = getObject(context, name);
 
 		if (obj != null) {
 			if (propertyName != null) {
@@ -79,29 +85,13 @@ public class WARContextUtil {
 
 		return ret;
 	}
-	
-	public static Object getValue(PageContext context, String name, String propertyName) {
-		if (log.isDebugEnabled()) {
-			log.debug("getValue(PageContext, " + name + ", " + propertyName + ")");
-		}
-
-		Scope scope = ScopeUtil.findAttribute(context, name);
-		
-		if (scope == null) {
-			return null;
-		} else {
-			return getValue(scope, name, propertyName);
-		}
-	}
 
 	public static Class getPropertyType(PageContext context, String name, String propertyName) {
 		if (log.isDebugEnabled()) {
 			log.debug("getPropertyType(PageContext, " + name + ", " + propertyName + ")");
 		}
 
-		Scope scope = ScopeUtil.findAttribute(context, name);
-		Object obj = getObject(scope, propertyName);
-		
+		Object obj = getObject(context, name);
 		Class ret = null;
 
 		if (obj != null) {
