@@ -74,7 +74,7 @@ public abstract class SubmitBaseTag extends BaseBodyTag {
 			String formName = ((FormTag) tag).getId();
 			String fieldName = ((FormTag) tag).getActionField();
 			
-			StringBuilder buffer  = new StringBuilder();
+			StringBuffer buffer  = new StringBuffer();
 			
 			String userOnClick = getUserOnClick();
 			

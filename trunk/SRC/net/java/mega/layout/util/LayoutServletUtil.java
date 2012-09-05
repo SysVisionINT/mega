@@ -150,7 +150,7 @@ public class LayoutServletUtil {
 	private static Controller getControler(PageContext pageContext, ControlerContent controlerContent) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 		Controller controler = null;
 
-		StringBuilder buffer = new StringBuilder();
+		StringBuffer buffer = new StringBuffer();
 		buffer.append(Constant.CONTROLER);
 		buffer.append(controlerContent.getClassName());
 

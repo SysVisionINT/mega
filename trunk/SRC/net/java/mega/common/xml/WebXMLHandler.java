@@ -57,7 +57,7 @@ public class WebXMLHandler extends SimpleHandler {
 				log.debug("url-pattern = " + value);
 			}
 			
-			((ServletMapping)currentObject).addUrl(value);
+			((ServletMapping)currentObject).setUrl(value);
 		}
 	}
 	

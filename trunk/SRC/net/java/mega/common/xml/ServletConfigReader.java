@@ -47,7 +47,7 @@ public class ServletConfigReader {
 	private static InputStream getSafeInputStream(InputStream inputStream) throws Exception {
 		String webXML = readText(inputStream);
 		
-		StringBuilder buffer = new StringBuilder();
+		StringBuffer buffer = new StringBuffer();
 		int pos = 0;
 		int posEnd = 0;
 

@@ -43,7 +43,7 @@ public class EventTag extends net.java.mega.action.tag.events.EventTag {
 		if (tag != null) {
 			AttributeContainer attributeContainer = (AttributeContainer) tag;
 
-			StringBuilder buffer = new StringBuilder();
+			StringBuffer buffer = new StringBuffer();
 
 			String userTrigger = getUserTrigger(attributeContainer, getTrigger());
 
