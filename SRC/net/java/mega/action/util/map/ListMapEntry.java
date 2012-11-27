@@ -60,4 +60,8 @@ public class ListMapEntry implements Serializable {
 		
 		return getKey().equals(other.getKey());
 	}
+	
+	public int hashCode() {
+		return getKey().hashCode();
+	}
 }

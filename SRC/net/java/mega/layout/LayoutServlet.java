@@ -92,7 +92,7 @@ public class LayoutServlet extends HttpServlet {
 
 		if (configFileName == null) {
 			log.fatal("Parameter " + Constant.CONFIG_FILE + " not found");
-			new ServletException("Parameter " + Constant.CONFIG_FILE + " not found");
+			throw new ServletException("Parameter " + Constant.CONFIG_FILE + " not found");
 		} else {
 			if (log.isDebugEnabled()) {
 				log.debug(Constant.CONFIG_FILE + " = " + configFileName);
@@ -104,7 +104,7 @@ public class LayoutServlet extends HttpServlet {
 					.getServletContext(), configFileName));
 		} catch (Exception e) {
 			log.fatal("Error reading " + configFileName, e);
-			new ServletException("Error reading " + configFileName, e);
+			throw new ServletException("Error reading " + configFileName, e);
 		}
 
 		config.getServletContext().setAttribute(Constant.LAYOUT, layout);

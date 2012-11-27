@@ -44,7 +44,7 @@ public class ControllerConfig implements Serializable {
 
 	private Map actionsByName = null;
 
-	private Lock lock = null;
+	private transient Lock lock = null;
 
 	public ControllerConfig() {
 		config = new Properties();
