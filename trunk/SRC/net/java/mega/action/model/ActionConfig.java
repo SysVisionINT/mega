@@ -81,6 +81,10 @@ public class ActionConfig implements Serializable {
 
 		return getClazz().getName().equals(other.getClazz().getName());
 	}
+	
+	public int hashCode() {
+		return getClazz().getName().hashCode();
+	}
 
 	public ResponseProvider getForward() {
 		return forward;

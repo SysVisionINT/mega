@@ -86,6 +86,10 @@ public class ServletConfigReader {
 			}
 		}
 
+		if (buffer == null) {
+			return "";
+		}
+		
 		return new String(buffer);
 	}
 }

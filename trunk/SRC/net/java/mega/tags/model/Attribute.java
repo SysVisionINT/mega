@@ -52,4 +52,9 @@ public class Attribute implements Serializable {
 		
 		return getName().toUpperCase().equals(other.getName().toUpperCase());
 	}
+	
+	public int hashCode() {
+		return getName().hashCode();
+	}
 }
+

@@ -566,7 +566,7 @@ public class RequestProcessor {
 							try {
 								beanUtil.set(name, object);
 							} catch (Exception e) {
-								log.error("Error trying to set property " + name + " with the value " + parameterArray + " of class " + action.getClass().getName(), e);
+								log.error("Error trying to set property " + name + " with the value [" + TextUtil.toString(parameterArray) + "] of class " + action.getClass().getName(), e);
 								throw new PropertySetError(name, parameterArray);
 							}
 						}

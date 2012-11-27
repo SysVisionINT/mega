@@ -51,6 +51,8 @@ public class ServletMapping {
 		
 		return getName().equals(other.getName());
 	}
-	
-	
+
+	public int hashCode() {
+		return getName().hashCode();
+	}	
 }
