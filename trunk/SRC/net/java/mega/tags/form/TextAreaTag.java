@@ -20,12 +20,14 @@ package net.java.mega.tags.form;
 
 import javax.servlet.jsp.JspException;
 
+import net.java.mega.common.http.HTMLUtil;
 import net.java.mega.tags.model.Attribute;
 import net.java.mega.tags.model.InputBaseTag;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
 
 public class TextAreaTag extends InputBaseTag {
+
 	private static final long serialVersionUID = 6220131178083682726L;
 
 	private static Log log = LogFactory.getLog(TextAreaTag.class);
@@ -57,7 +59,7 @@ public class TextAreaTag extends InputBaseTag {
 		if (getRows() != null) {
 			addAttribute(new Attribute("rows", getRows()));
 		}
-		
+
 		return NOT_INCLUDE_INNER_HTML;
 	}
 
@@ -66,14 +68,18 @@ public class TextAreaTag extends InputBaseTag {
 			pageContext.getOut().print("<textarea name=\"");
 			pageContext.getOut().print(getProperty());
 			pageContext.getOut().print("\"");
-			
+
 			writeAttributes();
-			
+
 			pageContext.getOut().print(">");
 
 			Object value = getPropertyValue();
 
 			if (value != null) {
+				if (value instanceof String) {
+					value = HTMLUtil.filter((String) value);
+				}
+
 				pageContext.getOut().print(value);
 			}
 
@@ -84,6 +90,5 @@ public class TextAreaTag extends InputBaseTag {
 		}
 	}
 
-	public void initTag() {
-	}
+	public void initTag() {}
 }
