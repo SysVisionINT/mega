@@ -20,12 +20,14 @@ package net.java.mega.tags.form;
 
 import javax.servlet.jsp.JspException;
 
+import net.java.mega.common.http.HTMLUtil;
 import net.java.mega.tags.model.Attribute;
 import net.java.mega.tags.model.InputBaseTag;
 import net.java.sjtools.logging.Log;
 import net.java.sjtools.logging.LogFactory;
 
 public class InputTextTag extends InputBaseTag {
+
 	private static final long serialVersionUID = 6592419051534858377L;
 
 	private static Log log = LogFactory.getLog(InputTextTag.class);
@@ -57,7 +59,7 @@ public class InputTextTag extends InputBaseTag {
 		if (getMaxLength() != null) {
 			addAttribute(new Attribute("maxlength", getMaxLength()));
 		}
-		
+
 		return NOT_INCLUDE_INNER_HTML;
 	}
 
@@ -72,6 +74,10 @@ public class InputTextTag extends InputBaseTag {
 			Object value = getPropertyValue();
 
 			if (value != null) {
+				if (value instanceof String) {
+					value = HTMLUtil.filter((String) value);
+				}
+
 				pageContext.getOut().print(" value=\"");
 				pageContext.getOut().print(value);
 				pageContext.getOut().print("\"");
@@ -90,6 +96,5 @@ public class InputTextTag extends InputBaseTag {
 		return "text";
 	}
 
-	public void initTag() {
-	}
+	public void initTag() {}
 }

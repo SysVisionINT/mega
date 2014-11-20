@@ -24,6 +24,7 @@ import java.util.Iterator;
 import javax.servlet.jsp.JspException;
 
 import net.java.mega.action.util.Constants;
+import net.java.mega.common.http.HTMLUtil;
 import net.java.mega.common.http.WARContextUtil;
 import net.java.mega.common.util.MegaCache;
 import net.java.mega.tags.model.BaseBodyTag;
@@ -33,6 +34,7 @@ import net.java.sjtools.logging.LogFactory;
 import net.java.sjtools.util.BeanUtil;
 
 public class OptionsTag extends BaseBodyTag {
+
 	private static final long serialVersionUID = 6019952761717128436L;
 
 	private static Log log = LogFactory.getLog(OptionsTag.class);
@@ -84,8 +86,10 @@ public class OptionsTag extends BaseBodyTag {
 				value = String.valueOf(element);
 			}
 
+			String encodedValue = HTMLUtil.filter(value);
+
 			pageContext.getOut().print("<option value=\"");
-			pageContext.getOut().print(value);
+			pageContext.getOut().print(encodedValue);
 			pageContext.getOut().print("\"");
 
 			if (select.isSelected(value)) {
@@ -97,9 +101,15 @@ public class OptionsTag extends BaseBodyTag {
 			pageContext.getOut().print(">");
 
 			if (getLabel() != null) {
-				pageContext.getOut().print(BeanUtil.getPropertyValue(MegaCache.getInstance(), element, getLabel()));
+				Object labelValue = BeanUtil.getPropertyValue(MegaCache.getInstance(), element, getLabel());
+
+				if (labelValue instanceof String) {
+					labelValue = HTMLUtil.filter((String) labelValue);
+				}
+
+				pageContext.getOut().print(labelValue);
 			} else {
-				pageContext.getOut().print(value);
+				pageContext.getOut().print(encodedValue);
 			}
 
 			pageContext.getOut().println("</option>");
@@ -113,8 +123,7 @@ public class OptionsTag extends BaseBodyTag {
 		return (SelectBox) findAncestorWithClass(this, SelectBox.class);
 	}
 
-	public void initTag() {
-	}
+	public void initTag() {}
 
 	public int writeStartTag() throws JspException {
 		return NOT_INCLUDE_INNER_HTML;
